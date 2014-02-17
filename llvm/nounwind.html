@@ -1,0 +1,360 @@
+<html>
+
+<head>
+	<title>LLVM: Discussion on the nounwind attribute</title>
+	<style type="text/css">
+	<!--
+	body {
+		margin: 0 auto;
+		max-width: 500pt;
+	}
+	.llattr {
+		color: #008800;
+	}
+	.myattr {
+		color: #0000ff;
+	}
+	.codeblock {
+		background-color: #eeeeee;
+		padding: 10px;
+	}
+	-->
+	</style>
+</head>
+
+<body>
+	<h1>Discussion on the nounwind attribute</h1>
+
+	<p>Logan Chien</p>
+
+	<p>(This is the follow up of the threads: <a href="http://lists.cs.uiuc.edu/pipermail/llvmdev/2014-February/070122.html">[LLVMdev] Unwind behaviour in Clang/LLVM</a>)</p>
+
+	<p>I feel that there are two problems with the existing infrastructure:</p>
+
+	<ul>
+		<li>The <code class="llattr">nounwind</code> attribute is ambiguous
+for (1) not throwing exceptions and (2) not performing stack unwinding.  I feel
+that it will be better to separate this in two different attributes.</li>
+
+		<li>There is some problem when the function has both
+<code class="llattr">uwtable</code> and <code class="llattr">nounwind</code>.
+Although, I think it fine to keep the current definition of
+<code class="llattr">nounwind</code>, however, the
+<code class="llattr">uwtable</code> attribute will be much useless
+to its user.  Besides, even if we wish to keep the current definition, to avoid
+the undefined behavior, we have to slightly change the code generator to emit
+<code>[can't unwind]</code> whenever there is a
+<code class="llattr">nounwind</code> attribute.</li>
+	</ul>
+
+	<p>I am writing my thoughts below, please have a look, and feel free
+to challenge or send me the feedback.  Thanks.</p>
+
+	<p>tl;dr</p>
+
+	<h2>Notations</h2>
+
+	<p>To make my argument clear, I would like to use a <em>different</em>
+notation from LLVM IR:</p>
+
+	<ul>
+		<li>The <code class="myattr">no-throw</code> attribute guarantees that
+the function will not throw any exception object.</li>
+
+		<li>The <code class="myattr">no-unwind</code> attribute guarantees
+that the function won't read the prior calling sequence with the stack
+unwinder.</li>
+	</ul>
+
+	<p>For simplification, if the function is not tagged with
+<code>no-throw</code> then it is <em>may-throw</em>.  Similarly, if the
+function is not tagged with <code>no-unwind</code>, then it is
+<em>may-unwind</em>.</p>
+
+	<ul>
+		<li>The <code class="myattr">ehtable</code> attribute guarantees that
+the exception handling table, such as the LSDA handler data and (by
+implementation) the stack unwinding information for exception, will be
+generated for exception handling.  If the table includes stack unwinding
+infomration, then it is guaranteed that the unwinding information is sufficient
+enough to go back to previous propagation barrier (landingpad, cleanup filter,
+or can't unwind.)</li>
+
+		<li>The <code class="myattr">uwtable</code> attribute guarantees that
+the unwind table will be generated for stack unwinding for profilers,
+debuggers, (possibly) exception handling mechansim and etc.  This attribute
+guarantees that the complete stack trace can be obtained as long as the calling
+sequence does not contain  the external function or the function marked with
+<code>no-unwind</code>.</li>
+	</ul>
+
+	<p>It is possible for some exception handling implemenation requires <code
+class="myattr">uwtable</code> to unwind the stack, it is not necessary to do
+so.  On the other hand, even if the stack unwind information for exception
+handling is encoded in <code class="myattr">ehtable</code>, it might be
+insufficient to implement the stack unwinder.  We will come back with this
+later.</p>
+
+	<p>If a function has both <code class="myattr">no-uwnind</code> and
+<code class="myattr">uwtable</code>, then there must be a mechanism
+(might be an agreement between the compiler and the run-time library) to
+signal the stack unwinder to stop before passing through the function.
+Otherwise, the undefined behavior might be happened.  Similarly, we
+need a similar mechanism for the function with both
+<code class="myattr">no-throw</code> and
+<code class="myattr">ehtable</code></p>
+
+	<p>With these notations, we can do some simple <em>reasoning</em>:</p>
+
+	<ul>
+		<li><em>may-throw</em> implies <em>may-unwind</em> &mdash;
+We have to unwind the stack if the exception is thrown by the function, thus
+the <em>may-throw</em> attribute will imply <em>may-unwind</em>.</li>
+
+		<li><code class="myattr">no-unwind</code> implies
+<code class="myattr">no-throw</code> &mdash; The contraposition to the previous
+statement.</li>
+	</ul>
+
+	<p>Please notice that <code class="myattr">no-throw</code> does not imply
+<code class="myattr">no-unwind</code>.  We will come back with this later.</p>
+
+	<h2>Attribute Properties</h2>
+
+	<p>In this section, I would like to discuss the properties of
+<code class="myattr">no-unwind</code> and <code class="myattr">no-throw</code>,
+and the rules to infer the attributes if the programmer didn't specified them
+in function definition.  These properties may be used by some optimization
+passes, such as <code>PruneEH</code>.</p>
+
+	<p>First, since <code class="myattr">no-unwind</code> implies <code
+class="myattr">no-throw</code>, we can add <code class="myattr">no-throw</code>
+attribute to the functions which have <code class="myattr">no-unwind</code>
+attribute.</p>
+
+	<p>Second, it is clear that the external functions should be considered as
+<em>may-throw</em> unless it is explicitly tagged with
+<code class="myattr">no-throw</code>.  Similarly, the external functions should
+be <em>may-unwind</em> unless it is explicitly tagged with
+<code class="myattr">no-unwind</code>.</p>
+
+
+	<p>For function definition, we can inspect the instructions:</p>
+
+	<ul>
+		<li>If the function does not have any <code>call</code> or
+<code>invoke</code> instruction to a <em>may-unwind</em> callee function and
+<code>-fasynchronous-unwind-table</code> compiler option isn't given, then we
+can add the <code class="myattr">no-unwind</code> attribute to the
+function.</li>
+
+		<li>If the function does not have any <code>call</code> or
+<code>invoke</code> instruction to a <em>may-throw</em> callee function, then
+we can add the <code class="myattr">no-throw</code> attribute to the
+function (safe approximation.)</code></li>
+
+		<li>If we can prove that every exceptions are caught by the landing pad
+and the function won't re-throw the exception or won't continue the
+unwinding, then we can add the <code class="myattr">no-throw</code> to the
+function attribute.</li>
+	</ul>
+
+	<p>Please notice that we have to deliberately separate the attribute
+into <code class="myattr">no-throw</code> and
+<code class="myattr">no-unwind</code> because the <code>landingpad</code>
+instruction can't give any guarantee on <code class="myattr">no-unwind</code>
+attribute.</p>
+
+	<h2>Problems with Existing LLVM Infrastructure</h2>
+
+	<p>There are two function attributes related with unwinding and exception
+handling in the existing LLVM infrastructure.  Here are the descriptions copied
+from the <a href="http://llvm.org/docs/LangRef.html">LLVM reference
+manual</a>:</p>
+
+	<ul>
+		<li><code class="llattr">nounwind</code> &mdash; This function
+attribute indicates that the function never returns with an unwind or
+exceptional control flow. If the function does unwind, its runtime behavior is
+undefined.</li>
+
+		<li><code class="llattr">uwtable</code> &mdash; This attribute
+indicates that the ABI being targeted requires that an unwind table entry be
+produce for this function even if we can show that no exceptions passes by it.
+This is normally the case for the ELF x86-64 abi, but it can be disabled for
+some compilation units.</li>
+	</ul>
+
+	<p>From my interpretation, the specification for
+<code class="llattr">nounwind</code> guarantees that the function will
+neither throw an exception nor unwind the stack, i.e.
+<code class="llattr">nounwind</code> = <code class="myattr">no-throw</code> +
+<code class="myattr">no-unwind</code>.  The specification for
+<code class="llattr">uwtable</code> guarantees <em>some</em> unwind table
+will be generated; however, it does not specify which kind of unwind table
+should be generated.  IIRC, the ARM backend actually implements
+<code class="myattr">ehtable</code>, which has only limited capability to
+unwind the stack.</p>
+
+	<h3>Inconsistant Interpretation of nounwind</h3>
+
+	<p>The things are getting tricky when it comes to the
+implementation.  There is a <code>PruneEH</code> pass, which will
+try to remove the unnecessary exception handling informantion.  For example,
+the following code:</p>
+
+<pre class="codeblock">define void @foo() {
+entry:
+  ret void
+}</pre>
+
+	<p>will be converted to:</p>
+
+<pre class="codeblock">define void @foo() <strong>nounwind</strong> {
+entry:
+  ret void
+}</pre>
+
+	<p>Here's a much more complex example:</p>
+
+<pre class="codeblock">define void @foo() {
+
+declare void @_Z3barv()
+
+declare i32 @__gxx_personality_v0(...)
+
+define void @_Z3foov() {
+entry:
+  invoke void @_Z3barv() to label %try.cont unwind label %lpad
+
+lpad:
+  %0 = landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*)
+          catch i8* null
+  ret void
+
+try.cont:
+  ret void
+}</pre>
+
+	<p>is converted to</p>
+
+<pre class="codeblock">declare void @_Z3barv()
+
+declare i32 @__gxx_personality_v0(...)
+
+<strong>; Function Attrs: nounwind</strong>
+define void @_Z3foov() <strong>#0</strong> {
+entry:
+  invoke void @_Z3barv()
+          to label %try.cont unwind label %lpad
+
+lpad:
+  %0 = landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gxx_personality_v0 to i8*)
+          catch i8* null
+  ret void
+
+try.cont:
+  ret void
+}
+
+<strong>attributes #0 = { nounwind }</strong></pre>
+
+	<p>Some careful reader might have noticed the problem here.  The
+<code class="llattr">nounwind</code> attribute is added to
+<code>@_Z3foov()</code> simply because the <code>landingpad</code> can
+catch the exception object.  However, in my notation, only
+<code class="myattr">no-throw</code> can be added to this function, and
+<code class="myattr">no-throw</code> does not imply
+<code class="myattr">no-unwind</code>.  It is possible for
+<code>@_Z3foov()</code> to unwind the stack.  For example, the function
+<code>@_Z3barv()</code> may call <code>_Unwind_Backtrace()</code> to get the
+backtrace.</p>
+
+	<p>Besides, some optimization might make the situation even worse.
+AFAIK, most of the stack unwinding implementations rely on the value in
+the <em>link register</em> or the <em>return address</em> on the stack.
+However, there is an optimization in LLVM code generation which will not
+save the link register if the callee function has
+<code class="llattr">noreturn</code> attribute [<a href="#footnote1">1</a>].
+Even though the optimization will only be applied when the callee function has
+<code class="llattr">nounwind</code> attribute as well, the problem still
+occurs because <code>PruneEH</code> will (incorrectly) add <code
+class="llattr">nounwind</code> to some function which actually unwinds.
+Besides, I am in doubt about whether we can apply this optimization when the
+caller function has the <code class="llattr">uwtable</code> attribute and
+requires the unwind table.</p>
+
+
+	<h3>Unwind Table and Can't Unwind</h3>
+
+	<p>The mixture of <code class="llattr">uwtable</code> and <code
+class="llattr">nounwind</code> will cause another problem.</p>
+
+	<p>IMO, it is incorrect to decide whether to emit
+<code>[can't unwind]</code> with <code>!needsUnwindTableEntry()</code>
+[<a href="#footnote2">2</a>].  The <code>needsUnwindTableEntry()</code> is
+defined as either the function has <code class="llattr">uwtable</code>
+attribute or the function does not have <code class="llattr">nounwind</code>.
+Thus, <code>!needsUnwindTableEntry()</code> imples not having <code
+class="llattr">uwtable</code> attribute <em>and</em> having <code
+class="llattr">nounwind</code>.  As the result, the <code>[can't unwind]</code>
+won't be generated for the following function:</p>
+
+<pre>define void @foo() uwtable nounwind {
+entry:
+  call void @bar()
+  ret void
+}</pre>
+
+	<p>The stack unwinder might continue to unwind the stack because there
+isn't any mark in the unwind table to stop the stack unwinding.  And,
+unfortunately, according to the <a href="http://llvm.org/docs/LangRef.html">
+LLVM reference manual</a>, this will result in undefined behavior.
+In fact, I did encounter some real example [<a href="#footnote3">3</a>]
+which will fall into an infinite loop during the phase 1 unwinding.</p>
+
+	<h2>Summary</h2>
+
+	<p>In conclusion, I would like to suggest that we need to put more
+efforts to define a precise specification for exception handling and
+stack unwinding mechanism, so that the optimization passes and the
+run-time environment can interact with each other without problems.</p>
+
+	<p>In summary, IMO, these are the topic have to be discussed:</p>
+
+	<ul>
+		<li>Should we separate <code class="llattr">nounwind</code>
+into <code class="myattr">no-throw</code> and
+<code class="myattr">no-unwind</code>?</li>
+
+		<ul>
+			<li>What is the impact in terms of the run-time performance?</li>
+			<li>What is the impact on the code size?</li>
+		</ul>
+
+		<li>Should we write more implementation details about
+<code class="llattr">uwtable</code> in the
+<a href="http://llvm.org/docs/LangRef.html"> LLVM reference manual</a>?</li>
+
+		<ul>
+			<li>What is the possible expected behavior when <code
+class="llattr">uwtable</code> is used with <code
+class="llattr">nounwind</code></li>
+		</ul>
+	</ul>
+
+	<p>If we have some decision, I am willing to write the patch. :-)</p>
+
+<hr />
+
+<h2>Footnotes</h2>
+
+<ol>
+	<li id="footnote1">See &lt;llvm&gt;/lib/CodeGen/VirtRegMap.cpp line 290</li>
+	<li id="footnote2">See &lt;llvm&gt;/lib/CodeGen/AsmPrinter/ARMException.cpp line 65</li>
+	<li id="footnote3">See &lt;libc++abi&gt;/test/test_vector3.cpp</li>
+</ol>
+
+</body>
+
+</html>
