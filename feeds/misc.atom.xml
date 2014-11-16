@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Thought</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/misc.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-16T11:38:00+08:00</updated><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/Nov/16/first-post/" rel="alternate"></link><updated>2014-11-16T11:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
+&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
+notes, and ideas with reStructuredText.  As a result, I can update the blog
+more frequently.&lt;/p&gt;
+&lt;p&gt;In the foreseeable future, I will start to write some C++ related articles.
+Stay tuned!  :-)&lt;/p&gt;
+</summary></entry></feed>
