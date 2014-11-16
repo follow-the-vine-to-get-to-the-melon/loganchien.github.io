@@ -76,5 +76,5 @@ Experiences
 Misc
 ----
 
-Note: You may wish to install my `CA Certificate </pages/cert.html>`_ before
+Note: You may wish to install my `CA Certificate </cert>`_ before
 using the service I am hosting.

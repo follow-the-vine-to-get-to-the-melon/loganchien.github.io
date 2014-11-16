@@ -36,12 +36,30 @@ DEFAULT_PAGINATION = 10
 # Uncomment following line if you want document-relative URLs when developing
 #RELATIVE_URLS = True
 
-# Change homepage
-INDEX_SAVE_AS = 'blog.html'
+# URL configuration
+INDEX_SAVE_AS = 'blog/index.html'  # Move article index page
 
-# Menu Item
+ARTICLE_URL = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/'
+ARTICLE_SAVE_AS = 'posts/{date:%Y}/{date:%b}/{date:%d}/{slug}/index.html'
+
+ARCHIVES_SAVE_AS = 'archives/index.html'
+
+PAGE_URL = 'pages/{slug}/'
+PAGE_SAVE_AS = 'pages/{slug}/index.html'
+
+CATEGORY_URL = 'category/{slug}'
+CATEGORY_SAVE_AS = 'category/{slug}/index.html'
+CATEGORIES_SAVE_AS = 'category/index.html'
+
+TAG_URL = 'tag/{slug}'
+TAG_SAVE_AS = 'tag/{slug}/index.html'
+TAGS_SAVE_AS = 'tag/index.html'
+
+AUTHORS_SAVE_AS = 'authors/index.html'
+
+# Menu item
 MENUITEMS = (('home', '/'),
-             ('blog', '/blog.html'),)
+             ('blog', '/blog'),)
 DISPLAY_PAGES_ON_MENU = False
 DISPLAY_CATEGORIES_ON_MENU = False
 

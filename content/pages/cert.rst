@@ -1,7 +1,8 @@
 CA Certificate
 ##############
 
-:save_as: pages/cert.html
+:url: cert
+:save_as: cert/index.html
 
 Download
 --------
