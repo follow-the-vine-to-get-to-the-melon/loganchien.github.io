@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Thought</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/all.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-22T12:22:00+08:00</updated><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Thought</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/programming.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-22T12:22:00+08:00</updated><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
 OpenCL kernel program and load the pre-compiled binaries with the OpenCL API.&lt;/p&gt;
 &lt;p&gt;However, I was using the &lt;code&gt;ioc64&lt;/code&gt; command from the &lt;a class="reference external" href="https://software.intel.com/en-us/intel-opencl"&gt;Intel OpenCL SDK&lt;/a&gt; to
 pre-compile the kernel program.  This command might be unavailable in the other
@@ -400,113 +400,7 @@ code should handled properly in a robust software.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-</summary><category term="opencl"></category></entry><entry><title>Fix GRUB2 Warning</title><link href="https://loganchien.github.io/posts/2014/Nov/17/fix-grub2-warning/" rel="alternate"></link><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-17:posts/2014/Nov/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
-Besides, I noticed that there was a warning message during the execution of
-&lt;code&gt;update-grub&lt;/code&gt;:&lt;/p&gt;
-&lt;blockquote&gt;
-Warning: Setting GRUB_TIMEOUT to a non-zero value when GRUB_HIDDEN_TIMEOUT
-is set is no longer supported.&lt;/blockquote&gt;
-&lt;p&gt;After checking the manual, I learned that we can fix the problem by removing
-following line from &lt;code&gt;/etc/default/grub&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-GRUB_HIDDEN_TIMEOUT=0
-&lt;/pre&gt;
-&lt;p&gt;And update the GRUB with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
-&lt;/pre&gt;
-&lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
-</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>GitHub Pages and HTTPS</title><link href="https://loganchien.github.io/posts/2014/Nov/16/github-pages-and-https/" rel="alternate"></link><updated>2014-11-16T23:31:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/github-pages-and-https/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; supports HTTPS protocol.  It will be good to prefer HTTPS to
-HTTP.  However, I found that if the URLs are not written carefully, the
-user might be redirected to HTTP URLs.&lt;/p&gt;
-&lt;p&gt;For unknown reason, &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; are redirecting the directories without
-trailing slash to the HTTP URLs.  For example, the following URL:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-https://loganchien.github.io/cert
-&lt;/pre&gt;
-&lt;p&gt;will be redirected to:&lt;/p&gt;
-&lt;pre class="literal-block"&gt;
-http://loganchien.github.io/cert/
-&lt;/pre&gt;
-&lt;p&gt;To avoid this pitfall, please make sure that your URLs are ending with trailing
-slash if they are pointing to directories.  For example,&lt;/p&gt;
-&lt;pre class="code literal-block"&gt;
-https://loganchien.github.io/cert/
-&lt;/pre&gt;
-&lt;p&gt;This URL won't be redirected and work as expected.&lt;/p&gt;
-</summary><category term="github"></category><category term="https"></category></entry><entry><title>Pelican and GitHub Pages</title><link href="https://loganchien.github.io/posts/2014/Nov/16/pelican-and-github-pages/" rel="alternate"></link><updated>2014-11-16T23:01:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/pelican-and-github-pages/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; has built-in support for &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  However, I noticed that
-the &lt;code&gt;ghp-import&lt;/code&gt; command might screw up the commit log if your GitHub
-Pages and your Pelican source code share the same branch name.&lt;/p&gt;
-&lt;p&gt;According to the document of &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;, the user pages should be
-committed to &lt;code&gt;master&lt;/code&gt; branch (instead of &lt;code&gt;gh_pages&lt;/code&gt;.)  If you have
-answered &lt;code&gt;master&lt;/code&gt; while &lt;code&gt;pelican-quickstart&lt;/code&gt; was asking for the
-GitHub Page branch, then &lt;code&gt;ghp-import&lt;/code&gt; will automatically commit the
-generated output to the &lt;code&gt;master&lt;/code&gt; branch.  Consequently, the git
-repository will be screwed up.&lt;/p&gt;
-&lt;p&gt;My solution is to create a &lt;code&gt;pelican-source&lt;/code&gt; branch for Pelican source
-code, and commit the generated output to the &lt;code&gt;master&lt;/code&gt; branch.  This will
-fix this issue without any problems.&lt;/p&gt;
-</summary><category term="github"></category><category term="pelican"></category></entry><entry><title>SSL Certificate</title><link href="https://loganchien.github.io/posts/2014/Nov/15/ssl-certificate/" rel="alternate"></link><updated>2014-11-15T02:30:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-15:posts/2014/Nov/15/ssl-certificate/</id><summary type="html">&lt;p&gt;I would like to run &lt;a class="reference external" href="https://code.google.com/p/shellinabox/"&gt;shellinabox&lt;/a&gt; and my private blog system through HTTPS
-protocol.  However, an SSL certificate is really expensive, thus I decided to
-run our own &lt;strong&gt;certificate authority&lt;/strong&gt; and distribute my &lt;em&gt;cacert.pem&lt;/em&gt; through
-&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In general, running a certificate authority requires three steps:&lt;/p&gt;
-&lt;ol class="arabic simple"&gt;
-&lt;li&gt;Create a RSA public/private keys for the CA.  This step will create
-&lt;code&gt;cacert.pem&lt;/code&gt; as well.  You should distribute the CA certificate via
-some safe tunnel.&lt;/li&gt;
-&lt;li&gt;For each service, create a &lt;em&gt;certificate request&lt;/em&gt; and send it to CA.&lt;/li&gt;
-&lt;li&gt;The CA should sign the certificate request, and return it back.&lt;/li&gt;
-&lt;li&gt;Install the CA-signed SSL certificate to HTTPS server (and etc.)&lt;/li&gt;
-&lt;/ol&gt;
-&lt;p&gt;The OpenSSL package from Ubuntu has provide a simple script for us to
-manage the certificates.  Let's start.&lt;/p&gt;
-&lt;div class="section" id="create-a-certificate-authority"&gt;
-&lt;h2&gt;Create a Certificate Authority&lt;/h2&gt;
-&lt;p&gt;Create directory to save everything:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir MyCA
-&lt;span class="nv"&gt;$ &lt;/span&gt;chmod &lt;span class="m"&gt;700&lt;/span&gt; MyCA
-&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;MyCA
-&lt;/pre&gt;
-&lt;p&gt;Copy the tools:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;cp /usr/lib/ssl/misc/CA.pl .
-&lt;span class="nv"&gt;$ &lt;/span&gt;cp /etc/ssl/openssl.cnf .
-&lt;/pre&gt;
-&lt;p&gt;Edit the configurations to fit your need, and finally create the certificate
-for your CA:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newca
-&lt;/pre&gt;
-&lt;p&gt;By default, the &lt;code&gt;cacert.pem&lt;/code&gt; will be generated at
-&lt;code&gt;demoCA/cacert.pem&lt;/code&gt;.  Install this certificate as an authority in your
-browser.  You can also check the fingerprint with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;openssl x509 -fingerprint -noout -in cacert.pem
-&lt;span class="nv"&gt;$ &lt;/span&gt;openssl x509 -sha256 -fingerprint -noout -in cacert.pem
-&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div class="section" id="generate-certificates-for-your-service"&gt;
-&lt;h2&gt;Generate Certificates for Your Service&lt;/h2&gt;
-&lt;p&gt;To create the SSL certificate for your service:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# Create a certificate request
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newreq
-
-&lt;span class="c"&gt;# Sign a certificate request
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -sign
-&lt;/pre&gt;
-&lt;p&gt;The generated &lt;code&gt;newkey.pem&lt;/code&gt; and &lt;code&gt;newcert.pem&lt;/code&gt; are the private key
-and the certificate respectively.&lt;/p&gt;
-&lt;p&gt;Please notice that the &lt;code&gt;newkey.pem&lt;/code&gt; has been encrypted with a passpharse.
-Under some situation, you have to decrypt it before installing the certificate
-(e.g. Apache2).  Here's the command to decrypt the private key:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;openssl rsa -in newkey.pem -out newkey.nopass.pem
-&lt;/pre&gt;
-&lt;/div&gt;
-</summary><category term="https"></category><category term="apache2"></category><category term="ssl"></category></entry><entry><title>C++ std::list Operations</title><link href="https://loganchien.github.io/posts/2014/Nov/14/c-stdlist-operations/" rel="alternate"></link><updated>2014-11-14T23:53:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-14:posts/2014/Nov/14/c-stdlist-operations/</id><summary type="html">&lt;p&gt;To sort the doubly linked list &lt;code&gt;std::list&lt;/code&gt;, we can simply call the
+</summary><category term="opencl"></category></entry><entry><title>C++ std::list Operations</title><link href="https://loganchien.github.io/posts/2014/Nov/14/c-stdlist-operations/" rel="alternate"></link><updated>2014-11-14T23:53:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-14:posts/2014/Nov/14/c-stdlist-operations/</id><summary type="html">&lt;p&gt;To sort the doubly linked list &lt;code&gt;std::list&lt;/code&gt;, we can simply call the
 &lt;code&gt;sort()&lt;/code&gt; member function.  For example,&lt;/p&gt;
 &lt;pre class="code c++ literal-block"&gt;
 &lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;
@@ -810,10 +704,4 @@ positive will result in bad consequence.&lt;/p&gt;
 and model is the set of correct program.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-</summary><category term="plt"></category><category term="logic"></category></entry><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/Nov/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-11:posts/2014/Nov/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
-&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
-notes, and ideas with reStructuredText.  As a result, I can update the blog
-more frequently.&lt;/p&gt;
-&lt;p&gt;In the foreseeable future, I will start to write some C++ related articles.
-Stay tuned!  :-)&lt;/p&gt;
-</summary></entry></feed>
+</summary><category term="plt"></category><category term="logic"></category></entry></feed>

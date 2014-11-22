@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>Logan's Thought - tips</title>
   <meta name="author" content="Logan">
 
 
@@ -43,54 +43,37 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
 
-  </article>
-</div>
+  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<pre class="code bash literal-block">
+<span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/">Pre-compile the OpenCL Kernel Program - Part 2</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/20/c-private-inheritence-and-using-directive/">C++ Private Inheritence and Using Directive</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/19/opencl-12-manual-pages/">OpenCL 1.2 Manual Pages</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/18/getting-started-with-opencl/">Getting Started with OpenCL</a>
+          <a href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
       </li>
     </ul>
   </section>

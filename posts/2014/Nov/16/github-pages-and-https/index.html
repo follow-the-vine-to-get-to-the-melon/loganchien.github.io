@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>GitHub Pages and HTTPS</title>
   <meta name="author" content="Logan">
 
 
@@ -44,34 +44,44 @@
   <div id="main">
     <div id="content">
 <div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">GitHub Pages and HTTPS</h1>
+      <p class="meta"><time datetime="2014-11-16T23:31:00+08:00" pubdate>Sun 16 November 2014</time></p>
+</header>
 
+  <div class="entry-content"><p><a class="reference external" href="https://pages.github.com">GitHub Pages</a> supports HTTPS protocol.  It will be good to prefer HTTPS to
+HTTP.  However, I found that if the URLs are not written carefully, the
+user might be redirected to HTTP URLs.</p>
+<p>For unknown reason, <a class="reference external" href="https://pages.github.com">GitHub Pages</a> are redirecting the directories without
+trailing slash to the HTTP URLs.  For example, the following URL:</p>
+<pre class="literal-block">
+https://loganchien.github.io/cert
+</pre>
+<p>will be redirected to:</p>
+<pre class="literal-block">
+http://loganchien.github.io/cert/
+</pre>
+<p>To avoid this pitfall, please make sure that your URLs are ending with trailing
+slash if they are pointing to directories.  For example,</p>
+<pre class="code literal-block">
+https://loganchien.github.io/cert/
+</pre>
+<p>This URL won't be redirected and work as expected.</p>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-11-16T23:31:00+08:00" pubdate>Sun 16 November 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/github/">github</a>
+    <a class="category" href="https://loganchien.github.io/tag/https/">https</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
   </article>
+
 </div>
 <aside class="sidebar">
   <section>

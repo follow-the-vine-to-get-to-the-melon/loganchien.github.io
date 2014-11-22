@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Thought</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/misc.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-16T11:38:00+08:00</updated><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/Nov/16/first-post/" rel="alternate"></link><updated>2014-11-16T11:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Thought</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/misc.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-17T23:50:00+08:00</updated><entry><title>Fix GRUB2 Warning</title><link href="https://loganchien.github.io/posts/2014/Nov/17/fix-grub2-warning/" rel="alternate"></link><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-17:posts/2014/Nov/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
+Besides, I noticed that there was a warning message during the execution of
+&lt;code&gt;update-grub&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+Warning: Setting GRUB_TIMEOUT to a non-zero value when GRUB_HIDDEN_TIMEOUT
+is set is no longer supported.&lt;/blockquote&gt;
+&lt;p&gt;After checking the manual, I learned that we can fix the problem by removing
+following line from &lt;code&gt;/etc/default/grub&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+GRUB_HIDDEN_TIMEOUT=0
+&lt;/pre&gt;
+&lt;p&gt;And update the GRUB with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
+&lt;/pre&gt;
+&lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
+</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/Nov/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-11:posts/2014/Nov/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
 &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
 notes, and ideas with reStructuredText.  As a result, I can update the blog
 more frequently.&lt;/p&gt;

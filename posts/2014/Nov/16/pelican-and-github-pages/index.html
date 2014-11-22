@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>Pelican and GitHub Pages</title>
   <meta name="author" content="Logan">
 
 
@@ -44,34 +44,38 @@
   <div id="main">
     <div id="content">
 <div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Pelican and GitHub Pages</h1>
+      <p class="meta"><time datetime="2014-11-16T23:01:00+08:00" pubdate>Sun 16 November 2014</time></p>
+</header>
 
+  <div class="entry-content"><p><a class="reference external" href="http://docs.getpelican.com">Pelican</a> has built-in support for <a class="reference external" href="https://pages.github.com">GitHub Pages</a>.  However, I noticed that
+the <code>ghp-import</code> command might screw up the commit log if your GitHub
+Pages and your Pelican source code share the same branch name.</p>
+<p>According to the document of <a class="reference external" href="https://pages.github.com">GitHub Pages</a>, the user pages should be
+committed to <code>master</code> branch (instead of <code>gh_pages</code>.)  If you have
+answered <code>master</code> while <code>pelican-quickstart</code> was asking for the
+GitHub Page branch, then <code>ghp-import</code> will automatically commit the
+generated output to the <code>master</code> branch.  Consequently, the git
+repository will be screwed up.</p>
+<p>My solution is to create a <code>pelican-source</code> branch for Pelican source
+code, and commit the generated output to the <code>master</code> branch.  This will
+fix this issue without any problems.</p>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-11-16T23:01:00+08:00" pubdate>Sun 16 November 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/github/">github</a>
+    <a class="category" href="https://loganchien.github.io/tag/pelican/">pelican</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
   </article>
+
 </div>
 <aside class="sidebar">
   <section>

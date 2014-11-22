@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>First Post</title>
+  <title>Logan's Thought - stl</title>
   <meta name="author" content="Logan">
 
 
@@ -39,39 +39,42 @@
 <ul class="main-navigation">
     <li><a href="/">home</a></li>
     <li><a href="/blog/">blog</a></li>
+    <li><a href="/archives/">archives</a></li>
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">First Post</h1>
-      <p class="meta"><time datetime="2014-11-16T11:38:00+08:00" pubdate>Sun 16 November 2014</time></p>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">C++ Associative Container and Iterator Validness</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:38:00+08:00" pubdate>Thu 13 November 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>After using <a class="reference external" href="https://blogger.com">Blogger</a> for several years, I decided to switch to <a class="reference external" href="http://docs.getpelican.com">Pelican</a> and
-<a class="reference external" href="https://pages.github.com">GitHub Pages</a>.  I feel it will be much easier to write down my thoughts,
-notes, and ideas with reStructuredText.  As a result, I can update the blog
-more frequently.</p>
-<p>In the foreseeable future, I will start to write some C++ related articles.
-Stay tuned!  :-)</p>
-</div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Logan</span>
-  </span>
-<time datetime="2014-11-16T11:38:00+08:00" pubdate>Sun 16 November 2014</time></p><div class="sharing">
-</div>    </footer>
-  </article>
+  <div class="entry-content"><p>I used to believe that iterators will be invalidated after calling the
+member functions <code>insert()</code> or <code>erase()</code> of containers.  Thus, I
+would adopt a conservative approach:</p>
+<ol class="arabic simple">
+<li>Create a temporary container.</li>
+<li>Copy the elements which I would like to keep to the temporary container.</li>
+<li>Swap the container.</li>
+</ol>
+<p>For example, to remove ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/16/first-post/">First Post</a>
+          <a href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">C++ Associative Container and Iterator Validness</a>
       </li>
     </ul>
   </section>
@@ -80,13 +83,15 @@ Stay tuned!  :-)</p>
     <h1>Categories</h1>
     <ul id="recent_posts">
         <li><a href="https://loganchien.github.io/category/misc/">misc</a></li>
+        <li><a href="https://loganchien.github.io/category/programming/">programming</a></li>
+        <li><a href="https://loganchien.github.io/category/web/">web</a></li>
     </ul>
   </section>
  
 
   <section>
   <h1>Tags</h1>
-  </section>
+    <a href="https://loganchien.github.io/tag/pelican/">pelican</a>,    <a href="https://loganchien.github.io/tag/git/">git</a>,    <a href="https://loganchien.github.io/tag/grub/">grub</a>,    <a href="https://loganchien.github.io/tag/ssl/">ssl</a>,    <a href="https://loganchien.github.io/tag/cxx/">cxx</a>,    <a href="https://loganchien.github.io/tag/opencl/">opencl</a>,    <a href="https://loganchien.github.io/tag/apache2/">apache2</a>,    <a href="https://loganchien.github.io/tag/stl/">stl</a>,    <a href="https://loganchien.github.io/tag/github/">github</a>,    <a href="https://loganchien.github.io/tag/https/">https</a>,    <a href="https://loganchien.github.io/tag/linux/">linux</a>,    <a href="https://loganchien.github.io/tag/plt/">plt</a>,    <a href="https://loganchien.github.io/tag/tips/">tips</a>,    <a href="https://loganchien.github.io/tag/logic/">logic</a>  </section>
 
 
     <section>

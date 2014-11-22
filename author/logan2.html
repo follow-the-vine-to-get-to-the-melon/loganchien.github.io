@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>Logan's Thought - Articles by Logan</title>
   <meta name="author" content="Logan">
 
 
@@ -43,36 +43,88 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">C++ Associative Container and Iterator Validness</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:38:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
 
-  </article>
-</div>
+  <div class="entry-content"><p>I used to believe that iterators will be invalidated after calling the
+member functions <code>insert()</code> or <code>erase()</code> of containers.  Thus, I
+would adopt a conservative approach:</p>
+<ol class="arabic simple">
+<li>Create a temporary container.</li>
+<li>Copy the elements which I would like to keep to the temporary container.</li>
+<li>Swap the container.</li>
+</ol>
+<p>For example, to remove ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<pre class="code bash literal-block">
+<span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/12/soundness-and-completeness-of-the-type-system/">Soundness and Completeness of the Type System</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>In the section 6 of  <a class="reference external" href="https://class.coursera.org/proglang-003">Programming Languages</a> course, Dan Grossman discussed
+about the soundness and the completeness of the type system.  He said that:</p>
+<ul class="simple">
+<li>A type-system is <strong>sound</strong> implies that all of type-checked programs are
+correct (in the other words, all of the incorrect program can't be type
+checked ...</li></ul></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/12/soundness-and-completeness-of-the-type-system/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/11/first-post/">First Post</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-11T23:38:00+08:00" pubdate>Tue 11 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>After using <a class="reference external" href="https://blogger.com">Blogger</a> for several years, I decided to switch to <a class="reference external" href="http://docs.getpelican.com">Pelican</a> and
+<a class="reference external" href="https://pages.github.com">GitHub Pages</a>.  I feel it will be much easier to write down my thoughts,
+notes, and ideas with reStructuredText.  As a result, I can update the blog
+more frequently.</p>
+<p>In the foreseeable future, I will start to ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/11/first-post/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+    <a class="next" href="https://loganchien.github.io/author/logan.html">Newer &rarr;</a>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>

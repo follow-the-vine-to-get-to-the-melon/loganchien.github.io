@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>Soundness and Completeness of the Type System</title>
   <meta name="author" content="Logan">
 
 
@@ -44,34 +44,70 @@
   <div id="main">
     <div id="content">
 <div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Soundness and Completeness of the Type System</h1>
+      <p class="meta"><time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time></p>
+</header>
 
+  <div class="entry-content"><p>In the section 6 of  <a class="reference external" href="https://class.coursera.org/proglang-003">Programming Languages</a> course, Dan Grossman discussed
+about the soundness and the completeness of the type system.  He said that:</p>
+<ul class="simple">
+<li>A type-system is <strong>sound</strong> implies that all of type-checked programs are
+correct (in the other words, all of the incorrect program can't be type
+checked), i.e. there won't be any <em>false negative</em> <a class="footnote-reference" href="#neg" id="id1">[1]</a>.</li>
+<li>A type-system is <strong>complete</strong> implies that all of the correct program can
+be accepted by the type checker, i.s. there won't be any <em>false positive</em>
+<a class="footnote-reference" href="#pos" id="id2">[2]</a>.</li>
+</ul>
+<p>With this explanation, I have better understanding to the soundness and the
+completeness of the logic system.  In the logic system, we would say that:</p>
+<ul class="simple">
+<li>A logic system is <strong>sound</strong> means that all provable statements are true in
+models <a class="footnote-reference" href="#ana" id="id3">[3]</a>.</li>
+<li>A logic system is <strong>complete</strong> means that all statements which are true in
+all models are provable <a class="footnote-reference" href="#ana" id="id4">[3]</a>.</li>
+</ul>
+<p>Besides, according to <a class="reference external" href="http://en.wikipedia.org/wiki/G%C3%B6del%27s_incompleteness_theorems">Godel's incompleteness theorems</a>, if your system is
+expressive enough to represent natural numbers, then it can't be both sound
+and complete.  This theorem applies to the type system as well.  Usually, most
+programming language would prefer soundness over completeness, since false
+positive will result in bad consequence.</p>
+<table class="docutils footnote" frame="void" id="neg" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>For negative, we mean that the type checker claims that there is
+<em>no error</em> in the input program, i.e. the input program is correct.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="pos" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>For positive, we mean that the type checker claims that there are
+<em>some errors</em> in the input program, i.e. the input program is incorrect.</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="ana" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id3">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> Analogous to the type system, provable is corresponded to type checked
+and model is the set of correct program.</td></tr>
+</tbody>
+</table>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/plt/">plt</a>
+    <a class="category" href="https://loganchien.github.io/tag/logic/">logic</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
   </article>
+
 </div>
 <aside class="sidebar">
   <section>

@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>CA Certificate | Logan's Thought </title>
+  <title>C++ Private Inheritence and Using Directive</title>
   <meta name="author" content="Logan">
 
 
@@ -44,34 +44,69 @@
   <div id="main">
     <div id="content">
 <div>
-  <article role="article">
-    <header>
-      <h1 class="entry-title">CA Certificate</h1>
-    </header>
-    <div class="section" id="download">
-<h2>Download</h2>
-<p>This is the CA certificate for my private HTTPS servers, please install this as
-the &quot;Authority&quot; in the browser.</p>
-<p><a class="reference external" href="https://loganchien.github.io/static/certs/LoganRootCA.pem">Download Certificate</a></p>
-</div>
-<div class="section" id="fingerprint">
-<h2>Fingerprint</h2>
-<ul>
-<li><p class="first">SHA1 Fingerprint:</p>
-<pre class="literal-block">
-98:E8:2C:0A:BE:49:3B:6F:62:72:A1:43:DE:D3:2D:E0:E2:09:70:80
-</pre>
-</li>
-<li><p class="first">SHA256 Fingerprint:</p>
-<pre class="literal-block">
-4A:B5:C8:1D:DB:88:2D:70:21:05:45:5E:8C:81:72:A6:
-FE:31:A0:33:90:DE:CA:21:8F:A8:2A:17:72:11:C6:BA
-</pre>
-</li>
-</ul>
-</div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">C++ Private Inheritence and Using Directive</h1>
+      <p class="meta"><time datetime="2014-11-20T11:52:00+08:00" pubdate>Thu 20 November 2014</time></p>
+</header>
 
+  <div class="entry-content"><p>I used to feel that the private inheritence is useless.  Although we can
+implement the has-a semantics with private inheritence, it provides little
+benefits compared with object composition.  Besides, in order to expose the
+privately inherited members to public, C++ introduced an awkward syntax, i.e.
+the <code>using</code> directives.  These are the reasons why I didn't like the
+private inheritence at all.</p>
+<p>Recently, I changed my mind.  Since we only have to specify the function
+names in the <code>using</code> directives, all of the overloaded functions can
+be <em>exported</em> with one directive.  As a result, we can reduce the numbers of
+helper functions.  For example:</p>
+<pre class="code c++ literal-block">
+<span class="cp">#include &lt;iostream&gt;
+</span>
+<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">j</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+  <span class="kt">void</span> <span class="n">test</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="p">,</span> <span class="kt">int</span> <span class="n">j</span><span class="p">)</span> <span class="k">const</span>  <span class="p">{</span> <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">B</span> <span class="o">:</span> <span class="k">private</span> <span class="n">A</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="k">using</span> <span class="n">A</span><span class="o">::</span><span class="n">test</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// All of these should work.
+</span>
+  <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">test</span><span class="p">();</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">b</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+  <span class="k">const</span> <span class="n">B</span> <span class="o">&amp;</span><span class="n">rb</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span>
+  <span class="n">rb</span><span class="p">.</span><span class="n">test</span><span class="p">();</span>
+  <span class="n">rb</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+  <span class="n">rb</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+<p>However, IMHO, private inheritence is still a good indication of bad class
+hierarchy deisgn.</p>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-11-20T11:52:00+08:00" pubdate>Thu 20 November 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/cxx/">cxx</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
   </article>
+
 </div>
 <aside class="sidebar">
   <section>
