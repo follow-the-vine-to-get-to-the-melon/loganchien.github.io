@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/all.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-22T12:22:00+08:00</updated><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/all.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-23T14:36:00+08:00</updated><entry><title>Install GCIN on Ubuntu 14.04</title><link href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-23:posts/2014/Nov/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
+its long latency to switch between input methods for a long time.  As a
+Taiwanese, both &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; and &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; came up to my mind.  Unfortunately, both of
+them need extra configuration after &lt;code&gt;apt-get&lt;/code&gt;.  Here's my note to install
+them properly.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;First, we have to install either &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; packages with
+&lt;code&gt;apt-get&lt;/code&gt;.  After installing the package, we have to change the
+system settings and reboot; otherwise, ibus daemon will continue to capture
+your keyboard.&lt;/p&gt;
+&lt;p&gt;Here are the instructions:&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Install the input methods&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="c"&gt;# To install gcin:
+&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
+
+&lt;span class="c"&gt;# To install hime:
+&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
+&lt;/pre&gt;
+&lt;p&gt;Install the &lt;a class="reference external" href="http://chewing.im/"&gt;chewing&lt;/a&gt; packages if you are interested in:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="c"&gt;# For gcin users:
+&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
+
+&lt;span class="c"&gt;# For hime users:
+&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Change the system settings for input method system:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Click on the &amp;quot;System Menu&amp;quot; button on the top right of the screen.&lt;/li&gt;
+&lt;li&gt;Click the &amp;quot;System Settings ...&amp;quot; menu item.&lt;/li&gt;
+&lt;li&gt;Click the &amp;quot;Language Support&amp;quot; button.&lt;/li&gt;
+&lt;li&gt;Change &amp;quot;Keyboard input method system&amp;quot; field to gcin (or hime)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Reboot the system (restart X11 window system)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;After rebooting your system, &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; should start to work after
+pressing Ctrl+Space.  You should be able to type some Chinese characters now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="system-tray-icon"&gt;
+&lt;h2&gt;System Tray Icon&lt;/h2&gt;
+&lt;p&gt;Since Ubuntu Unity team decided to ship their own indicator protocol, you won't
+be able to see the &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; (or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt;) icon on the system tray (or the
+notification area) if you are using Ubuntu 13.10 or newer.  To workaround the
+problem, we have to install the Unity package built by the third-party.&lt;/p&gt;
+&lt;p&gt;Here are the instructions for Ubuntu 14.04 &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;:&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Add APT repository for systray&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Edit configuration&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
+Package: *
+Pin: release &lt;span class="nv"&gt;o&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;LP-PPA-gurqn-systray-trusty
+Pin-Priority: 600
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Update APT&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get upgrade
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Reboot the system (logout and login again)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;You should be able to see the &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; system tray after rebooting.&lt;/p&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;For Ubuntu 14.10, change &lt;code&gt;trusty&lt;/code&gt; with &lt;code&gt;utopic&lt;/code&gt; should work.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div class="section" id="hide-the-ibus-icon"&gt;
+&lt;h2&gt;Hide the IBus Icon&lt;/h2&gt;
+&lt;p&gt;Finally, we can hide the ibus icon since it is not useful anymore.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Click on the &amp;quot;System Menu&amp;quot; button on the top right of the screen.&lt;/li&gt;
+&lt;li&gt;Click the &amp;quot;System Settings ...&amp;quot; menu item.&lt;/li&gt;
+&lt;li&gt;Click the &amp;quot;Text Entry&amp;quot; button.&lt;/li&gt;
+&lt;li&gt;Uncheck &amp;quot;Show current input source in the menu bar&amp;quot;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These are the tweaks for me to install &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt;, and hope this is
+helpful.  Feel free to let me know if you have any problem.&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="ubuntu"></category><category term="gcin"></category></entry><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
 OpenCL kernel program and load the pre-compiled binaries with the OpenCL API.&lt;/p&gt;
 &lt;p&gt;However, I was using the &lt;code&gt;ioc64&lt;/code&gt; command from the &lt;a class="reference external" href="https://software.intel.com/en-us/intel-opencl"&gt;Intel OpenCL SDK&lt;/a&gt; to
 pre-compile the kernel program.  This command might be unavailable in the other

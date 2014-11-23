@@ -47,6 +47,35 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/Nov/14/c-stdlist-operations/">C++ std::list Operations</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-14T23:53:00+08:00" pubdate>Fri 14 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>To sort the doubly linked list <code>std::list</code>, we can simply call the
+<code>sort()</code> member function.  For example,</p>
+<pre class="code c++ literal-block">
+<span class="cp">#include &lt;iostream&gt;
+#include &lt;list&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+  <span class="n">xs</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span>  <span class="c1">// Sort the std::list!
+</span>
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span> <span class="p">:</span> <span class="n">xs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+<p>We can ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/14/c-stdlist-operations/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/">C++ Associative Container and Iterator Validness</a>
       </h1>
       <p class="meta"><time datetime="2014-11-13T22:38:00+08:00" pubdate>Thu 13 November 2014</time></p>
@@ -130,6 +159,9 @@ more frequently.</p>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/">Install GCIN on Ubuntu 14.04</a>
+      </li>
+      <li class="post">
           <a href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/">Pre-compile the OpenCL Kernel Program - Part 2</a>
       </li>
       <li class="post">
@@ -140,9 +172,6 @@ more frequently.</p>
       </li>
       <li class="post">
           <a href="https://loganchien.github.io/posts/2014/Nov/19/opencl-12-manual-pages/">OpenCL 1.2 Manual Pages</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/18/getting-started-with-opencl/">Getting Started with OpenCL</a>
       </li>
     </ul>
   </section>
@@ -159,7 +188,7 @@ more frequently.</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="https://loganchien.github.io/tag/pelican/">pelican</a>,    <a href="https://loganchien.github.io/tag/git/">git</a>,    <a href="https://loganchien.github.io/tag/grub/">grub</a>,    <a href="https://loganchien.github.io/tag/ssl/">ssl</a>,    <a href="https://loganchien.github.io/tag/cxx/">cxx</a>,    <a href="https://loganchien.github.io/tag/opencl/">opencl</a>,    <a href="https://loganchien.github.io/tag/apache2/">apache2</a>,    <a href="https://loganchien.github.io/tag/stl/">stl</a>,    <a href="https://loganchien.github.io/tag/github/">github</a>,    <a href="https://loganchien.github.io/tag/https/">https</a>,    <a href="https://loganchien.github.io/tag/linux/">linux</a>,    <a href="https://loganchien.github.io/tag/plt/">plt</a>,    <a href="https://loganchien.github.io/tag/tips/">tips</a>,    <a href="https://loganchien.github.io/tag/logic/">logic</a>  </section>
+    <a href="https://loganchien.github.io/tag/pelican/">pelican</a>,    <a href="https://loganchien.github.io/tag/git/">git</a>,    <a href="https://loganchien.github.io/tag/grub/">grub</a>,    <a href="https://loganchien.github.io/tag/ssl/">ssl</a>,    <a href="https://loganchien.github.io/tag/cxx/">cxx</a>,    <a href="https://loganchien.github.io/tag/opencl/">opencl</a>,    <a href="https://loganchien.github.io/tag/apache2/">apache2</a>,    <a href="https://loganchien.github.io/tag/stl/">stl</a>,    <a href="https://loganchien.github.io/tag/github/">github</a>,    <a href="https://loganchien.github.io/tag/https/">https</a>,    <a href="https://loganchien.github.io/tag/linux/">linux</a>,    <a href="https://loganchien.github.io/tag/plt/">plt</a>,    <a href="https://loganchien.github.io/tag/tips/">tips</a>,    <a href="https://loganchien.github.io/tag/gcin/">gcin</a>,    <a href="https://loganchien.github.io/tag/ubuntu/">ubuntu</a>,    <a href="https://loganchien.github.io/tag/logic/">logic</a>  </section>
 
 
     <section>
