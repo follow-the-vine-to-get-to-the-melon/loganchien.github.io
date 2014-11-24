@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-23T14:36:00+08:00</updated><entry><title>Install GCIN on Ubuntu 14.04</title><link href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-23:posts/2014/Nov/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-24T23:04:00+08:00</updated><entry><title>Ubuntu Bluetooth Headset</title><link href="https://loganchien.github.io/posts/2014/Nov/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-24:posts/2014/Nov/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+was quite disappointed with the sound quality.  Fortunately, after searching on
+the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
+quality.&lt;/p&gt;
+&lt;p&gt;Here are the steps to switch to the mode with better sound quality:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Left click on the &amp;quot;Bluetooth icon&amp;quot; on the top right corner.&lt;/li&gt;
+&lt;li&gt;Move the cursor to your connected device.&lt;/li&gt;
+&lt;li&gt;Left click on &amp;quot;Sound Settings ...&amp;quot; menu item.&lt;/li&gt;
+&lt;li&gt;Change the mode from &amp;quot;Telphony Duplex (HSP/HFP)&amp;quot; to &amp;quot;&lt;strong&gt;High Fidelity Playback
+(A2DP)&lt;/strong&gt;&amp;quot;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Reference: &lt;a class="reference external" href="http://ubuntuforums.org/showthread.php?t=2171043"&gt;Ubuntu Forums: Bluetooth Headset Bad Sound Quality&lt;/a&gt;.&lt;/p&gt;
+</summary><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Install GCIN on Ubuntu 14.04</title><link href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-23:posts/2014/Nov/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
 its long latency to switch between input methods for a long time.  As a
 Taiwanese, both &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; and &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; came up to my mind.  Unfortunately, both of
 them need extra configuration after &lt;code&gt;apt-get&lt;/code&gt;.  Here's my note to install
