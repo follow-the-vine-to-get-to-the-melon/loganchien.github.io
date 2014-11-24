@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Logan's Note - tips</title>
+  <title>Let's Encrypt</title>
   <meta name="author" content="Logan">
 
   <link href="https://loganchien.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,37 +49,53 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+      <h1 class="entry-title">Let's Encrypt</h1>
+      <p class="meta"><time datetime="2014-11-24T23:32:00+08:00" pubdate>Mon 24 November 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
-list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
-</pre>
-<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
-will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
-<code>commit_n</code>, and ...</p></div>
-  <footer>
-    <a rel="full-article" href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
+  <div class="entry-content"><p>According to the <a class="reference external" href="http://andreasgal.com/2014/11/18/lets-encrypt-one-more-step-on-the-road-to-tls-everywhere/">post</a> by <a class="reference external" href="http://andreasgal.com">Andreas Gal</a>, <a class="reference external" href="https://www.eff.org/">EFF</a>, <a class="reference external" href="https://mozilla.com/">Mozilla</a>, Cisco, Akamai,
+and IdenTrust are going to form Internet Security Research Group which will
+start the <a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> ceritificate authority service in 2015 Q2.</p>
+<p><a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> is expected to become a free, automated, and open SSL
+sertificate authority which aims to increase the adoption of HTTPS protocol
+and provide a more secure Internet.  I am looking forward to this project.</p>
+<p>For the impatient, you may check <a class="reference external" href="https://github.com/letsencrypt">their GitHub</a> for the preview release.</p>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-11-24T23:32:00+08:00" pubdate>Mon 24 November 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/http/">http</a>
+    <a class="category" href="https://loganchien.github.io/tag/ssl/">ssl</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-  <br />
-</div></div>
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+          <a href="https://loganchien.github.io/posts/2014/Nov/24/lets-encrypt/">Let's Encrypt</a>
+      </li>
+      <li class="post">
+          <a href="https://loganchien.github.io/posts/2014/Nov/24/ubuntu-bluetooth-headset/">Ubuntu Bluetooth Headset</a>
+      </li>
+      <li class="post">
+          <a href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/">Install GCIN on Ubuntu 14.04</a>
+      </li>
+      <li class="post">
+          <a href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/">Pre-compile the OpenCL Kernel Program - Part 2</a>
+      </li>
+      <li class="post">
+          <a href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
       </li>
     </ul>
   </section>
