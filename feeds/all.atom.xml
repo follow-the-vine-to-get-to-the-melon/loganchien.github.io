@@ -1,12 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/all.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-24T23:32:00+08:00</updated><entry><title>Let's Encrypt</title><link href="https://loganchien.github.io/posts/2014/Nov/24/lets-encrypt/" rel="alternate"></link><updated>2014-11-24T23:32:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-24:posts/2014/Nov/24/lets-encrypt/</id><summary type="html">&lt;p&gt;According to the &lt;a class="reference external" href="http://andreasgal.com/2014/11/18/lets-encrypt-one-more-step-on-the-road-to-tls-everywhere/"&gt;post&lt;/a&gt; by &lt;a class="reference external" href="http://andreasgal.com"&gt;Andreas Gal&lt;/a&gt;, &lt;a class="reference external" href="https://www.eff.org/"&gt;EFF&lt;/a&gt;, &lt;a class="reference external" href="https://mozilla.com/"&gt;Mozilla&lt;/a&gt;, Cisco, Akamai,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="https://loganchien.github.io/" rel="alternate"></link><link href="https://loganchien.github.io/feeds/all.atom.xml" rel="self"></link><id>https://loganchien.github.io/</id><updated>2014-11-25T22:41:00+08:00</updated><entry><title>Vim Vundle</title><link href="https://loganchien.github.io/posts/2014/11/25/vim-vundle/" rel="alternate"></link><updated>2014-11-25T22:41:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-25:posts/2014/11/25/vim-vundle/</id><summary type="html">&lt;p&gt;In the past, I didn't like to install the &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; plug-ins or new syntax
+highlight because all of the files were messed up in the &lt;code&gt;.vim&lt;/code&gt; directory
+which makes it difficult to uninstall a plug-in.&lt;/p&gt;
+&lt;p&gt;Recently, I have come across with &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt;.  It is a vim plug-in manager
+which allows you to install or uninstall a plug-in by editing lines in
+&lt;code&gt;.vimrc&lt;/code&gt;.  In the next section, I would like to explain how to install
+&lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;First, to reduce the possible problems, it is suggested to remove or backup
+your existing &lt;code&gt;.vim&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;mv ~/.vim ~/vim-backup
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, clone the &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/gmarik/Vundle.vim.git &lt;span class="se"&gt;\&lt;/span&gt;
+            ~/.vim/bundle/Vundle.vim
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, add following lines to your &lt;code&gt;.vimrc&lt;/code&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;if&lt;/span&gt; version &lt;span class="p"&gt;&amp;gt;=&lt;/span&gt; &lt;span class="m"&gt;600&lt;/span&gt;
+  &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nb"&gt;nocompatible&lt;/span&gt;
+  &lt;span class="k"&gt;filetype&lt;/span&gt; off
+
+  &lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="nb"&gt;rtp&lt;/span&gt;&lt;span class="p"&gt;+=~&lt;/span&gt;&lt;span class="sr"&gt;/.vim/&lt;/span&gt;bundle/Vundle.&lt;span class="k"&gt;vim&lt;/span&gt;
+  &lt;span class="k"&gt;call&lt;/span&gt; vundle#begin&lt;span class="p"&gt;()&lt;/span&gt;
+
+  Plugin &lt;span class="s1"&gt;&amp;#39;gmarik/Vundle.vim&amp;#39;&lt;/span&gt;
+
+&lt;span class="c"&gt;  &amp;quot; ... Add More Plug-ins Here ...&lt;/span&gt;
+
+  &lt;span class="k"&gt;call&lt;/span&gt; vundle#&lt;span class="k"&gt;end&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+  &lt;span class="k"&gt;filetype&lt;/span&gt; plugin indent &lt;span class="k"&gt;on&lt;/span&gt;
+&lt;span class="k"&gt;end&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fourth, after editing &lt;code&gt;.vimrc&lt;/code&gt;, run following command to download
+plug-ins:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vim +PluginInstall +qall
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The Vim will pop up and show the progress.  You have to run this command again
+whenever you are adding (or removing) the &lt;code&gt;Plugin&lt;/code&gt; directives to your
+&lt;code&gt;.vimrc&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="folding"&gt;
+&lt;h2&gt;Folding&lt;/h2&gt;
+&lt;p&gt;If you follow the steps in the previous section, you will find out that Vim
+will fold our &lt;a class="reference external" href="http://docutils.sourceforge.net/rst.html"&gt;reStructuredText&lt;/a&gt; or &lt;a class="reference external" href="http://daringfireball.net/projects/markdown/"&gt;Markdown&lt;/a&gt; documents.  However, I don't
+like these behavior at all.  After some try and error, I realized that the
+problem is related to the &lt;code&gt;filetype&lt;/code&gt; command in the &lt;code&gt;.vimrc&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;You can fix the problem by changing the &lt;code&gt;filetype&lt;/code&gt; command to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;filetype&lt;/span&gt; &lt;span class="k"&gt;on&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Or alternatively, add following lines to your &lt;code&gt;.vimrc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;quot; Disable auto folding&lt;/span&gt;
+&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; mkd &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt;
+&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; rst &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="vim-plugins-which-i-have-installed"&gt;
+&lt;h2&gt;Vim Plugins which I Have Installed&lt;/h2&gt;
+&lt;p&gt;Finally, it's time to add more vim plug-ins.  You can specify the plug-in with
+the plug-in names from &lt;a class="reference external" href="http://vim-scripts.org/vim/scripts.html"&gt;Vim Scripts&lt;/a&gt;, GitHub repository names, or complete
+Git repository urls.&lt;/p&gt;
+&lt;p&gt;Here's the list of plug-ins which I have installed at the moment:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;quot; LLVM assembly and tablegen syntax highlight&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;andrewmacp/llvm.vim&amp;#39;&lt;/span&gt;
+
+&lt;span class="c"&gt;&amp;quot; Rust programming language syntax highlight&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;wting/rust.vim&amp;#39;&lt;/span&gt;
+
+&lt;span class="c"&gt;&amp;quot; OpenCL syntax highlight&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;petRUShka/vim-opencl&amp;#39;&lt;/span&gt;
+
+&lt;span class="c"&gt;&amp;quot; reStructuredText&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;Rykka/riv.vim&amp;#39;&lt;/span&gt;
+&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;g&lt;/span&gt;:riv_disable_folding&lt;span class="p"&gt;=&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;  &lt;span class="c"&gt;&amp;quot; disable folding&lt;/span&gt;
+
+&lt;span class="c"&gt;&amp;quot; Markdown&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;godlygeek/tabular&amp;#39;&lt;/span&gt;
+Plugin &lt;span class="s1"&gt;&amp;#39;plasticboy/vim-markdown&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Hope you enjoy this article, check out the &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt; official website
+for more details: &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;https://github.com/gmarik/Vundle.vim&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="vim"></category></entry><entry><title>Let's Encrypt</title><link href="https://loganchien.github.io/posts/2014/11/24/lets-encrypt/" rel="alternate"></link><updated>2014-11-24T23:32:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-24:posts/2014/11/24/lets-encrypt/</id><summary type="html">&lt;p&gt;According to the &lt;a class="reference external" href="http://andreasgal.com/2014/11/18/lets-encrypt-one-more-step-on-the-road-to-tls-everywhere/"&gt;post&lt;/a&gt; by &lt;a class="reference external" href="http://andreasgal.com"&gt;Andreas Gal&lt;/a&gt;, &lt;a class="reference external" href="https://www.eff.org/"&gt;EFF&lt;/a&gt;, &lt;a class="reference external" href="https://mozilla.com/"&gt;Mozilla&lt;/a&gt;, Cisco, Akamai,
 and IdenTrust are going to form Internet Security Research Group which will
 start the &lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt; ceritificate authority service in 2015 Q2.&lt;/p&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://letsencrypt.org/"&gt;Let's Encrypt&lt;/a&gt; is expected to become a free, automated, and open SSL
 sertificate authority which aims to increase the adoption of HTTPS protocol
 and provide a more secure Internet.  I am looking forward to this project.&lt;/p&gt;
 &lt;p&gt;For the impatient, you may check &lt;a class="reference external" href="https://github.com/letsencrypt"&gt;their GitHub&lt;/a&gt; for the preview release.&lt;/p&gt;
-</summary><category term="http"></category><category term="ssl"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="https://loganchien.github.io/posts/2014/Nov/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-24:posts/2014/Nov/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+</summary><category term="http"></category><category term="ssl"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="https://loganchien.github.io/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
 was quite disappointed with the sound quality.  Fortunately, after searching on
 the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
 quality.&lt;/p&gt;
@@ -19,7 +101,7 @@ quality.&lt;/p&gt;
 (A2DP)&lt;/strong&gt;&amp;quot;.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Reference: &lt;a class="reference external" href="http://ubuntuforums.org/showthread.php?t=2171043"&gt;Ubuntu Forums: Bluetooth Headset Bad Sound Quality&lt;/a&gt;.&lt;/p&gt;
-</summary><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Install GCIN on Ubuntu 14.04</title><link href="https://loganchien.github.io/posts/2014/Nov/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-23:posts/2014/Nov/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
+</summary><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Install GCIN on Ubuntu 14.04</title><link href="https://loganchien.github.io/posts/2014/11/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-23:posts/2014/11/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
 its long latency to switch between input methods for a long time.  As a
 Taiwanese, both &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; and &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; came up to my mind.  Unfortunately, both of
 them need extra configuration after &lt;code&gt;apt-get&lt;/code&gt;.  Here's my note to install
@@ -113,7 +195,7 @@ Pin-Priority: 600
 &lt;p&gt;These are the tweaks for me to install &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt;, and hope this is
 helpful.  Feel free to let me know if you have any problem.&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="ubuntu"></category><category term="gcin"></category></entry><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/Nov/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
+</summary><category term="linux"></category><category term="ubuntu"></category><category term="gcin"></category></entry><entry><title>Pre-compile the OpenCL Kernel Program - Part 2</title><link href="https://loganchien.github.io/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/" rel="alternate"></link><updated>2014-11-22T12:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-22:posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/"&gt;part 1&lt;/a&gt; of this article, we have mentioned how to pre-compile the
 OpenCL kernel program and load the pre-compiled binaries with the OpenCL API.&lt;/p&gt;
 &lt;p&gt;However, I was using the &lt;code&gt;ioc64&lt;/code&gt; command from the &lt;a class="reference external" href="https://software.intel.com/en-us/intel-opencl"&gt;Intel OpenCL SDK&lt;/a&gt; to
 pre-compile the kernel program.  This command might be unavailable in the other
@@ -207,7 +289,7 @@ refer to &lt;a class="reference external" href="https://github.com/loganchien/op
 &lt;p&gt;This completes our discussion on the compilation of OpenCL kernel binaries.  In
 the next post, I would like to give an introduction to OpenCL SPIR, the
 official intermediate representation for OpenCL kernel programs.&lt;/p&gt;
-</summary><category term="opencl"></category></entry><entry><title>Pre-compile the OpenCL Kernel Program - Part 1</title><link href="https://loganchien.github.io/posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/" rel="alternate"></link><updated>2014-11-21T21:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-21:posts/2014/Nov/21/pre-compile-the-opencl-kernel-program-part-1/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/Nov/18/getting-started-with-opencl/"&gt;previous post&lt;/a&gt;, we have written a simple vector addition OpenCL
+</summary><category term="opencl"></category></entry><entry><title>Pre-compile the OpenCL Kernel Program - Part 1</title><link href="https://loganchien.github.io/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/" rel="alternate"></link><updated>2014-11-21T21:22:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-21:posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/</id><summary type="html">&lt;p&gt;In the &lt;a class="reference external" href="https://loganchien.github.io/posts/2014/11/18/getting-started-with-opencl/"&gt;previous post&lt;/a&gt;, we have written a simple vector addition OpenCL
 program.  We were compiling the OpenCL kernel program from source code at
 run-time, thus we have to distribute the OpenCL source code to our users.&lt;/p&gt;
 &lt;p&gt;However, in some cases, we may prefer to &lt;strong&gt;pre-compile the OpenCL kernel
@@ -254,7 +336,7 @@ changed lines:&lt;/p&gt;
 binaries are inherently not portable.&lt;/p&gt;
 &lt;p&gt;Last, I have uploaded the source code to &lt;a class="reference external" href="https://github.com/loganchien/opencl-examples"&gt;opencl-examples&lt;/a&gt;.  Check
 &lt;a class="reference external" href="https://github.com/loganchien/opencl-examples/blob/master/vec_add/vec_add_binary.c"&gt;vec_add_binary.c&lt;/a&gt; for complete source code.&lt;/p&gt;
-</summary><category term="opencl"></category></entry><entry><title>C++ Private Inheritence and Using Directive</title><link href="https://loganchien.github.io/posts/2014/Nov/20/c-private-inheritence-and-using-directive/" rel="alternate"></link><updated>2014-11-20T11:52:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-20:posts/2014/Nov/20/c-private-inheritence-and-using-directive/</id><summary type="html">&lt;p&gt;I used to feel that the private inheritence is useless.  Although we can
+</summary><category term="opencl"></category></entry><entry><title>C++ Private Inheritence and Using Directive</title><link href="https://loganchien.github.io/posts/2014/11/20/c-private-inheritence-and-using-directive/" rel="alternate"></link><updated>2014-11-20T11:52:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-20:posts/2014/11/20/c-private-inheritence-and-using-directive/</id><summary type="html">&lt;p&gt;I used to feel that the private inheritence is useless.  Although we can
 implement the has-a semantics with private inheritence, it provides little
 benefits compared with object composition.  Besides, in order to expose the
 privately inherited members to public, C++ introduced an awkward syntax, i.e.
@@ -298,7 +380,7 @@ helper functions.  For example:&lt;/p&gt;
 &lt;/pre&gt;
 &lt;p&gt;However, IMHO, private inheritence is still a good indication of bad class
 hierarchy deisgn.&lt;/p&gt;
-</summary><category term="cxx"></category></entry><entry><title>OpenCL 1.2 Manual Pages</title><link href="https://loganchien.github.io/posts/2014/Nov/19/opencl-12-manual-pages/" rel="alternate"></link><updated>2014-11-19T22:37:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-19:posts/2014/Nov/19/opencl-12-manual-pages/</id><summary type="html">&lt;p&gt;There is a package for &lt;a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"&gt;OpenCL 1.2 manual pages&lt;/a&gt; in the Ubuntu repository.  To
+</summary><category term="cxx"></category></entry><entry><title>OpenCL 1.2 Manual Pages</title><link href="https://loganchien.github.io/posts/2014/11/19/opencl-12-manual-pages/" rel="alternate"></link><updated>2014-11-19T22:37:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-19:posts/2014/11/19/opencl-12-manual-pages/</id><summary type="html">&lt;p&gt;There is a package for &lt;a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"&gt;OpenCL 1.2 manual pages&lt;/a&gt; in the Ubuntu repository.  To
 install the &lt;code&gt;opencl-1.2-man-doc&lt;/code&gt; package, please run this command:&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
 &lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install opencl-1.2-man-doc
@@ -306,7 +388,7 @@ install the &lt;code&gt;opencl-1.2-man-doc&lt;/code&gt; package, please run this
 &lt;p&gt;After installing this package, we can check the OpenCL API with &lt;code&gt;man&lt;/code&gt;
 command.  For example, run &lt;code&gt;man 3 clGetPlatformIDs&lt;/code&gt; to read the document
 for &lt;code&gt;clGetPlatformIDs()&lt;/code&gt;.&lt;/p&gt;
-</summary><category term="opencl"></category></entry><entry><title>Getting Started with OpenCL</title><link href="https://loganchien.github.io/posts/2014/Nov/18/getting-started-with-opencl/" rel="alternate"></link><updated>2014-11-18T23:05:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-18:posts/2014/Nov/18/getting-started-with-opencl/</id><summary type="html">&lt;p&gt;I have heard of &lt;a class="reference external" href="http://www.khronos.org/opencl"&gt;OpenCL&lt;/a&gt; for a long time, but I haven't tried it until
+</summary><category term="opencl"></category></entry><entry><title>Getting Started with OpenCL</title><link href="https://loganchien.github.io/posts/2014/11/18/getting-started-with-opencl/" rel="alternate"></link><updated>2014-11-18T23:05:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-18:posts/2014/11/18/getting-started-with-opencl/</id><summary type="html">&lt;p&gt;I have heard of &lt;a class="reference external" href="http://www.khronos.org/opencl"&gt;OpenCL&lt;/a&gt; for a long time, but I haven't tried it until
 recently.  Here's my note to write and run a simple &lt;strong&gt;vector addition&lt;/strong&gt; OpenCL
 program.&lt;/p&gt;
 &lt;p&gt;The following source code is compiled and tested with &lt;a class="reference external" href="https://software.intel.com/en-us/intel-opencl"&gt;Intel SDK for OpenCL
@@ -514,7 +596,7 @@ code should handled properly in a robust software.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-</summary><category term="opencl"></category></entry><entry><title>Fix GRUB2 Warning</title><link href="https://loganchien.github.io/posts/2014/Nov/17/fix-grub2-warning/" rel="alternate"></link><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-17:posts/2014/Nov/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
+</summary><category term="opencl"></category></entry><entry><title>Fix GRUB2 Warning</title><link href="https://loganchien.github.io/posts/2014/11/17/fix-grub2-warning/" rel="alternate"></link><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-17:posts/2014/11/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
 Besides, I noticed that there was a warning message during the execution of
 &lt;code&gt;update-grub&lt;/code&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -530,7 +612,7 @@ GRUB_HIDDEN_TIMEOUT=0
 &lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
 &lt;/pre&gt;
 &lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
-</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>GitHub Pages and HTTPS</title><link href="https://loganchien.github.io/posts/2014/Nov/16/github-pages-and-https/" rel="alternate"></link><updated>2014-11-16T23:31:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/github-pages-and-https/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; supports HTTPS protocol.  It will be good to prefer HTTPS to
+</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>GitHub Pages and HTTPS</title><link href="https://loganchien.github.io/posts/2014/11/16/github-pages-and-https/" rel="alternate"></link><updated>2014-11-16T23:31:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/11/16/github-pages-and-https/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; supports HTTPS protocol.  It will be good to prefer HTTPS to
 HTTP.  However, I found that if the URLs are not written carefully, the
 user might be redirected to HTTP URLs.&lt;/p&gt;
 &lt;p&gt;For unknown reason, &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; are redirecting the directories without
@@ -548,7 +630,7 @@ slash if they are pointing to directories.  For example,&lt;/p&gt;
 https://loganchien.github.io/cert/
 &lt;/pre&gt;
 &lt;p&gt;This URL won't be redirected and work as expected.&lt;/p&gt;
-</summary><category term="github"></category><category term="https"></category></entry><entry><title>Pelican and GitHub Pages</title><link href="https://loganchien.github.io/posts/2014/Nov/16/pelican-and-github-pages/" rel="alternate"></link><updated>2014-11-16T23:01:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/Nov/16/pelican-and-github-pages/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; has built-in support for &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  However, I noticed that
+</summary><category term="github"></category><category term="https"></category></entry><entry><title>Pelican and GitHub Pages</title><link href="https://loganchien.github.io/posts/2014/11/16/pelican-and-github-pages/" rel="alternate"></link><updated>2014-11-16T23:01:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-16:posts/2014/11/16/pelican-and-github-pages/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; has built-in support for &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  However, I noticed that
 the &lt;code&gt;ghp-import&lt;/code&gt; command might screw up the commit log if your GitHub
 Pages and your Pelican source code share the same branch name.&lt;/p&gt;
 &lt;p&gt;According to the document of &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;, the user pages should be
@@ -560,7 +642,7 @@ repository will be screwed up.&lt;/p&gt;
 &lt;p&gt;My solution is to create a &lt;code&gt;pelican-source&lt;/code&gt; branch for Pelican source
 code, and commit the generated output to the &lt;code&gt;master&lt;/code&gt; branch.  This will
 fix this issue without any problems.&lt;/p&gt;
-</summary><category term="github"></category><category term="pelican"></category></entry><entry><title>SSL Certificate</title><link href="https://loganchien.github.io/posts/2014/Nov/15/ssl-certificate/" rel="alternate"></link><updated>2014-11-15T02:30:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-15:posts/2014/Nov/15/ssl-certificate/</id><summary type="html">&lt;p&gt;I would like to run &lt;a class="reference external" href="https://code.google.com/p/shellinabox/"&gt;shellinabox&lt;/a&gt; and my private blog system through HTTPS
+</summary><category term="github"></category><category term="pelican"></category></entry><entry><title>SSL Certificate</title><link href="https://loganchien.github.io/posts/2014/11/15/ssl-certificate/" rel="alternate"></link><updated>2014-11-15T02:30:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-15:posts/2014/11/15/ssl-certificate/</id><summary type="html">&lt;p&gt;I would like to run &lt;a class="reference external" href="https://code.google.com/p/shellinabox/"&gt;shellinabox&lt;/a&gt; and my private blog system through HTTPS
 protocol.  However, an SSL certificate is really expensive, thus I decided to
 run our own &lt;strong&gt;certificate authority&lt;/strong&gt; and distribute my &lt;em&gt;cacert.pem&lt;/em&gt; through
 &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.&lt;/p&gt;
@@ -620,7 +702,7 @@ Under some situation, you have to decrypt it before installing the certificate
 &lt;span class="nv"&gt;$ &lt;/span&gt;openssl rsa -in newkey.pem -out newkey.nopass.pem
 &lt;/pre&gt;
 &lt;/div&gt;
-</summary><category term="https"></category><category term="apache2"></category><category term="ssl"></category></entry><entry><title>C++ std::list Operations</title><link href="https://loganchien.github.io/posts/2014/Nov/14/c-stdlist-operations/" rel="alternate"></link><updated>2014-11-14T23:53:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-14:posts/2014/Nov/14/c-stdlist-operations/</id><summary type="html">&lt;p&gt;To sort the doubly linked list &lt;code&gt;std::list&lt;/code&gt;, we can simply call the
+</summary><category term="https"></category><category term="apache2"></category><category term="ssl"></category></entry><entry><title>C++ std::list Operations</title><link href="https://loganchien.github.io/posts/2014/11/14/c-stdlist-operations/" rel="alternate"></link><updated>2014-11-14T23:53:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-14:posts/2014/11/14/c-stdlist-operations/</id><summary type="html">&lt;p&gt;To sort the doubly linked list &lt;code&gt;std::list&lt;/code&gt;, we can simply call the
 &lt;code&gt;sort()&lt;/code&gt; member function.  For example,&lt;/p&gt;
 &lt;pre class="code c++ literal-block"&gt;
 &lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;
@@ -770,7 +852,7 @@ to the other as well.  For example,&lt;/p&gt;
 &lt;p&gt;Let's call it a day.  In this article, we have introduced the usage of
 &lt;code&gt;std::list&amp;lt;T&amp;gt;::sort()&lt;/code&gt; and &lt;code&gt;std::list::splice()&lt;/code&gt;.  Hope you enjoy
 this article.&lt;/p&gt;
-</summary><category term="cxx"></category></entry><entry><title>C++ Associative Container and Iterator Validness</title><link href="https://loganchien.github.io/posts/2014/Nov/13/c-associative-container-and-iterator-validness/" rel="alternate"></link><updated>2014-11-13T22:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-13:posts/2014/Nov/13/c-associative-container-and-iterator-validness/</id><summary type="html">&lt;p&gt;I used to believe that iterators will be invalidated after calling the
+</summary><category term="cxx"></category></entry><entry><title>C++ Associative Container and Iterator Validness</title><link href="https://loganchien.github.io/posts/2014/11/13/c-associative-container-and-iterator-validness/" rel="alternate"></link><updated>2014-11-13T22:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-13:posts/2014/11/13/c-associative-container-and-iterator-validness/</id><summary type="html">&lt;p&gt;I used to believe that iterators will be invalidated after calling the
 member functions &lt;code&gt;insert()&lt;/code&gt; or &lt;code&gt;erase()&lt;/code&gt; of containers.  Thus, I
 would adopt a conservative approach:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
@@ -857,7 +939,7 @@ and references to &lt;em&gt;container&lt;/em&gt;&amp;quot;.   The &amp;quot;&lt;
 containers, such as &lt;code&gt;std::vector&lt;/code&gt; and &lt;code&gt;std::deque&lt;/code&gt;, in general.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-</summary><category term="cxx"></category><category term="stl"></category></entry><entry><title>Git Merge Base and Checkout</title><link href="https://loganchien.github.io/posts/2014/Nov/13/git-merge-base-and-checkout/" rel="alternate"></link><updated>2014-11-13T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-13:posts/2014/Nov/13/git-merge-base-and-checkout/</id><summary type="html">&lt;p&gt;Today I have learned two different usages of &lt;code&gt;git&lt;/code&gt; command.  First, to
+</summary><category term="cxx"></category><category term="stl"></category></entry><entry><title>Git Merge Base and Checkout</title><link href="https://loganchien.github.io/posts/2014/11/13/git-merge-base-and-checkout/" rel="alternate"></link><updated>2014-11-13T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-13:posts/2014/11/13/git-merge-base-and-checkout/</id><summary type="html">&lt;p&gt;Today I have learned two different usages of &lt;code&gt;git&lt;/code&gt; command.  First, to
 list the &lt;strong&gt;least common ancestor&lt;/strong&gt; of two refs, we may use following command:&lt;/p&gt;
 &lt;pre class="code bash literal-block"&gt;
 &lt;span class="nv"&gt;$ &lt;/span&gt;git merge-base --octopus &amp;lt;commit_1&amp;gt; &amp;lt;commit_2&amp;gt; ... &amp;lt;commit_n&amp;gt;
@@ -880,7 +962,7 @@ following commands:&lt;/p&gt;
 &lt;/pre&gt;
 &lt;p&gt;The orphan branch will be completely independent of the existing branches.
 This is helpful when creating &lt;a class="reference external" href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; branch.&lt;/p&gt;
-</summary><category term="git"></category><category term="tips"></category></entry><entry><title>Soundness and Completeness of the Type System</title><link href="https://loganchien.github.io/posts/2014/Nov/12/soundness-and-completeness-of-the-type-system/" rel="alternate"></link><updated>2014-11-12T21:26:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-12:posts/2014/Nov/12/soundness-and-completeness-of-the-type-system/</id><summary type="html">&lt;p&gt;In the section 6 of  &lt;a class="reference external" href="https://class.coursera.org/proglang-003"&gt;Programming Languages&lt;/a&gt; course, Dan Grossman discussed
+</summary><category term="git"></category><category term="tips"></category></entry><entry><title>Soundness and Completeness of the Type System</title><link href="https://loganchien.github.io/posts/2014/11/12/soundness-and-completeness-of-the-type-system/" rel="alternate"></link><updated>2014-11-12T21:26:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-12:posts/2014/11/12/soundness-and-completeness-of-the-type-system/</id><summary type="html">&lt;p&gt;In the section 6 of  &lt;a class="reference external" href="https://class.coursera.org/proglang-003"&gt;Programming Languages&lt;/a&gt; course, Dan Grossman discussed
 about the soundness and the completeness of the type system.  He said that:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;A type-system is &lt;strong&gt;sound&lt;/strong&gt; implies that all of type-checked programs are
@@ -924,7 +1006,7 @@ positive will result in bad consequence.&lt;/p&gt;
 and model is the set of correct program.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-</summary><category term="plt"></category><category term="logic"></category></entry><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/Nov/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-11:posts/2014/Nov/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
+</summary><category term="plt"></category><category term="logic"></category></entry><entry><title>First Post</title><link href="https://loganchien.github.io/posts/2014/11/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-11:posts/2014/11/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
 &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
 notes, and ideas with reStructuredText.  As a result, I can update the blog
 more frequently.&lt;/p&gt;
