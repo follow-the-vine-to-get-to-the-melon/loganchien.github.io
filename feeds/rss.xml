@@ -1,5 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logan's Note</title><link>https://loganchien.github.io/</link><description></description><atom:link href="https://loganchien.github.io/feeds/rss.xml" rel="self"></atom:link><lastBuildDate>Tue, 25 Nov 2014 22:41:00 +0800</lastBuildDate><item><title>Vim Vundle</title><link>https://loganchien.github.io/posts/2014/11/25/vim-vundle/</link><description>&lt;p&gt;In the past, I didn't like to install the &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; plug-ins or new syntax
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logan's Note</title><link>https://loganchien.github.io/</link><description></description><atom:link href="https://loganchien.github.io/feeds/rss.xml" rel="self"></atom:link><lastBuildDate>Mon, 15 Dec 2014 18:04:00 +0800</lastBuildDate><item><title>Autossh and Ubuntu Upstart Daemon</title><link>https://loganchien.github.io/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</link><description>&lt;p&gt;Since I am sharing the network without public IP, I would like to maintain a
+SSH tunnel so that I can connect to my desktop from the remote site.  After
+searching the web, I found that &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; fits my needs.  &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; is a
+utility that can start and monitor the SSH tunnel.  If the connections are
+broken, then &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; will restart the SSH connection automatically.&lt;/p&gt;
+&lt;p&gt;In this post, I would like to introduce how to setup an autossh daemon with
+&lt;a class="reference external" href="http://upstart.ubuntu.com"&gt;Ubuntu Upstart&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="setup-local-host"&gt;
+&lt;h2&gt;Setup Local Host&lt;/h2&gt;
+&lt;p&gt;First, create a new user:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create a new user named &amp;quot;autossh&amp;quot;&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo adduser --system --group --disabled-password autossh
+
+&lt;span class="c"&gt;# Login as autossh&lt;/span&gt;
+autossh:~&lt;span class="nv"&gt;$ &lt;/span&gt;sudo su autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, record the remote SSH server key:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;autossh:~&lt;span class="nv"&gt;$ &lt;/span&gt;ssh-keyscan &lt;span class="o"&gt;[&lt;/span&gt;remote&lt;span class="o"&gt;]&lt;/span&gt; &amp;gt;&amp;gt; ~/.ssh/known_hosts
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, create SSH public keys:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create SSH private and public keys&lt;/span&gt;
+autossh:~&lt;span class="nv"&gt;$ &lt;/span&gt;ssh-keygen -t rsa
+Enter file in which to save the key &lt;span class="o"&gt;(&lt;/span&gt;/home/autossh/.ssh/id_rsa&lt;span class="o"&gt;)&lt;/span&gt;: &lt;span class="o"&gt;[&lt;/span&gt;enter&lt;span class="o"&gt;]&lt;/span&gt;
+Created directory &lt;span class="s1"&gt;&amp;#39;/home/autossh/.ssh&amp;#39;&lt;/span&gt;.
+Enter passphrase &lt;span class="o"&gt;(&lt;/span&gt;empty &lt;span class="k"&gt;for&lt;/span&gt; no passphrase&lt;span class="o"&gt;)&lt;/span&gt;: &lt;span class="o"&gt;[&lt;/span&gt;enter&lt;span class="o"&gt;]&lt;/span&gt;
+Enter same passphrase again: &lt;span class="o"&gt;[&lt;/span&gt;enter&lt;span class="o"&gt;]&lt;/span&gt;
+
+&lt;span class="c"&gt;# Print the public key&lt;/span&gt;
+autossh:~&lt;span class="nv"&gt;$ &lt;/span&gt;cat ~/.ssh/id_rsa.pub
+&lt;span class="o"&gt;[&lt;/span&gt;copy the output line&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fourth, logout and disable the shell:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;autossh:~&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chsh --shell /bin/false autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup-remote-host"&gt;
+&lt;h2&gt;Setup Remote Host&lt;/h2&gt;
+&lt;p&gt;First, create a new user:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Login to the remote host&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;ssh &lt;span class="o"&gt;[&lt;/span&gt;user&lt;span class="o"&gt;]&lt;/span&gt;@&lt;span class="o"&gt;[&lt;/span&gt;remote&lt;span class="o"&gt;]&lt;/span&gt;
+
+&lt;span class="c"&gt;# Create a new user&lt;/span&gt;
+remote:~&lt;span class="nv"&gt;$ &lt;/span&gt;sudo adduser --system --group --shell /bin/false &lt;span class="se"&gt;\&lt;/span&gt;
+                       --disabled-password autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, add the authorized public key:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create directory for authorized keys&lt;/span&gt;
+remote:~&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mkdir -p /home/autossh/.ssh
+
+&lt;span class="c"&gt;# Add new public key&lt;/span&gt;
+remote:~&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vi /home/autossh/.ssh/authorized_keys
+&lt;span class="o"&gt;[&lt;/span&gt;paste the public key&lt;span class="o"&gt;]&lt;/span&gt;
+
+&lt;span class="c"&gt;# Change the owner of the file&lt;/span&gt;
+remote:~&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chown -R autossh:autossh /home/autossh/.ssh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We have finished the configuration on the remote host, logout from the remote
+host with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;remote:~&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup-upstart-configuration-file"&gt;
+&lt;h2&gt;Setup Upstart Configuration File&lt;/h2&gt;
+&lt;p&gt;Let's add the Ubuntu Upstart configuration file.&lt;/p&gt;
+&lt;p&gt;First, create new upstart configuration with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/init/autossh.conf
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Add following lines to the file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;description &amp;quot;autossh daemon for ssh tunnel&amp;quot;
+
+start on net-device-up IFACE=eth0
+stop on runlevel [01S6]
+
+setuid autossh
+
+respawn
+respawn limit 5 60
+
+script
+export AUTOSSH_FIRST_POLL=30
+export AUTOSSH_GATETIME=0
+export AUTOSSH_POLL=60
+autossh -M [daemon-port] -N -R [remote-port]:localhost:22 [remote] -i /home/autossh/.ssh/id_rsa
+end script
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Change the variables properly.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;[daemon-port]&lt;/code&gt; can be any number larger than 8000.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;[remote-port]&lt;/code&gt; is the remote port that will be opened on remote host
+which will be mapped to local port.&lt;/li&gt;
+&lt;li&gt;For the exported environment variables, you can refer to the &lt;a class="reference external" href="http://manpages.ubuntu.com/manpages/utopic/en/man1/autossh.1.html"&gt;autossh manual
+pages&lt;/a&gt; for further details.  Usually, you would like to set
+&lt;code&gt;AUTOSSH_GATETIME&lt;/code&gt; to zero.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Finally, start the service now:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo service autossh start
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After these steps, the SSH tunnel should start to work now!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.ubuntugeek.com/automatically-restart-ssh-sessions-and-tunnels-using-autossh.html"&gt;Automatically restart SSH sessions and tunnels Using Autossh&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Mon, 15 Dec 2014 18:04:00 +0800</pubDate><guid>tag:loganchien.github.io,2014-12-15:posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</guid><category>ssh</category><category>autossh</category><category>upstart</category><category>init</category></item><item><title>Vim Vundle</title><link>https://loganchien.github.io/posts/2014/11/25/vim-vundle/</link><description>&lt;p&gt;In the past, I didn't like to install the &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; plug-ins or new syntax
 highlight because all of the files were messed up in the &lt;code&gt;.vim&lt;/code&gt; directory
 which makes it difficult to uninstall a plug-in.&lt;/p&gt;
 &lt;p&gt;Recently, I have come across with &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt;.  It is a vim plug-in manager

@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Fix GRUB2 Warning</title>
+  <title>Autossh and Ubuntu Upstart Daemon</title>
   <meta name="author" content="Logan">
 
   <link href="https://loganchien.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,35 +52,127 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">Fix GRUB2 Warning</h1>
-      <p class="meta"><time datetime="2014-11-17T23:50:00+08:00" pubdate>Mon 17 November 2014</time></p>
+      <h1 class="entry-title">Autossh and Ubuntu Upstart Daemon</h1>
+      <p class="meta"><time datetime="2014-12-15T18:04:00+08:00" pubdate>Mon 15 December 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>It has been for a while that my desktop PC was not showing the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB2</a> menu.
-Besides, I noticed that there was a warning message during the execution of
-<code>update-grub</code>:</p>
-<blockquote>
-Warning: Setting GRUB_TIMEOUT to a non-zero value when GRUB_HIDDEN_TIMEOUT
-is set is no longer supported.</blockquote>
-<p>After checking the manual, I learned that we can fix the problem by removing
-following line from <code>/etc/default/grub</code>:</p>
-<pre class="literal-block">
-GRUB_HIDDEN_TIMEOUT=0
-</pre>
-<p>And update the GRUB with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>sudo update-grub
-</pre>
-<p>After rebooting, GRUB should work now.</p>
+  <div class="entry-content"><p>Since I am sharing the network without public IP, I would like to maintain a
+SSH tunnel so that I can connect to my desktop from the remote site.  After
+searching the web, I found that <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> fits my needs.  <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> is a
+utility that can start and monitor the SSH tunnel.  If the connections are
+broken, then <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> will restart the SSH connection automatically.</p>
+<p>In this post, I would like to introduce how to setup an autossh daemon with
+<a class="reference external" href="http://upstart.ubuntu.com">Ubuntu Upstart</a>.</p>
+<div class="section" id="setup-local-host">
+<h2>Setup Local Host</h2>
+<p>First, create a new user:</p>
+<div class="highlight"><pre><span class="c"># Create a new user named &quot;autossh&quot;</span>
+<span class="nv">$ </span>sudo adduser --system --group --disabled-password autossh
+
+<span class="c"># Login as autossh</span>
+autossh:~<span class="nv">$ </span>sudo su autossh
+</pre></div>
+<p>Second, record the remote SSH server key:</p>
+<div class="highlight"><pre>autossh:~<span class="nv">$ </span>ssh-keyscan <span class="o">[</span>remote<span class="o">]</span> &gt;&gt; ~/.ssh/known_hosts
+</pre></div>
+<p>Third, create SSH public keys:</p>
+<div class="highlight"><pre><span class="c"># Create SSH private and public keys</span>
+autossh:~<span class="nv">$ </span>ssh-keygen -t rsa
+Enter file in which to save the key <span class="o">(</span>/home/autossh/.ssh/id_rsa<span class="o">)</span>: <span class="o">[</span>enter<span class="o">]</span>
+Created directory <span class="s1">&#39;/home/autossh/.ssh&#39;</span>.
+Enter passphrase <span class="o">(</span>empty <span class="k">for</span> no passphrase<span class="o">)</span>: <span class="o">[</span>enter<span class="o">]</span>
+Enter same passphrase again: <span class="o">[</span>enter<span class="o">]</span>
+
+<span class="c"># Print the public key</span>
+autossh:~<span class="nv">$ </span>cat ~/.ssh/id_rsa.pub
+<span class="o">[</span>copy the output line<span class="o">]</span>
+</pre></div>
+<p>Fourth, logout and disable the shell:</p>
+<div class="highlight"><pre>autossh:~<span class="nv">$ </span><span class="nb">exit</span>
+<span class="nv">$ </span>sudo chsh --shell /bin/false autossh
+</pre></div>
+</div>
+<div class="section" id="setup-remote-host">
+<h2>Setup Remote Host</h2>
+<p>First, create a new user:</p>
+<div class="highlight"><pre><span class="c"># Login to the remote host</span>
+<span class="nv">$ </span>ssh <span class="o">[</span>user<span class="o">]</span>@<span class="o">[</span>remote<span class="o">]</span>
+
+<span class="c"># Create a new user</span>
+remote:~<span class="nv">$ </span>sudo adduser --system --group --shell /bin/false <span class="se">\</span>
+                       --disabled-password autossh
+</pre></div>
+<p>Second, add the authorized public key:</p>
+<div class="highlight"><pre><span class="c"># Create directory for authorized keys</span>
+remote:~<span class="nv">$ </span>sudo mkdir -p /home/autossh/.ssh
+
+<span class="c"># Add new public key</span>
+remote:~<span class="nv">$ </span>sudo vi /home/autossh/.ssh/authorized_keys
+<span class="o">[</span>paste the public key<span class="o">]</span>
+
+<span class="c"># Change the owner of the file</span>
+remote:~<span class="nv">$ </span>sudo chown -R autossh:autossh /home/autossh/.ssh
+</pre></div>
+<p>We have finished the configuration on the remote host, logout from the remote
+host with:</p>
+<div class="highlight"><pre>remote:~<span class="nv">$ </span><span class="nb">exit</span>
+</pre></div>
+</div>
+<div class="section" id="setup-upstart-configuration-file">
+<h2>Setup Upstart Configuration File</h2>
+<p>Let's add the Ubuntu Upstart configuration file.</p>
+<p>First, create new upstart configuration with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo vim /etc/init/autossh.conf
+</pre></div>
+<p>Add following lines to the file:</p>
+<div class="highlight"><pre>description &quot;autossh daemon for ssh tunnel&quot;
+
+start on net-device-up IFACE=eth0
+stop on runlevel [01S6]
+
+setuid autossh
+
+respawn
+respawn limit 5 60
+
+script
+export AUTOSSH_FIRST_POLL=30
+export AUTOSSH_GATETIME=0
+export AUTOSSH_POLL=60
+autossh -M [daemon-port] -N -R [remote-port]:localhost:22 [remote] -i /home/autossh/.ssh/id_rsa
+end script
+</pre></div>
+<p>Change the variables properly.</p>
+<ul class="simple">
+<li><code>[daemon-port]</code> can be any number larger than 8000.</li>
+<li><code>[remote-port]</code> is the remote port that will be opened on remote host
+which will be mapped to local port.</li>
+<li>For the exported environment variables, you can refer to the <a class="reference external" href="http://manpages.ubuntu.com/manpages/utopic/en/man1/autossh.1.html">autossh manual
+pages</a> for further details.  Usually, you would like to set
+<code>AUTOSSH_GATETIME</code> to zero.</li>
+</ul>
+<p>Finally, start the service now:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo service autossh start
+</pre></div>
+<p>After these steps, the SSH tunnel should start to work now!</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://www.ubuntugeek.com/automatically-restart-ssh-sessions-and-tunnels-using-autossh.html">Automatically restart SSH sessions and tunnels Using Autossh</a></li>
+</ul>
+</div>
 </div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2014-11-17T23:50:00+08:00" pubdate>Mon 17 November 2014</time>  <span class="categories">
-    <a class="category" href="https://loganchien.github.io/tag/linux/">linux</a>
-    <a class="category" href="https://loganchien.github.io/tag/grub/">grub</a>
+<time datetime="2014-12-15T18:04:00+08:00" pubdate>Mon 15 December 2014</time>  <span class="categories">
+    <a class="category" href="https://loganchien.github.io/tag/ssh/">ssh</a>
+    <a class="category" href="https://loganchien.github.io/tag/autossh/">autossh</a>
+    <a class="category" href="https://loganchien.github.io/tag/upstart/">upstart</a>
+    <a class="category" href="https://loganchien.github.io/tag/init/">init</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Fix GRUB2 Warning</title>
+  <title>Logan's Note - init</title>
   <meta name="author" content="Logan">
 
   <link href="https://loganchien.github.io/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,62 +49,33 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Fix GRUB2 Warning</h1>
-      <p class="meta"><time datetime="2014-11-17T23:50:00+08:00" pubdate>Mon 17 November 2014</time></p>
+      <h1 class="entry-title">
+        <a href="https://loganchien.github.io/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+      </h1>
+      <p class="meta"><time datetime="2014-12-15T18:04:00+08:00" pubdate>Mon 15 December 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>It has been for a while that my desktop PC was not showing the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB2</a> menu.
-Besides, I noticed that there was a warning message during the execution of
-<code>update-grub</code>:</p>
-<blockquote>
-Warning: Setting GRUB_TIMEOUT to a non-zero value when GRUB_HIDDEN_TIMEOUT
-is set is no longer supported.</blockquote>
-<p>After checking the manual, I learned that we can fix the problem by removing
-following line from <code>/etc/default/grub</code>:</p>
-<pre class="literal-block">
-GRUB_HIDDEN_TIMEOUT=0
-</pre>
-<p>And update the GRUB with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>sudo update-grub
-</pre>
-<p>After rebooting, GRUB should work now.</p>
-</div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Logan</span>
-  </span>
-<time datetime="2014-11-17T23:50:00+08:00" pubdate>Mon 17 November 2014</time>  <span class="categories">
-    <a class="category" href="https://loganchien.github.io/tag/linux/">linux</a>
-    <a class="category" href="https://loganchien.github.io/tag/grub/">grub</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
+  <div class="entry-content"><p>Since I am sharing the network without public IP, I would like to maintain a
+SSH tunnel so that I can connect to my desktop from the remote site.  After
+searching the web, I found that <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> fits my needs.  <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> is a
+utility that can start and monitor the ...</p></div>
+  <footer>
+    <a rel="full-article" href="https://loganchien.github.io/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="https://loganchien.github.io/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/11/25/vim-vundle/">Vim Vundle</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/11/24/lets-encrypt/">Let's Encrypt</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/11/24/ubuntu-bluetooth-headset/">Ubuntu Bluetooth Headset</a>
-      </li>
-      <li class="post">
-          <a href="https://loganchien.github.io/posts/2014/11/23/install-gcin-on-ubuntu-1404/">Install GCIN on Ubuntu 14.04</a>
       </li>
     </ul>
   </section>
