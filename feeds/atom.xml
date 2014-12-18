@@ -105,7 +105,113 @@ pages&lt;/a&gt; for further details.  Usually, you would like to set
 &lt;li&gt;&lt;a class="reference external" href="http://www.ubuntugeek.com/automatically-restart-ssh-sessions-and-tunnels-using-autossh.html"&gt;Automatically restart SSH sessions and tunnels Using Autossh&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</summary><category term="ssh"></category><category term="autossh"></category><category term="upstart"></category><category term="init"></category></entry><entry><title>Vim Vundle</title><link href="https://loganchien.github.io/posts/2014/11/25/vim-vundle/" rel="alternate"></link><updated>2014-11-25T22:41:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-25:posts/2014/11/25/vim-vundle/</id><summary type="html">&lt;p&gt;In the past, I didn't like to install the &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; plug-ins or new syntax
+</summary><category term="ssh"></category><category term="autossh"></category><category term="upstart"></category><category term="init"></category></entry><entry><title>LLVM Bugpoint</title><link href="https://loganchien.github.io/posts/2014/11/26/llvm-bugpoint/" rel="alternate"></link><updated>2014-11-26T23:03:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-26:posts/2014/11/26/llvm-bugpoint/</id><summary type="html">&lt;p&gt;In this post, I would like to introduce the &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; command line tool.
+This is a automatic test case reduction tool which can help us generate
+minimal test case.&lt;/p&gt;
+&lt;p&gt;As a compiler developer, the first step to debug is to create a minimal test
+case which can still reproduce the bug.  Unfortunately, the preprocessed C++
+source code usually contains more than 10,000 lines.  However, to make the test
+case understandable, we have to reduce them to less than 100 lines.  To be
+honest, it is really a boring task that I don't like to work on manually.
+Fortunately, &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; is the automatic tool to solve the problem.&lt;/p&gt;
+&lt;div class="section" id="convert-to-llvm-assembly"&gt;
+&lt;h2&gt;Convert to LLVM Assembly&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;Bugpoint&lt;/a&gt; is a reduction tool for &lt;a class="reference external" href="http://llvm.org/docs/LangRef.html"&gt;LLVM assembly&lt;/a&gt;.  In the other words,
+it takes &lt;a class="reference external" href="http://llvm.org/docs/LangRef.html"&gt;LLVM assembly&lt;/a&gt; as the input and generates LLVM bitcode as the output.
+Thus, we have to convert C/C++ programs to &lt;a class="reference external" href="http://llvm.org/docs/LangRef.html"&gt;LLVM assembly&lt;/a&gt; with &lt;code&gt;clang&lt;/code&gt;.
+The easiest way is to replace the &lt;code&gt;-emit-obj&lt;/code&gt; with &lt;code&gt;-emit-llvm&lt;/code&gt;
+from the &lt;code&gt;cc1&lt;/code&gt; invocation command.  For example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;clang -cc1 -emit-llvm input.cpp  &lt;span class="c"&gt;# ... other options ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If &lt;code&gt;clang&lt;/code&gt; crashes in this step, then it seems that you are facing a
+front-end bug.  You may wish to use &lt;a class="reference external" href="http://embed.cs.utah.edu/creduce/"&gt;C-Reduce&lt;/a&gt; or more general tools working
+on top of C/C++ source code.&lt;/p&gt;
+&lt;p&gt;If the output &lt;code&gt;input.ll&lt;/code&gt; is generated without any problems, than we can
+continue with the &lt;code&gt;llc&lt;/code&gt; command (which will generate either machine
+assembly file or relocatable object file):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;llc input.ll  &lt;span class="c"&gt;# ... other options ... (e.g. -O3 -mtriple=...)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;llc&lt;/code&gt; command should crash in this step.  If it does not crash, then
+try to add some common optimization flags such as &lt;code&gt;-O3&lt;/code&gt; to the command
+line.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reduce-the-test-case"&gt;
+&lt;h2&gt;Reduce the Test Case&lt;/h2&gt;
+&lt;p&gt;Now, we can reduce the test case with the &lt;code&gt;bugpoint&lt;/code&gt; command.  Since I am
+cross-compiling the source code in this case, I am using &lt;code&gt;-llc-safe&lt;/code&gt; to
+test the compiler without the interpreter.  Besides, the arguments to be passed
+to &lt;code&gt;llc&lt;/code&gt; can be specified with the &lt;code&gt;-safe-tool-args&lt;/code&gt; option.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;bugpoint input.ll -llc-safe -safe-tool-args -mtriple&lt;span class="o"&gt;=&lt;/span&gt;armv7-linux-gnueabi
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If everything goes well, then &lt;code&gt;bugpoint-reduced-simplified.bc&lt;/code&gt; will be
+created.  You can disassemble the output file with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;llvm-dis bugpoint-reduced-simplified.bc
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The output &lt;code&gt;bugpoint-reduced-simplified.ll&lt;/code&gt; is the result test case.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reduce-the-test-case-with-custom-compile-script"&gt;
+&lt;h2&gt;Reduce the Test Case with Custom Compile Script&lt;/h2&gt;
+&lt;p&gt;You may wish to customize the compiler pipeline to reproduce the bug.  To do
+so, use the &lt;code&gt;-compile-custom&lt;/code&gt; option instead and specify the test script
+with &lt;code&gt;-compile-command&lt;/code&gt;.  For example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;bugpoint input.ll -compile-custom -compile-command ./test.sh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here's the test script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class="c"&gt;# Create a temporary file for the test command&lt;/span&gt;
+&lt;span class="nv"&gt;logfile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;mktemp&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Run your test command (and redirect the output messages)&lt;/span&gt;
+llc &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &amp;gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;logfile&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; 2&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;1
+&lt;span class="nv"&gt;ret&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$?&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Print messages when error occurs&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;ret&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; !&lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="m"&gt;0&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+  &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;test failed&amp;quot;&lt;/span&gt;  &lt;span class="c"&gt;# must print something on failure&lt;/span&gt;
+  cat &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;logfile&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
+
+&lt;span class="c"&gt;# Cleanup the temporary file&lt;/span&gt;
+rm &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;logfile&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class="nb"&gt;exit&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;ret&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;The test script &lt;em&gt;MUST&lt;/em&gt; print some message when the command &lt;strong&gt;failed&lt;/strong&gt; and it
+should not print any message when the command succeed.  Otherwise, the
+&lt;code&gt;bugpoint&lt;/code&gt; command won't work properly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="strip-the-symbols"&gt;
+&lt;h2&gt;Strip the Symbols&lt;/h2&gt;
+&lt;p&gt;Sometimes, there will be several long symbol names and dead function
+declaration in the LLVM bitcode, we can further strip the bitcode with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;opt -S -strip -strip-dead-prototypes &lt;span class="se"&gt;\&lt;/span&gt;
+    bugpoint-reduced-simplified.ll &amp;gt; strip.ll
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;After these steps, we should be able to obtain a minimal test case which is
+suitable for debugging.  We can find the exact pass causing the problem with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;opt -print-before-all -print-after-all -O2 strip.ll &amp;gt; debug.txt 2&amp;gt;&lt;span class="p"&gt;&amp;amp;&lt;/span&gt;1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this post, I have introduced the basic usage of &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; to reduce the
+test case for code generation bugs.  We can automate the test case reduction
+process with &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt;, and as a creative programmer we can focus on more
+challenging tasks.  For further information, please refer to &lt;a class="reference external" href="http://llvm.org/docs/HowToSubmitABug.html"&gt;How to Submit a
+LLVM Bug&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;Bugpoint: automatic test case reduction tool&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://comments.gmane.org/gmane.comp.compilers.llvm.devel/68215"&gt;Bugpoint can't automatically select a safe interpreter&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="clang"></category><category term="llvm"></category><category term="test"></category></entry><entry><title>Vim Vundle</title><link href="https://loganchien.github.io/posts/2014/11/25/vim-vundle/" rel="alternate"></link><updated>2014-11-25T22:41:00+08:00</updated><author><name>Logan</name></author><id>tag:loganchien.github.io,2014-11-25:posts/2014/11/25/vim-vundle/</id><summary type="html">&lt;p&gt;In the past, I didn't like to install the &lt;a class="reference external" href="http://www.vim.org/"&gt;Vim&lt;/a&gt; plug-ins or new syntax
 highlight because all of the files were messed up in the &lt;code&gt;.vim&lt;/code&gt; directory
 which makes it difficult to uninstall a plug-in.&lt;/p&gt;
 &lt;p&gt;Recently, I have come across with &lt;a class="reference external" href="https://github.com/gmarik/Vundle.vim"&gt;Vim Vundle&lt;/a&gt;.  It is a vim plug-in manager
