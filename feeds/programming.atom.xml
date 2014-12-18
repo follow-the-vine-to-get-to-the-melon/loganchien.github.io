@@ -95,8 +95,8 @@ suitable for debugging.  We can find the exact pass causing the problem with:&lt
 &lt;p&gt;In this post, I have introduced the basic usage of &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; to reduce the
 test case for code generation bugs.  We can automate the test case reduction
 process with &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt;, and as a creative programmer we can focus on more
-challenging tasks.  For further information, please refer to &lt;a class="reference external" href="http://llvm.org/docs/HowToSubmitABug.html"&gt;How to Submit a
-LLVM Bug&lt;/a&gt;.&lt;/p&gt;
+challenging tasks.  For further information, please refer to
+&lt;a class="reference external" href="http://llvm.org/docs/HowToSubmitABug.html"&gt;How to Submit a LLVM Bug&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="reference"&gt;
 &lt;h2&gt;Reference&lt;/h2&gt;
