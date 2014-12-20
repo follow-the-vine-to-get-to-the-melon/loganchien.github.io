@@ -53,23 +53,6 @@
   		<article>
 <header>
       <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
-      </h1>
-      <p class="meta"><time datetime="2014-12-20T22:04:00+08:00" pubdate>Sat 20 December 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>It is well-known that <a class="reference external" href="http://www.debian.org/">Debian</a> stable release is very <em>stable</em>, i.e. the
-packages are very old and well-tested.  However, this become a problem to me.</p>
-<p>Since <a class="reference external" href="http://www.git-scm.org/">Git</a> 1.9, we have to run the following command to silence a warning
-when we are running <code>git push</code>.</p>
-<div class="highlight"><pre><span class="nv">$ </span>git config --global ...</pre></div></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/12/20/debian-backports/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
       </h1>
       <p class="meta"><time datetime="2014-11-26T23:03:00+08:00" pubdate>Wed 26 November 2014</time></p>
@@ -236,6 +219,26 @@ would adopt a conservative approach:</p>
     <a rel="full-article" href="http://logan.tw/posts/2014/11/13/c-associative-container-and-iterator-validness/">Read On &crarr;</a>
   </footer>
   		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<pre class="code bash literal-block">
+<span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Read On &crarr;</a>
+  </footer>
+  		</article>
 <div class="pagination">
     <a class="prev" href="http://logan.tw/category/programming/index2.html">&larr; Older</a>
 
@@ -245,9 +248,6 @@ would adopt a conservative approach:</p>
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
-      <li class="post">
-          <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
-      </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
       </li>
@@ -259,6 +259,9 @@ would adopt a conservative approach:</p>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2014/11/20/c-private-inheritence-and-using-directive/">C++ Private Inheritence and Using Directive</a>
       </li>
     </ul>
   </section>

@@ -1,5 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2014-11-24T23:04:00+08:00</updated><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2014-12-20T22:04:00+08:00</updated><entry><title>Debian Backports</title><link href="http://logan.tw/posts/2014/12/20/debian-backports/" rel="alternate"></link><updated>2014-12-20T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</id><summary type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
+packages are very old and well-tested.  However, this become a problem to me.&lt;/p&gt;
+&lt;p&gt;Since &lt;a class="reference external" href="http://www.git-scm.org/"&gt;Git&lt;/a&gt; 1.9, we have to run the following command to silence a warning
+when we are running &lt;code&gt;git push&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git config --global push.default simple
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But this command will add settings to &lt;code&gt;.gitconfig&lt;/code&gt; in the home directory,
+which is unknown to the &lt;code&gt;git&lt;/code&gt; command from the Wheezy repository.  And,
+unfortunately, I am using &lt;a class="reference external" href="https://alioth.debian.org/projects/buildd-tools/"&gt;schroot&lt;/a&gt; to switch between Ubuntu 14.04 and Debian
+Wheezy.  Can I install a newer &lt;code&gt;git&lt;/code&gt; package on Debian Wheezy?&lt;/p&gt;
+&lt;p&gt;Yes, &lt;a class="reference external" href="http://backports.debian.org/"&gt;Debian Backports&lt;/a&gt; is the answer.  &lt;strong&gt;Debian backports&lt;/strong&gt; provide
+repositories that contains the newer software for Debian stable releases (with
+necessary modification.)&lt;/p&gt;
+&lt;p&gt;To install the packages from the backports, add the following line to
+&lt;code&gt;/etc/apt/sources.list&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;deb http://ftp.us.debian.org/debian wheezy-backports main
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: The URL can be any &lt;a class="reference external" href="https://www.debian.org/mirror/official"&gt;official Debian mirrors&lt;/a&gt;.  Usually, there will be
+one line similar to &lt;code&gt;deb [URL] wheezy main&lt;/code&gt; in your &lt;code&gt;sources.list&lt;/code&gt;.
+You can copy the line and replace &lt;code&gt;wheezy&lt;/code&gt; with &lt;code&gt;wheezy-backport&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Update the local APT information with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To install the packages from the backports:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports &lt;span class="o"&gt;[&lt;/span&gt;package-name&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For example, to install &lt;code&gt;git&lt;/code&gt; from the backports:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports git
+&lt;/pre&gt;&lt;/div&gt;
+</summary><category term="linux"></category><category term="debian"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
 was quite disappointed with the sound quality.  Fortunately, after searching on
 the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
 quality.&lt;/p&gt;
