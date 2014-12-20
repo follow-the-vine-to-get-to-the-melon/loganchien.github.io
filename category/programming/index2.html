@@ -53,6 +53,26 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<pre class="code bash literal-block">
+<span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2014/11/12/soundness-and-completeness-of-the-type-system/">Soundness and Completeness of the Type System</a>
       </h1>
       <p class="meta"><time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time></p>
@@ -78,6 +98,9 @@ checked ...</li></ul></div>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
+      </li>
+      <li class="post">
           <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
       </li>
       <li class="post">
@@ -88,9 +111,6 @@ checked ...</li></ul></div>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2014/11/20/c-private-inheritence-and-using-directive/">C++ Private Inheritence and Using Directive</a>
       </li>
     </ul>
   </section>
@@ -107,7 +127,7 @@ checked ...</li></ul></div>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>  </section>
 
 
     <section>

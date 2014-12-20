@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Logan's Note - opencl</title>
+  <title>Debian Backports</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,95 +49,75 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/">Pre-compile the OpenCL Kernel Program - Part 2</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-22T12:22:00+08:00" pubdate>Sat 22 November 2014</time></p>
+      <h1 class="entry-title">Debian Backports</h1>
+      <p class="meta"><time datetime="2014-12-20T22:04:00+08:00" pubdate>Sat 20 December 2014</time></p>
 </header>
 
-  <div class="entry-content"><p>In the <a class="reference external" href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">part 1</a> of this article, we have mentioned how to pre-compile the
-OpenCL kernel program and load the pre-compiled binaries with the OpenCL API.</p>
-<p>However, I was using the <code>ioc64</code> command from the <a class="reference external" href="https://software.intel.com/en-us/intel-opencl">Intel OpenCL SDK</a> to
-pre-compile the kernel program.  This command might be unavailable in the ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-21T21:22:00+08:00" pubdate>Fri 21 November 2014</time></p>
-</header>
+  <div class="entry-content"><p>It is well-known that <a class="reference external" href="http://www.debian.org/">Debian</a> stable release is very <em>stable</em>, i.e. the
+packages are very old and well-tested.  However, this become a problem to me.</p>
+<p>Since <a class="reference external" href="http://www.git-scm.org/">Git</a> 1.9, we have to run the following command to silence a warning
+when we are running <code>git push</code>.</p>
+<div class="highlight"><pre><span class="nv">$ </span>git config --global push.default simple
+</pre></div>
+<p>But this command will add settings to <code>.gitconfig</code> in the home directory,
+which is unknown to the <code>git</code> command from the Wheezy repository.  And,
+unfortunately, I am using <a class="reference external" href="https://alioth.debian.org/projects/buildd-tools/">schroot</a> to switch between Ubuntu 14.04 and Debian
+Wheezy.  Can I install a newer <code>git</code> package on Debian Wheezy?</p>
+<p>Yes, <a class="reference external" href="http://backports.debian.org/">Debian Backports</a> is the answer.  <strong>Debian backports</strong> provide
+repositories that contains the newer software for Debian stable releases (with
+necessary modification.)</p>
+<p>To install the packages from the backports, add the following line to
+<code>/etc/apt/sources.list</code>:</p>
+<div class="highlight"><pre>deb http://ftp.us.debian.org/debian wheezy-backports main
+</pre></div>
+<p>Note: The URL can be any <a class="reference external" href="https://www.debian.org/mirror/official">official Debian mirrors</a>.  Usually, there will be
+one line similar to <code>deb [URL] wheezy main</code> in your <code>sources.list</code>.
+You can copy the line and replace <code>wheezy</code> with <code>wheezy-backport</code>.</p>
+<p>Update the local APT information with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+</pre></div>
+<p>To install the packages from the backports:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install -t wheezy-backports <span class="o">[</span>package-name<span class="o">]</span>
+</pre></div>
+<p>For example, to install <code>git</code> from the backports:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install -t wheezy-backports git
+</pre></div>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2014-12-20T22:04:00+08:00" pubdate>Sat 20 December 2014</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
+    <a class="category" href="http://logan.tw/tag/debian/">debian</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-  <div class="entry-content"><p>In the <a class="reference external" href="http://logan.tw/posts/2014/11/18/getting-started-with-opencl/">previous post</a>, we have written a simple vector addition OpenCL
-program.  We were compiling the OpenCL kernel program from source code at
-run-time, thus we have to distribute the OpenCL source code to our users.</p>
-<p>However, in some cases, we may prefer to <strong>pre-compile the OpenCL kernel
-program ...</strong></p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/">OpenCL 1.2 Manual Pages</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-19T22:37:00+08:00" pubdate>Wed 19 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>There is a package for <a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/">OpenCL 1.2 manual pages</a> in the Ubuntu repository.  To
-install the <code>opencl-1.2-man-doc</code> package, please run this command:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>sudo apt-get install opencl-1.2-man-doc
-</pre>
-<p>After installing this package, we can check the OpenCL API with <code>man</code>
-command.  For example, run <code>man 3 clGetPlatformIDs</code> to read ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/18/getting-started-with-opencl/">Getting Started with OpenCL</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-18T23:05:00+08:00" pubdate>Tue 18 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>I have heard of <a class="reference external" href="http://www.khronos.org/opencl">OpenCL</a> for a long time, but I haven't tried it until
-recently.  Here's my note to write and run a simple <strong>vector addition</strong> OpenCL
-program.</p>
-<p>The following source code is compiled and tested with <a class="reference external" href="https://software.intel.com/en-us/intel-opencl">Intel SDK for OpenCL
-Applications</a>.  The code should work with ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/18/getting-started-with-opencl/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
-
-  <br />
-</div></div>
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
-          <a href="http://logan.tw/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/">Pre-compile the OpenCL Kernel Program - Part 2</a>
+          <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">Pre-compile the OpenCL Kernel Program - Part 1</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/">OpenCL 1.2 Manual Pages</a>
+          <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/11/18/getting-started-with-opencl/">Getting Started with OpenCL</a>
+          <a href="http://logan.tw/posts/2014/11/25/vim-vundle/">Vim Vundle</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2014/11/24/lets-encrypt/">Let's Encrypt</a>
       </li>
     </ul>
   </section>
