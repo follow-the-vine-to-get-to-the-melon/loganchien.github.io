@@ -1,5 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/web.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2014-12-15T18:04:00+08:00</updated><entry><title>Autossh and Ubuntu Upstart Daemon</title><link href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/" rel="alternate"></link><updated>2014-12-15T18:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-15:posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</id><summary type="html">&lt;p&gt;Since I am sharing the network without public IP, I would like to maintain a
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/web.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-01-02T11:20:00+08:00</updated><entry><title>Waliki Installation</title><link href="http://logan.tw/posts/2015/01/02/waliki-installation/" rel="alternate"></link><updated>2015-01-02T11:20:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-01-02:posts/2015/01/02/waliki-installation/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://github.com/mgaitan/waliki"&gt;Waliki&lt;/a&gt; is a simple wiki app for &lt;a class="reference external" href="http://www.djangoproject.com/"&gt;Django&lt;/a&gt;.  We can write wiki contents with
+&lt;a class="reference external" href="http://docutils.sourceforge.net/rst.html"&gt;reStructuredText&lt;/a&gt; and the contents will be stored in a &lt;a class="reference external" href="http://git-scm.com"&gt;Git&lt;/a&gt; repository.
+In this post, I would like to introduce the instructions to install &lt;a class="reference external" href="https://github.com/mgaitan/waliki"&gt;Waliki&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="getting-started"&gt;
+&lt;h2&gt;Getting Started&lt;/h2&gt;
+&lt;p&gt;First, install the related Ubuntu packages:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install git python3 python-virtualenv &lt;span class="se"&gt;\
+&lt;/span&gt;      libpython3-dev libxml2-dev libxslt1-dev
+&lt;/pre&gt;
+&lt;p&gt;Second, create a new Python virtual environment:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;virtualenv ENV --no-site-packages --python&lt;span class="o"&gt;=&lt;/span&gt;/usr/bin/python3
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;source &lt;/span&gt;ENV/bin/activate
+&lt;/pre&gt;
+&lt;p&gt;Third, install the Python packages:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki rst2pdf hovercraft &lt;span class="se"&gt;\
+&lt;/span&gt;                   django-sendfile django-allauth
+&lt;/pre&gt;
+&lt;p&gt;Fourth, create a new Django project:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;django-admin startproject waliki_site
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki_site
+&lt;/pre&gt;
+&lt;p&gt;Fifth, edit the site settings:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/settings.py
+&lt;/pre&gt;
+&lt;p&gt;Add following lines to &lt;code&gt;waliki_site/settings.py&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;'allauth.account.context_processors.account'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.auth.context_processors.auth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.core.context_processors.request'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;'allauth.account.auth_backends.AuthenticationBackend'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.auth.backends.ModelBackend'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;SITE_ID&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Add following Django apps to &lt;code&gt;INSTALLED_APPS&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.admin'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.auth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.contenttypes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.sessions'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.messages'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.staticfiles'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+
+    &lt;span class="c"&gt;# BEGIN OF CHANGE - Extra Django Apps for Waliki&lt;/span&gt;
+    &lt;span class="s"&gt;'django.contrib.sites'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'waliki'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'waliki.git'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'waliki.attachments'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'waliki.pdf'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'waliki.slides'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'allauth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;'allauth.account'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="c"&gt;# END OF CHANGE&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Add following lines to &lt;code&gt;waliki_site/urls.py&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="c"&gt;# Examples:&lt;/span&gt;
+    &lt;span class="c"&gt;# url(r'^$', 'waliki_site.views.home', name='home'),&lt;/span&gt;
+    &lt;span class="c"&gt;# url(r'^blog/', include('blog.urls')),&lt;/span&gt;
+
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^admin/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+
+    &lt;span class="c"&gt;# BEGIN OF CHANGE&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^accounts/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'allauth.urls'&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'waliki.urls'&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="c"&gt;# END OF CHANGE&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Sixth, migrate the database:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py migrate
+&lt;/pre&gt;
+&lt;p&gt;Seventh, create a super user:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py createsuperuser
+Username &lt;span class="o"&gt;(&lt;/span&gt;leave blank to use &lt;span class="s1"&gt;'username'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
+Email address: username&amp;#64;example.com
+Password:
+Password &lt;span class="o"&gt;(&lt;/span&gt;again&lt;span class="o"&gt;)&lt;/span&gt;:
+&lt;/pre&gt;
+&lt;p&gt;Finally, start the development server with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py runserver
+&lt;/pre&gt;
+&lt;p&gt;We should be able to see Waliki at &lt;a class="reference external" href="http://127.0.0.1:8000"&gt;http://127.0.0.1:8000&lt;/a&gt; now.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="customize-the-authentication"&gt;
+&lt;h2&gt;Customize the Authentication&lt;/h2&gt;
+&lt;p&gt;Since I am using Waliki to take my personal notes, I &lt;strong&gt;don't want&lt;/strong&gt; the wiki to
+be edited by the others.  To disable the sign up feature, we have to customize
+the account adapter.&lt;/p&gt;
+&lt;p&gt;First, add following lines to &lt;code&gt;settings.py&lt;/code&gt;:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="n"&gt;ACCOUNT_ADAPTER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'waliki_site.auth.AccountAdapter'&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Second, create &lt;code&gt;waliki_site/auth.py&lt;/code&gt; with following contents:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;allauth.account.adapter&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AccountAdapter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_open_for_signup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;After these changes, the sign up feature will be disabled.  You can only login
+with account created with &lt;code&gt;python manage.py createsuperuser&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="deploy-waliki-with-apache-wsgi"&gt;
+&lt;h2&gt;Deploy Waliki with Apache WSGI&lt;/h2&gt;
+&lt;p&gt;We would like to deploy our Waliki site with Apache and WSGI so that all users
+can have access to our Waliki.&lt;/p&gt;
+&lt;p&gt;First, we have to install Apache and its WSGI module with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install apache2 libapache2-mod-wsgi-py3
+&lt;/pre&gt;
+&lt;p&gt;NOTE: AFAIK, due to the design of WSGI module, we can't install WSGI module for
+both Python 2.x and 3.0.  It is possible to have some problem if you have
+installed &lt;code&gt;libapache2-mod-wsgi&lt;/code&gt; at the same time.  Remove
+&lt;code&gt;libapache2-mod-wsgi&lt;/code&gt; or try to install Waliki with Python 2 if you have
+encountered any problems.&lt;/p&gt;
+&lt;p&gt;Second, we have to change &lt;code&gt;waliki_site/wsgi.py&lt;/code&gt; to workaround the
+&lt;a class="reference external" href="https://code.google.com/p/modwsgi/wiki/VirtualEnvironments#Application_Environments"&gt;problem related to virtualenv&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/wsgi.py
+&lt;/pre&gt;
+&lt;p&gt;Add following lines to the beginning of &lt;code&gt;wsgi.py&lt;/code&gt; and change
+&lt;code&gt;/PATH/TO/DIR/ENV&lt;/code&gt; to the virtual environment:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;site&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
+
+&lt;span class="n"&gt;ENV_DIR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'/PATH/TO/DIR/ENV'&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;activate_virtualenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;ver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;version_info&lt;/span&gt;
+    &lt;span class="n"&gt;ver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'python'&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;'.'&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+
+    &lt;span class="c"&gt;# Path to executables and site-packages.&lt;/span&gt;
+    &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'bin'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;site_packages_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'lib'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'site-packages'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="c"&gt;# Add bin_dir to executable search path.&lt;/span&gt;
+    &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'PATH'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pathsep&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'PATH'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="c"&gt;# Add site_packages_dir to the front of sys.path.&lt;/span&gt;
+    &lt;span class="n"&gt;prev_sys_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;addsitedir&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;site_packages_dir&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;new_sys_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[]&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;item&lt;/span&gt; &lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;prev_sys_path&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="n"&gt;new_sys_path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;append&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;remove&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;item&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_sys_path&lt;/span&gt;
+
+&lt;span class="n"&gt;activate_virtualenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ENV_DIR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Third, create a new virtual host configuration file:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apache2/sites-available/waliki.conf
+&lt;/pre&gt;
+&lt;p&gt;And add following lines and change &lt;code&gt;/PATH/TO/DIR&lt;/code&gt; and &lt;code&gt;USERNAME&lt;/code&gt;
+accordingly:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+&amp;lt;VirtualHost *:80&amp;gt;
+    Define name waliki_site
+    Define base /PATH/TO/DIR
+    Define site ${base}/${name}
+    Define user USERNAME
+
+    WSGIDaemonProcess ${name} processes=1 threads=15 user=${user} display-name=%{GROUP} home=${site} python-path=${site}:${base}/ENV/lib/python2.7/site-packages
+    WSGIProcessGroup ${name}
+    WSGIScriptAlias / ${site}/${name}/wsgi.py
+
+    Alias /robots.txt ${site}/static/robots.txt
+    Alias /favicon.ico ${site}/static/favicon.ico
+
+    Alias /media/ ${site}/media/
+    Alias /static/ ${site}/static/
+
+    &amp;lt;Directory ${site}/static&amp;gt;
+        Require all granted
+    &amp;lt;/Directory&amp;gt;
+
+    &amp;lt;Directory ${site}/media&amp;gt;
+        Require all granted
+    &amp;lt;/Directory&amp;gt;
+
+    &amp;lt;Directory ${site}/${name}&amp;gt;
+        &amp;lt;Files wsgi.py&amp;gt;
+            Require all granted
+        &amp;lt;/Files&amp;gt;
+    &amp;lt;/Directory&amp;gt;
+&amp;lt;/VirtualHost&amp;gt;
+&lt;/pre&gt;
+&lt;p&gt;Fourth, enable the site with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo a2ensite waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo service apache2 reload
+&lt;/pre&gt;
+&lt;p&gt;Finally, you should be able to see your Waliki installation!&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="python"></category><category term="wsgi"></category><category term="waliki"></category></entry><entry><title>Autossh and Ubuntu Upstart Daemon</title><link href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/" rel="alternate"></link><updated>2014-12-15T18:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-15:posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</id><summary type="html">&lt;p&gt;Since I am sharing the network without public IP, I would like to maintain a
 SSH tunnel so that I can connect to my desktop from the remote site.  After
 searching the web, I found that &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; fits my needs.  &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; is a
 utility that can start and monitor the SSH tunnel.  If the connections are

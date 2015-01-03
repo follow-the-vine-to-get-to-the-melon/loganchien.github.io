@@ -1,5 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2014-11-26T23:03:00+08:00</updated><entry><title>LLVM Bugpoint</title><link href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/" rel="alternate"></link><updated>2014-11-26T23:03:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-26:posts/2014/11/26/llvm-bugpoint/</id><summary type="html">&lt;p&gt;In this post, I would like to introduce the &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; command line tool.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-01-01T00:14:00+08:00</updated><entry><title>Python Package Manager: PIP</title><link href="http://logan.tw/posts/2015/01/01/python-package-manager-pip/" rel="alternate"></link><updated>2015-01-01T00:14:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-01-01:posts/2015/01/01/python-package-manager-pip/</id><summary type="html">&lt;p&gt;The Python package manager &lt;a class="reference external" href="https://pip.pypa.io"&gt;pip&lt;/a&gt; is a tool to manage the installed site
+packages.  With &lt;a class="reference external" href="https://pip.pypa.io"&gt;pip&lt;/a&gt;, we don't have to be worried about the package
+dependencies anymore.  &lt;a class="reference external" href="https://pip.pypa.io"&gt;pip&lt;/a&gt; will download the required packages from
+&lt;a class="reference external" href="https://pypi.python.org"&gt;Python Package Index&lt;/a&gt; automatically.&lt;/p&gt;
+&lt;div class="section" id="install-packages"&gt;
+&lt;h2&gt;Install Packages&lt;/h2&gt;
+&lt;p&gt;To download and install the packages from &lt;a class="reference external" href="https://pypi.python.org"&gt;Python Package Index&lt;/a&gt;:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install package1 package2 package3
+&lt;/pre&gt;
+&lt;p&gt;For example, we can install &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; and its dependencies with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install django
+&lt;/pre&gt;
+&lt;p&gt;In some scenario, we have to install the package with specific version.  We can
+achieve this with the version qualifier:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;'django==1.5'&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;'django&amp;gt;=1.7'&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;We can also write a &lt;code&gt;requirements.txt&lt;/code&gt; with various packages, for example:&lt;/p&gt;
+&lt;pre class="code literal-block"&gt;
+django-sendfile
+django&amp;gt;=1.7
+&lt;/pre&gt;
+&lt;p&gt;And then install packages with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -r requirements.txt
+&lt;/pre&gt;
+&lt;p&gt;Some projects have extra requirements.  To install those requirements, we
+have to specify the name in the brackets, for example:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki&lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-packages-for-development"&gt;
+&lt;h2&gt;Install Packages for Development&lt;/h2&gt;
+&lt;p&gt;To install the lastest still-in-development packages, which has not been released
+to &lt;a class="reference external" href="https://pypi.python.org"&gt;Python Package Index&lt;/a&gt;, we can install them by specifying the tarball URLs.&lt;/p&gt;
+&lt;p&gt;For example, we can install the latest &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; packages from their master
+branch with:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install https://github.com/django/django/tarball/master
+&lt;/pre&gt;
+&lt;p&gt;We can also install the package from the local file system with the
+&lt;code&gt;file://&lt;/code&gt; protocol:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s2"&gt;&amp;quot;file:///path/to/the/package#egg=name&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;For example, to install latest &lt;a class="reference external" href="https://github.com/mgaitan/waliki"&gt;Waliki&lt;/a&gt; from Git repository:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s2"&gt;&amp;quot;file://&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;#egg=waliki[all]&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Sometimes, it is more convenient use the Python files in-place, so that we
+don't have to reinstall the package after changing any files.  We can achieve
+this with &lt;code&gt;-e&lt;/code&gt; option:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e path/to/the/package
+&lt;/pre&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e .&lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;With &lt;code&gt;pip install -e&lt;/code&gt;, we can save a lot of development time!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="uninstall-packages"&gt;
+&lt;h2&gt;Uninstall Packages&lt;/h2&gt;
+&lt;p&gt;Finally, we can remove the package with the &lt;code&gt;pip uninstall&lt;/code&gt; command:&lt;/p&gt;
+&lt;pre class="code bash literal-block"&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip uninstall package-name
+&lt;/pre&gt;
+&lt;/div&gt;
+</summary><category term="python"></category><category term="linux"></category></entry><entry><title>LLVM Obfuscator</title><link href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/" rel="alternate"></link><updated>2014-12-09T23:18:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-09:posts/2014/12/09/llvm-obfuscator/</id><summary type="html">&lt;p&gt;I came across the &lt;a class="reference external" href="https://github.com/obfuscator-llvm/obfuscator/wiki"&gt;LLVM obfuscator&lt;/a&gt; today.  It is a &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Obfuscation_%28software%29"&gt;code obfuscator&lt;/a&gt; working
+mostly on LLVM IR level.  This means that most LLVM supported target platforms
+are supported by the &lt;a class="reference external" href="https://github.com/obfuscator-llvm/obfuscator/wiki"&gt;LLVM obfuscator&lt;/a&gt; as well.&lt;/p&gt;
+&lt;p&gt;Also, I have also read &lt;a class="reference external" href="http://blog.quarkslab.com/deobfuscation-recovering-an-ollvm-protected-program.html"&gt;an article&lt;/a&gt; which mentioned how to disassemble and
+deobfuscate the binaries compiled by &lt;a class="reference external" href="https://github.com/obfuscator-llvm/obfuscator/wiki"&gt;LLVM obfuscator&lt;/a&gt;.  The article sounds
+interesting and the example being used looks impressive.  It is worthwhile to
+read this article.&lt;/p&gt;
+</summary><category term="llvm"></category></entry><entry><title>C++ Virtual Destructor and Inheritence</title><link href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/" rel="alternate"></link><updated>2014-12-09T19:00:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-09:posts/2014/12/09/c-virtual-destructor-and-inheritence/</id><summary type="html">&lt;p&gt;It is a well-known idiom to define a virtual destructor for the classes with
+virtual functions.  If we don't define a virtual destructor, then the base
+class destructor will be invoked when you are deleting the object through the
+base class pointer even if the object is an instance of derived class.&lt;/p&gt;
+&lt;p&gt;Although this sounds intuitive, it is non-trivial to the C++ compiler
+implementation.  Some extra care should be paid if the programmer didn't
+specify the desturctor.  For example, in the following code, the base class
+&lt;code&gt;A&lt;/code&gt; has a virtual destructor and the derived class &lt;code&gt;B&lt;/code&gt; does not
+define any destructor.  What will happen when after running &lt;code&gt;delete a&lt;/code&gt;?&lt;/p&gt;
+&lt;pre class="code c++ literal-block"&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;If your compiler is following the &lt;a class="reference external" href="https://mentorembedded.github.io/cxx-abi/abi.html"&gt;Itanium C++ ABI&lt;/a&gt;, then the compiler will
+synthesize two functions &lt;code&gt;_ZN1BD0Ev()&lt;/code&gt; and &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt;.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;The &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt; is the synthesized destructor which will destruct the
+instance members of class &lt;code&gt;B&lt;/code&gt; and will in turn call the
+&lt;code&gt;_ZN1AD2Ev()&lt;/code&gt; to destruct the members of class &lt;code&gt;A&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;_ZN1BD0Ev()&lt;/code&gt; will invoke &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt; to destruct the object
+and deallocate the memory with &lt;code&gt;operator delete (void *)&lt;/code&gt; (or namely
+&lt;code&gt;_ZdlPv()&lt;/code&gt;.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Back to the example, when the &lt;code&gt;delete a&lt;/code&gt; is executed, the underlying code
+sequence will get the second function pointer (index 1) from the virtual method
+table and pass the object address to the corresponding function, which is
+&lt;code&gt;_ZN1BD0Ev()&lt;/code&gt; in this case.&lt;/p&gt;
+&lt;p&gt;In fact, if you define the destructor in the derived class, then your destructor
+will be part of the &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt;.  You can check the behavior with the
+following code:&lt;/p&gt;
+&lt;pre class="code c++ literal-block"&gt;
+&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;C&amp;quot;&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt; &lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="k"&gt;public&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
+  &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;p.s. You can generate the LLVM assembly with &lt;code&gt;clang++ -S -emit-llvm&lt;/code&gt;
+which is more readable.&lt;/p&gt;
+</summary><category term="cxx"></category></entry><entry><title>LLVM Bugpoint</title><link href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/" rel="alternate"></link><updated>2014-11-26T23:03:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-26:posts/2014/11/26/llvm-bugpoint/</id><summary type="html">&lt;p&gt;In this post, I would like to introduce the &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; command line tool.
 This is a automatic test case reduction tool which can help us generate
 minimal test case.&lt;/p&gt;
 &lt;p&gt;As a compiler developer, the first step to debug is to create a minimal test
