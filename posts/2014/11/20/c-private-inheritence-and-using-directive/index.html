@@ -66,9 +66,8 @@ private inheritence at all.</p>
 names in the <code>using</code> directives, all of the overloaded functions can
 be <em>exported</em> with one directive.  As a result, we can reduce the numbers of
 helper functions.  For example:</p>
-<pre class="code c++ literal-block">
-<span class="cp">#include &lt;iostream&gt;
-</span>
+<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
+
 <span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
   <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
@@ -85,8 +84,8 @@ helper functions.  For example:</p>
 <span class="p">};</span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="c1">// All of these should work.
-</span>
+  <span class="c1">// All of these should work.</span>
+
   <span class="n">B</span> <span class="n">b</span><span class="p">;</span>
   <span class="n">b</span><span class="p">.</span><span class="n">test</span><span class="p">();</span>
   <span class="n">b</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
@@ -97,7 +96,7 @@ helper functions.  For example:</p>
   <span class="n">rb</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
   <span class="n">rb</span><span class="p">.</span><span class="n">test</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>However, IMHO, private inheritence is still a good indication of bad class
 hierarchy deisgn.</p>
 </div>
@@ -128,10 +127,10 @@ hierarchy deisgn.</p>
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -148,7 +147,7 @@ hierarchy deisgn.</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

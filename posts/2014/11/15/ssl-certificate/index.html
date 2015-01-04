@@ -74,47 +74,41 @@ manage the certificates.  Let's start.</p>
 <div class="section" id="create-a-certificate-authority">
 <h2>Create a Certificate Authority</h2>
 <p>Create directory to save everything:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>mkdir MyCA
+<div class="highlight"><pre><span class="nv">$ </span>mkdir MyCA
 <span class="nv">$ </span>chmod <span class="m">700</span> MyCA
 <span class="nv">$ </span><span class="nb">cd </span>MyCA
-</pre>
+</pre></div>
 <p>Copy the tools:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>cp /usr/lib/ssl/misc/CA.pl .
+<div class="highlight"><pre><span class="nv">$ </span>cp /usr/lib/ssl/misc/CA.pl .
 <span class="nv">$ </span>cp /etc/ssl/openssl.cnf .
-</pre>
+</pre></div>
 <p>Edit the configurations to fit your need, and finally create the certificate
 for your CA:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>./CA.pl -newca
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>./CA.pl -newca
+</pre></div>
 <p>By default, the <code>cacert.pem</code> will be generated at
 <code>demoCA/cacert.pem</code>.  Install this certificate as an authority in your
 browser.  You can also check the fingerprint with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>openssl x509 -fingerprint -noout -in cacert.pem
+<div class="highlight"><pre><span class="nv">$ </span>openssl x509 -fingerprint -noout -in cacert.pem
 <span class="nv">$ </span>openssl x509 -sha256 -fingerprint -noout -in cacert.pem
-</pre>
+</pre></div>
 </div>
 <div class="section" id="generate-certificates-for-your-service">
 <h2>Generate Certificates for Your Service</h2>
 <p>To create the SSL certificate for your service:</p>
-<pre class="code bash literal-block">
-<span class="c"># Create a certificate request
-</span><span class="nv">$ </span>./CA.pl -newreq
+<div class="highlight"><pre><span class="c"># Create a certificate request</span>
+<span class="nv">$ </span>./CA.pl -newreq
 
-<span class="c"># Sign a certificate request
-</span><span class="nv">$ </span>./CA.pl -sign
-</pre>
+<span class="c"># Sign a certificate request</span>
+<span class="nv">$ </span>./CA.pl -sign
+</pre></div>
 <p>The generated <code>newkey.pem</code> and <code>newcert.pem</code> are the private key
 and the certificate respectively.</p>
 <p>Please notice that the <code>newkey.pem</code> has been encrypted with a passpharse.
 Under some situation, you have to decrypt it before installing the certificate
 (e.g. Apache2).  Here's the command to decrypt the private key:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>openssl rsa -in newkey.pem -out newkey.nopass.pem
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>openssl rsa -in newkey.pem -out newkey.nopass.pem
+</pre></div>
 </div>
 </div>
     <footer>
@@ -146,10 +140,10 @@ Under some situation, you have to decrypt it before installing the certificate
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -166,7 +160,7 @@ Under some situation, you have to decrypt it before installing the certificate
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

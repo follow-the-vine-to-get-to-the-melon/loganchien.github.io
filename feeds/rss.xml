@@ -5,99 +5,88 @@ In this post, I would like to introduce the instructions to install &lt;a class=
 &lt;div class="section" id="getting-started"&gt;
 &lt;h2&gt;Getting Started&lt;/h2&gt;
 &lt;p&gt;First, install the related Ubuntu packages:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install git python3 python-virtualenv &lt;span class="se"&gt;\
-&lt;/span&gt;      libpython3-dev libxml2-dev libxslt1-dev
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install git python3 python-virtualenv &lt;span class="se"&gt;\&lt;/span&gt;
+      libpython3-dev libxml2-dev libxslt1-dev
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Second, create a new Python virtual environment:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir waliki
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;virtualenv ENV --no-site-packages --python&lt;span class="o"&gt;=&lt;/span&gt;/usr/bin/python3
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;source &lt;/span&gt;ENV/bin/activate
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Third, install the Python packages:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki rst2pdf hovercraft &lt;span class="se"&gt;\
-&lt;/span&gt;                   django-sendfile django-allauth
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki rst2pdf hovercraft &lt;span class="se"&gt;\&lt;/span&gt;
+                   django-sendfile django-allauth
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Fourth, create a new Django project:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;django-admin startproject waliki_site
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;django-admin startproject waliki_site
 &lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki_site
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Fifth, edit the site settings:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/settings.py
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/settings.py
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Add following lines to &lt;code&gt;waliki_site/settings.py&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-    &lt;span class="s"&gt;'allauth.account.context_processors.account'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.auth.context_processors.auth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.core.context_processors.request'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;TEMPLATE_CONTEXT_PROCESSORS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;allauth.account.context_processors.account&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.auth.context_processors.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.core.context_processors.request&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="n"&gt;AUTHENTICATION_BACKENDS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-    &lt;span class="s"&gt;'allauth.account.auth_backends.AuthenticationBackend'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.auth.backends.ModelBackend'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;allauth.account.auth_backends.AuthenticationBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.auth.backends.ModelBackend&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 &lt;span class="p"&gt;)&lt;/span&gt;
 
 &lt;span class="n"&gt;SITE_ID&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Add following Django apps to &lt;code&gt;INSTALLED_APPS&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.admin'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.auth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.contenttypes'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.sessions'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.messages'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.staticfiles'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;INSTALLED_APPS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.admin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.auth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.contenttypes&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.sessions&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.messages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.staticfiles&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
 
     &lt;span class="c"&gt;# BEGIN OF CHANGE - Extra Django Apps for Waliki&lt;/span&gt;
-    &lt;span class="s"&gt;'django.contrib.sites'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'waliki'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'waliki.git'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'waliki.attachments'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'waliki.pdf'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'waliki.slides'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'allauth'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-    &lt;span class="s"&gt;'allauth.account'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;django.contrib.sites&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;waliki&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;waliki.git&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;waliki.attachments&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;waliki.pdf&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;waliki.slides&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;allauth&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="s"&gt;&amp;#39;allauth.account&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="c"&gt;# END OF CHANGE&lt;/span&gt;
 &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Add following lines to &lt;code&gt;waliki_site/urls.py&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;''&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;urlpatterns&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;patterns&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
     &lt;span class="c"&gt;# Examples:&lt;/span&gt;
-    &lt;span class="c"&gt;# url(r'^$', 'waliki_site.views.home', name='home'),&lt;/span&gt;
-    &lt;span class="c"&gt;# url(r'^blog/', include('blog.urls')),&lt;/span&gt;
+    &lt;span class="c"&gt;# url(r&amp;#39;^$&amp;#39;, &amp;#39;waliki_site.views.home&amp;#39;, name=&amp;#39;home&amp;#39;),&lt;/span&gt;
+    &lt;span class="c"&gt;# url(r&amp;#39;^blog/&amp;#39;, include(&amp;#39;blog.urls&amp;#39;)),&lt;/span&gt;
 
-    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^admin/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r&amp;#39;^admin/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;admin&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;site&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urls&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
 
     &lt;span class="c"&gt;# BEGIN OF CHANGE&lt;/span&gt;
-    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^accounts/'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'allauth.urls'&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
-    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r'^'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;'waliki.urls'&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r&amp;#39;^accounts/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;allauth.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;r&amp;#39;^&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;include&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;waliki.urls&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
     &lt;span class="c"&gt;# END OF CHANGE&lt;/span&gt;
 &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Sixth, migrate the database:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py migrate
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py migrate
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Seventh, create a super user:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py createsuperuser
-Username &lt;span class="o"&gt;(&lt;/span&gt;leave blank to use &lt;span class="s1"&gt;'username'&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
-Email address: username&amp;#64;example.com
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py createsuperuser
+Username &lt;span class="o"&gt;(&lt;/span&gt;leave blank to use &lt;span class="s1"&gt;&amp;#39;username&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;)&lt;/span&gt;:
+Email address: username@example.com
 Password:
 Password &lt;span class="o"&gt;(&lt;/span&gt;again&lt;span class="o"&gt;)&lt;/span&gt;:
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, start the development server with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py runserver
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="o"&gt;(&lt;/span&gt;ENV&lt;span class="o"&gt;)&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;python manage.py runserver
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We should be able to see Waliki at &lt;a class="reference external" href="http://127.0.0.1:8000"&gt;http://127.0.0.1:8000&lt;/a&gt; now.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="customize-the-authentication"&gt;
@@ -106,17 +95,15 @@ Password &lt;span class="o"&gt;(&lt;/span&gt;again&lt;span class="o"&gt;)&lt;/sp
 be edited by the others.  To disable the sign up feature, we have to customize
 the account adapter.&lt;/p&gt;
 &lt;p&gt;First, add following lines to &lt;code&gt;settings.py&lt;/code&gt;:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="n"&gt;ACCOUNT_ADAPTER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'waliki_site.auth.AccountAdapter'&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;ACCOUNT_ADAPTER&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;waliki_site.auth.AccountAdapter&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Second, create &lt;code&gt;waliki_site/auth.py&lt;/code&gt; with following contents:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;allauth.account.adapter&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;allauth.account.adapter&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;AccountAdapter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DefaultAccountAdapter&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;is_open_for_signup&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;False&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After these changes, the sign up feature will be disabled.  You can only login
 with account created with &lt;code&gt;python manage.py createsuperuser&lt;/code&gt;.&lt;/p&gt;
 &lt;/div&gt;
@@ -125,9 +112,8 @@ with account created with &lt;code&gt;python manage.py createsuperuser&lt;/code&
 &lt;p&gt;We would like to deploy our Waliki site with Apache and WSGI so that all users
 can have access to our Waliki.&lt;/p&gt;
 &lt;p&gt;First, we have to install Apache and its WSGI module with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install apache2 libapache2-mod-wsgi-py3
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install apache2 libapache2-mod-wsgi-py3
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;NOTE: AFAIK, due to the design of WSGI module, we can't install WSGI module for
 both Python 2.x and 3.0.  It is possible to have some problem if you have
 installed &lt;code&gt;libapache2-mod-wsgi&lt;/code&gt; at the same time.  Remove
@@ -135,28 +121,26 @@ installed &lt;code&gt;libapache2-mod-wsgi&lt;/code&gt; at the same time.  Remove
 encountered any problems.&lt;/p&gt;
 &lt;p&gt;Second, we have to change &lt;code&gt;waliki_site/wsgi.py&lt;/code&gt; to workaround the
 &lt;a class="reference external" href="https://code.google.com/p/modwsgi/wiki/VirtualEnvironments#Application_Environments"&gt;problem related to virtualenv&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/wsgi.py
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;vim waliki_site/wsgi.py
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Add following lines to the beginning of &lt;code&gt;wsgi.py&lt;/code&gt; and change
 &lt;code&gt;/PATH/TO/DIR/ENV&lt;/code&gt; to the virtual environment:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;os&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;site&lt;/span&gt;
 &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;sys&lt;/span&gt;
 
-&lt;span class="n"&gt;ENV_DIR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'/PATH/TO/DIR/ENV'&lt;/span&gt;
+&lt;span class="n"&gt;ENV_DIR&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;/PATH/TO/DIR/ENV&amp;#39;&lt;/span&gt;
 
 &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;activate_virtualenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;ver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;version_info&lt;/span&gt;
-    &lt;span class="n"&gt;ver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;'python'&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;'.'&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
+    &lt;span class="n"&gt;ver&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;python&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;.&amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
 
     &lt;span class="c"&gt;# Path to executables and site-packages.&lt;/span&gt;
-    &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'bin'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;site_packages_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'lib'&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;'site-packages'&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;bin&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;site_packages_dir&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;env_dir&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;lib&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ver&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;#39;site-packages&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 
     &lt;span class="c"&gt;# Add bin_dir to executable search path.&lt;/span&gt;
-    &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'PATH'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pathsep&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;'PATH'&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;PATH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;bin_dir&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pathsep&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;os&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;environ&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s"&gt;&amp;#39;PATH&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 
     &lt;span class="c"&gt;# Add site_packages_dir to the front of sys.path.&lt;/span&gt;
     &lt;span class="n"&gt;prev_sys_path&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;list&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -171,11 +155,10 @@ encountered any problems.&lt;/p&gt;
     &lt;span class="n"&gt;sys&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;path&lt;/span&gt;&lt;span class="p"&gt;[:&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;new_sys_path&lt;/span&gt;
 
 &lt;span class="n"&gt;activate_virtualenv&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ENV_DIR&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Third, create a new virtual host configuration file:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apache2/sites-available/waliki.conf
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apache2/sites-available/waliki.conf
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;And add following lines and change &lt;code&gt;/PATH/TO/DIR&lt;/code&gt; and &lt;code&gt;USERNAME&lt;/code&gt;
 accordingly:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;
@@ -211,10 +194,9 @@ accordingly:&lt;/p&gt;
 &amp;lt;/VirtualHost&amp;gt;
 &lt;/pre&gt;
 &lt;p&gt;Fourth, enable the site with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo a2ensite waliki
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo a2ensite waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;sudo service apache2 reload
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, you should be able to see your Waliki installation!&lt;/p&gt;
 &lt;/div&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Fri, 02 Jan 2015 11:20:00 +0800</pubDate><guid>tag:logan.tw,2015-01-02:posts/2015/01/02/waliki-installation/</guid><category>python</category><category>wsgi</category><category>waliki</category></item><item><title>Python Package Manager: PIP</title><link>http://logan.tw/posts/2015/01/01/python-package-manager-pip/</link><description>&lt;p&gt;The Python package manager &lt;a class="reference external" href="https://pip.pypa.io"&gt;pip&lt;/a&gt; is a tool to manage the installed site
@@ -224,33 +206,28 @@ dependencies anymore.  &lt;a class="reference external" href="https://pip.pypa.i
 &lt;div class="section" id="install-packages"&gt;
 &lt;h2&gt;Install Packages&lt;/h2&gt;
 &lt;p&gt;To download and install the packages from &lt;a class="reference external" href="https://pypi.python.org"&gt;Python Package Index&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install package1 package2 package3
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install package1 package2 package3
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example, we can install &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; and its dependencies with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install django
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install django
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In some scenario, we have to install the package with specific version.  We can
 achieve this with the version qualifier:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;'django==1.5'&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;'django&amp;gt;=1.7'&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;&amp;#39;django==1.5&amp;#39;&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s1"&gt;&amp;#39;django&amp;gt;=1.7&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can also write a &lt;code&gt;requirements.txt&lt;/code&gt; with various packages, for example:&lt;/p&gt;
 &lt;pre class="code literal-block"&gt;
 django-sendfile
 django&amp;gt;=1.7
 &lt;/pre&gt;
 &lt;p&gt;And then install packages with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -r requirements.txt
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -r requirements.txt
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Some projects have extra requirements.  To install those requirements, we
 have to specify the name in the brackets, for example:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki&lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install waliki&lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="install-packages-for-development"&gt;
 &lt;h2&gt;Install Packages for Development&lt;/h2&gt;
@@ -258,40 +235,34 @@ have to specify the name in the brackets, for example:&lt;/p&gt;
 to &lt;a class="reference external" href="https://pypi.python.org"&gt;Python Package Index&lt;/a&gt;, we can install them by specifying the tarball URLs.&lt;/p&gt;
 &lt;p&gt;For example, we can install the latest &lt;a class="reference external" href="https://www.djangoproject.com/"&gt;Django&lt;/a&gt; packages from their master
 branch with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install https://github.com/django/django/tarball/master
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install https://github.com/django/django/tarball/master
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can also install the package from the local file system with the
 &lt;code&gt;file://&lt;/code&gt; protocol:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s2"&gt;&amp;quot;file:///path/to/the/package#egg=name&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s2"&gt;&amp;quot;file:///path/to/the/package#egg=name&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example, to install latest &lt;a class="reference external" href="https://github.com/mgaitan/waliki"&gt;Waliki&lt;/a&gt; from Git repository:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;pip install &lt;span class="s2"&gt;&amp;quot;file://&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;#egg=waliki[all]&amp;quot;&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Sometimes, it is more convenient use the Python files in-place, so that we
 don't have to reinstall the package after changing any files.  We can achieve
 this with &lt;code&gt;-e&lt;/code&gt; option:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e path/to/the/package
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e path/to/the/package
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git clone https://github.com/mgaitan/waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;waliki
 &lt;span class="nv"&gt;$ &lt;/span&gt;pip install -e .&lt;span class="o"&gt;[&lt;/span&gt;all&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;With &lt;code&gt;pip install -e&lt;/code&gt;, we can save a lot of development time!&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="uninstall-packages"&gt;
 &lt;h2&gt;Uninstall Packages&lt;/h2&gt;
 &lt;p&gt;Finally, we can remove the package with the &lt;code&gt;pip uninstall&lt;/code&gt; command:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;pip uninstall package-name
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip uninstall package-name
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Thu, 01 Jan 2015 00:14:00 +0800</pubDate><guid>tag:logan.tw,2015-01-01:posts/2015/01/01/python-package-manager-pip/</guid><category>python</category><category>linux</category></item><item><title>Debian Backports</title><link>http://logan.tw/posts/2014/12/20/debian-backports/</link><description>&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
 packages are very old and well-tested.  However, this become a problem to me.&lt;/p&gt;
@@ -322,7 +293,31 @@ You can copy the line and replace &lt;code&gt;wheezy&lt;/code&gt; with &lt;code&
 &lt;p&gt;For example, to install &lt;code&gt;git&lt;/code&gt; from the backports:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports git
 &lt;/pre&gt;&lt;/div&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 20 Dec 2014 22:04:00 +0800</pubDate><guid>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</guid><category>linux</category><category>debian</category></item><item><title>Autossh and Ubuntu Upstart Daemon</title><link>http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</link><description>&lt;p&gt;Since I am sharing the network without public IP, I would like to maintain a
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 20 Dec 2014 22:04:00 +0800</pubDate><guid>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</guid><category>linux</category><category>debian</category></item><item><title>Count Trailing Zeros</title><link>http://logan.tw/posts/2014/12/17/count-trailing-zeros/</link><description>&lt;p&gt;How to count the number of trailing zeros of an integer?  The simplest way is
+to use the built-in function &lt;code&gt;__builtin_ctz()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;__builtin_ctz&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;What will happen if we don't have &lt;code&gt;__builtin_ctz()&lt;/code&gt;?  If we have another
+built-in function &lt;code&gt;__popcount()&lt;/code&gt;, which can compute the &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight"&gt;Hamming weight&lt;/a&gt;
+(the number of set bits), then we can compute the number of trailing zeros with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uint64_t&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;__popcount&lt;/span&gt;&lt;span class="p"&gt;((&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: Assume that &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Two%27s_complement"&gt;two's complement&lt;/a&gt; is adopted for negation and substract,
+the expression &lt;code&gt;(n &amp;amp; -n)&lt;/code&gt; will leave only the last set-bit in the input
+integer.  Next, the &lt;code&gt;-1&lt;/code&gt; operation will set the bits lower than the last
+set-bit.  And finally, you can get the number of trailing zeros with
+&lt;code&gt;__popcount()&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://en.wikipedia.org/wiki/Find_first_set"&gt;Wikipedia: Find First Set&lt;/a&gt; (retrived on 2014/12/17)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Wed, 17 Dec 2014 23:34:00 +0800</pubDate><guid>tag:logan.tw,2014-12-17:posts/2014/12/17/count-trailing-zeros/</guid><category>compiler</category></item><item><title>Autossh and Ubuntu Upstart Daemon</title><link>http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</link><description>&lt;p&gt;Since I am sharing the network without public IP, I would like to maintain a
 SSH tunnel so that I can connect to my desktop from the remote site.  After
 searching the web, I found that &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; fits my needs.  &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;Autossh&lt;/a&gt; is a
 utility that can start and monitor the SSH tunnel.  If the connections are
@@ -444,8 +439,7 @@ implementation.  Some extra care should be paid if the programmer didn't
 specify the desturctor.  For example, in the following code, the base class
 &lt;code&gt;A&lt;/code&gt; has a virtual destructor and the derived class &lt;code&gt;B&lt;/code&gt; does not
 define any destructor.  What will happen when after running &lt;code&gt;delete a&lt;/code&gt;?&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
   &lt;span class="k"&gt;virtual&lt;/span&gt; &lt;span class="o"&gt;~&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
@@ -457,7 +451,7 @@ define any destructor.  What will happen when after running &lt;code&gt;delete a
   &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If your compiler is following the &lt;a class="reference external" href="https://mentorembedded.github.io/cxx-abi/abi.html"&gt;Itanium C++ ABI&lt;/a&gt;, then the compiler will
 synthesize two functions &lt;code&gt;_ZN1BD0Ev()&lt;/code&gt; and &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt;.&lt;/p&gt;
 &lt;ul class="simple"&gt;
@@ -475,8 +469,7 @@ table and pass the object address to the corresponding function, which is
 &lt;p&gt;In fact, if you define the destructor in the derived class, then your destructor
 will be part of the &lt;code&gt;_ZN1BD2Ev()&lt;/code&gt;.  You can check the behavior with the
 following code:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;C&amp;quot;&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="p"&gt;();&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;extern&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;C&amp;quot;&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;throw&lt;/span&gt; &lt;span class="p"&gt;();&lt;/span&gt;
 
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
@@ -494,7 +487,7 @@ following code:&lt;/p&gt;
   &lt;span class="n"&gt;A&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="k"&gt;delete&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;p.s. You can generate the LLVM assembly with &lt;code&gt;clang++ -S -emit-llvm&lt;/code&gt;
 which is more readable.&lt;/p&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Tue, 09 Dec 2014 19:00:00 +0800</pubDate><guid>tag:logan.tw,2014-12-09:posts/2014/12/09/c-virtual-destructor-and-inheritence/</guid><category>cxx</category></item><item><title>LLVM Bugpoint</title><link>http://logan.tw/posts/2014/11/26/llvm-bugpoint/</link><description>&lt;p&gt;In this post, I would like to introduce the &lt;a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html"&gt;bugpoint&lt;/a&gt; command line tool.
@@ -719,21 +712,19 @@ your keyboard.&lt;/p&gt;
 &lt;p&gt;Here are the instructions:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Install the input methods&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# To install gcin:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# To install gcin:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
 
-&lt;span class="c"&gt;# To install hime:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
-&lt;/pre&gt;
+&lt;span class="c"&gt;# To install hime:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Install the &lt;a class="reference external" href="http://chewing.im/"&gt;chewing&lt;/a&gt; packages if you are interested in:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# For gcin users:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# For gcin users:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
 
-&lt;span class="c"&gt;# For hime users:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
-&lt;/pre&gt;
+&lt;span class="c"&gt;# For hime users:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Change the system settings for input method system:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
@@ -758,23 +749,20 @@ problem, we have to install the Unity package built by the third-party.&lt;/p&gt
 &lt;p&gt;Here are the instructions for Ubuntu 14.04 &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Add APT repository for systray&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Edit configuration&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
 Package: *
 Pin: release &lt;span class="nv"&gt;o&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;LP-PPA-gurqn-systray-trusty
 Pin-Priority: 600
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Update APT&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
 &lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get upgrade
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Reboot the system (logout and login again)&lt;/p&gt;
 &lt;/li&gt;
@@ -818,16 +806,15 @@ greater than or equal to the size returned in the second step.&lt;/li&gt;
 &lt;code&gt;clGetProgramInfo(program, CL_PROGRAM_BINARIES, ...)&lt;/code&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Here's the code listing:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="nf"&gt;write_binaries&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_program&lt;/span&gt; &lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="nf"&gt;write_binaries&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_program&lt;/span&gt; &lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                       &lt;span class="n"&gt;cl_uint&lt;/span&gt; &lt;span class="n"&gt;platform_idx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CL_SUCCESS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;binaries_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Read the binaries size
-&lt;/span&gt;  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;binaries_size_alloc_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;size_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Read the binaries size&lt;/span&gt;
+  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;binaries_size_alloc_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;size_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;binaries_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;binaries_size_alloc_size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;binaries_size&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CL_OUT_OF_HOST_MEMORY&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -840,8 +827,8 @@ greater than or equal to the size returned in the second step.&lt;/li&gt;
     &lt;span class="k"&gt;goto&lt;/span&gt; &lt;span class="n"&gt;cleanup&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Read the binaries
-&lt;/span&gt;  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;binaries_ptr_alloc_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Read the binaries&lt;/span&gt;
+  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;binaries_ptr_alloc_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;binaries_ptr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr_alloc_size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;CL_OUT_OF_HOST_MEMORY&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -863,20 +850,20 @@ greater than or equal to the size returned in the second step.&lt;/li&gt;
     &lt;span class="k"&gt;goto&lt;/span&gt; &lt;span class="n"&gt;cleanup&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Write the binaries to file
-&lt;/span&gt;  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// Create output file name
-&lt;/span&gt;    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;128&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+  &lt;span class="c1"&gt;// Write the binaries to file&lt;/span&gt;
+  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// Create output file name&lt;/span&gt;
+    &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;128&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
     &lt;span class="n"&gt;snprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;cl-out_%u-%u.bin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
              &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;platform_idx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-    &lt;span class="c1"&gt;// Write the binary to the output file
-&lt;/span&gt;    &lt;span class="n"&gt;write_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;binaries_size&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+    &lt;span class="c1"&gt;// Write the binary to the output file&lt;/span&gt;
+    &lt;span class="n"&gt;write_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;filename&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt; &lt;span class="n"&gt;binaries_size&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="nl"&gt;cleanup&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
-  &lt;span class="c1"&gt;// Free the return value buffer
-&lt;/span&gt;  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// Free the return value buffer&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_devices&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;binaries_ptr&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -886,7 +873,7 @@ greater than or equal to the size returned in the second step.&lt;/li&gt;
 
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Based on these OpenCL APIs, I have written a simple OpenCL kernel program
 compiler to translate &lt;code&gt;.cl&lt;/code&gt; files into pre-compiled binaries.  Please
 refer to &lt;a class="reference external" href="https://github.com/loganchien/opencl-examples/blob/master/cl-compile/cl-compile.c"&gt;cl-compile.c&lt;/a&gt; for the source code.&lt;/p&gt;
@@ -906,18 +893,16 @@ program&lt;/strong&gt;.  For example:&lt;/p&gt;
 &lt;/ol&gt;
 &lt;p&gt;Fortunately, there are some OpenCL APIs which can make this possible.&lt;/p&gt;
 &lt;p&gt;First, we have to compile our OpenCL kernel function:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;ioc64 -cmd&lt;span class="o"&gt;=&lt;/span&gt;build -input&lt;span class="o"&gt;=&lt;/span&gt;vec_add.cl -ir&lt;span class="o"&gt;=&lt;/span&gt;vec_add.bin
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ioc64 -cmd&lt;span class="o"&gt;=&lt;/span&gt;build -input&lt;span class="o"&gt;=&lt;/span&gt;vec_add.cl -ir&lt;span class="o"&gt;=&lt;/span&gt;vec_add.bin
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, we have converted &lt;code&gt;vec_add.cl&lt;/code&gt; into binary executable for
 &lt;a class="reference external" href="https://software.intel.com/en-us/intel-opencl"&gt;Intel OpenCL SDK&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Second, we have to load the binaries from our host program.  Instead of
 loading &lt;code&gt;vec_add.cl&lt;/code&gt; with &lt;code&gt;clCreateProgramWithSource()&lt;/code&gt;, we should
 use &lt;code&gt;clCreateProgramWithBinary()&lt;/code&gt; instead.  Here's the listing of the
 changed lines:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="c1"&gt;// Create program
-&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;program_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// Create program&lt;/span&gt;
+&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;program_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;program_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="n"&gt;read_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;program_file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;program_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;vec_add.bin&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
@@ -929,7 +914,7 @@ changed lines:&lt;/p&gt;
 &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clBuildProgram&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
 &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;program_file&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Please notice that there is two subtle differences between
 &lt;code&gt;clCreateProgramWithSource()&lt;/code&gt; and &lt;code&gt;clCreateProgramWithBinar()&lt;/code&gt;:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
@@ -950,9 +935,8 @@ private inheritence at all.&lt;/p&gt;
 names in the &lt;code&gt;using&lt;/code&gt; directives, all of the overloaded functions can
 be &lt;em&gt;exported&lt;/em&gt; with one directive.  As a result, we can reduce the numbers of
 helper functions.  For example:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;&lt;/span&gt;
+
 &lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
 &lt;span class="k"&gt;public&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
   &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt; &lt;span class="p"&gt;}&lt;/span&gt;
@@ -969,8 +953,8 @@ helper functions.  For example:&lt;/p&gt;
 &lt;span class="p"&gt;};&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="c1"&gt;// All of these should work.
-&lt;/span&gt;
+  &lt;span class="c1"&gt;// All of these should work.&lt;/span&gt;
+
   &lt;span class="n"&gt;B&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -981,14 +965,13 @@ helper functions.  For example:&lt;/p&gt;
   &lt;span class="n"&gt;rb&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;rb&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, IMHO, private inheritence is still a good indication of bad class
 hierarchy deisgn.&lt;/p&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Thu, 20 Nov 2014 11:52:00 +0800</pubDate><guid>tag:logan.tw,2014-11-20:posts/2014/11/20/c-private-inheritence-and-using-directive/</guid><category>cxx</category></item><item><title>OpenCL 1.2 Manual Pages</title><link>http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/</link><description>&lt;p&gt;There is a package for &lt;a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/"&gt;OpenCL 1.2 manual pages&lt;/a&gt; in the Ubuntu repository.  To
 install the &lt;code&gt;opencl-1.2-man-doc&lt;/code&gt; package, please run this command:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install opencl-1.2-man-doc
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install opencl-1.2-man-doc
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After installing this package, we can check the OpenCL API with &lt;code&gt;man&lt;/code&gt;
 command.  For example, run &lt;code&gt;man 3 clGetPlatformIDs&lt;/code&gt; to read the document
 for &lt;code&gt;clGetPlatformIDs()&lt;/code&gt;.&lt;/p&gt;
@@ -1000,14 +983,13 @@ Applications&lt;/a&gt;.  The code should work with other OpenCL implementation a
 &lt;div class="section" id="kernel-functions"&gt;
 &lt;h2&gt;Kernel Functions&lt;/h2&gt;
 &lt;p&gt;First, we have to write a &lt;strong&gt;kernel function&lt;/strong&gt; which will be run on the devices:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="n"&gt;__kernel&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;vec_add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;__global&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;__kernel&lt;/span&gt; &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;vec_add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;__global&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                       &lt;span class="n"&gt;__global&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                       &lt;span class="n"&gt;__global&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;in2&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_global_id&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;out&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;in1&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="n"&gt;in2&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Since the OpenCL run-time will launch many work items, we can simply process
 one element at once.  As a result, we are only adding &lt;code&gt;in1[i]&lt;/code&gt; and
 &lt;code&gt;in2[i]&lt;/code&gt; and assigning the result to &lt;code&gt;out[i]&lt;/code&gt;.&lt;/p&gt;
@@ -1050,12 +1032,11 @@ have to:&lt;/p&gt;
 &lt;li&gt;Release the resources.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Here is the complete host program for the vector addition example &lt;a class="footnote-reference" href="#id4" id="id2"&gt;[2]&lt;/a&gt;:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;CL/cl.h&amp;gt;
-&lt;/span&gt;
-&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;stdlib.h&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;CL/cl.h&amp;gt;&lt;/span&gt;
+
+&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;stdlib.h&amp;gt;&lt;/span&gt;
+
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;read_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;output&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="kt"&gt;FILE&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;fp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;fopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;rb&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="n"&gt;fp&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1080,8 +1061,8 @@ have to:&lt;/p&gt;
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;run_vec_add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;cl_int&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Query platforms and devices
-&lt;/span&gt;  &lt;span class="n"&gt;cl_platform_id&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Query platforms and devices&lt;/span&gt;
+  &lt;span class="n"&gt;cl_platform_id&lt;/span&gt; &lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clGetPlatformIDs&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;platform&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
   &lt;span class="n"&gt;cl_device_id&lt;/span&gt; &lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1092,11 +1073,11 @@ have to:&lt;/p&gt;
     &lt;span class="mi"&gt;0&lt;/span&gt;
   &lt;span class="p"&gt;};&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Create context
-&lt;/span&gt;  &lt;span class="n"&gt;cl_context&lt;/span&gt; &lt;span class="n"&gt;ctx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateContext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Create context&lt;/span&gt;
+  &lt;span class="n"&gt;cl_context&lt;/span&gt; &lt;span class="n"&gt;ctx&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateContext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;prop&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Create program
-&lt;/span&gt;  &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;program_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Create program&lt;/span&gt;
+  &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;program_file&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;program_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;read_file&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;program_file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;program_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;vec_add.cl&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
@@ -1108,24 +1089,24 @@ have to:&lt;/p&gt;
 
   &lt;span class="n"&gt;free&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;program_file&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Allocate memory buffers (on the device)
-&lt;/span&gt;  &lt;span class="n"&gt;cl_mem&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_MEM_READ_ONLY&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Allocate memory buffers (on the device)&lt;/span&gt;
+  &lt;span class="n"&gt;cl_mem&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_MEM_READ_ONLY&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;cl_mem&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_MEM_READ_ONLY&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;cl_mem&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_MEM_WRITE_ONLY&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Create command queue
-&lt;/span&gt;  &lt;span class="n"&gt;cl_command_queue&lt;/span&gt; &lt;span class="n"&gt;queue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateCommandQueue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Create command queue&lt;/span&gt;
+  &lt;span class="n"&gt;cl_command_queue&lt;/span&gt; &lt;span class="n"&gt;queue&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateCommandQueue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ctx&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;device&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Enqueue the write buffer commands
-&lt;/span&gt;  &lt;span class="n"&gt;cl_event&lt;/span&gt; &lt;span class="n"&gt;wb_events&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+  &lt;span class="c1"&gt;// Enqueue the write buffer commands&lt;/span&gt;
+  &lt;span class="n"&gt;cl_event&lt;/span&gt; &lt;span class="n"&gt;wb_events&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
 
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clEnqueueWriteBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_FALSE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                              &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;wb_events&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clEnqueueWriteBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_FALSE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                              &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;wb_events&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Enqueue the kernel execution command
-&lt;/span&gt;  &lt;span class="n"&gt;cl_kernel&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateKernel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;vec_add&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Enqueue the kernel execution command&lt;/span&gt;
+  &lt;span class="n"&gt;cl_kernel&lt;/span&gt; &lt;span class="n"&gt;kernel&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clCreateKernel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;program&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;vec_add&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;err&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clSetKernelArg&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_mem&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clSetKernelArg&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_mem&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clSetKernelArg&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_mem&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1136,15 +1117,15 @@ have to:&lt;/p&gt;
                                &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;wb_events&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                                &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;kernel_event&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Enqueue the read buffer command
-&lt;/span&gt;  &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clEnqueueReadBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_TRUE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="c1"&gt;// Enqueue the read buffer command&lt;/span&gt;
+  &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clEnqueueReadBuffer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;CL_TRUE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                             &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;kernel_event&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;NULL&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Wait until every commands are finished
-&lt;/span&gt;  &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clFinish&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Wait until every commands are finished&lt;/span&gt;
+  &lt;span class="n"&gt;err&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;clFinish&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;queue&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Release the resources
-&lt;/span&gt;  &lt;span class="n"&gt;clReleaseMemObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Release the resources&lt;/span&gt;
+  &lt;span class="n"&gt;clReleaseMemObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;clReleaseMemObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;clReleaseMemObject&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;clReleaseKernel&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;kernel&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -1157,19 +1138,19 @@ have to:&lt;/p&gt;
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Prepare the input data
-&lt;/span&gt;  &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10000000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Prepare the input data&lt;/span&gt;
+  &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10000000&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cl_int&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Run the OpenCL program
-&lt;/span&gt;  &lt;span class="n"&gt;run_vec_add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Run the OpenCL program&lt;/span&gt;
+  &lt;span class="n"&gt;run_vec_add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;buf_size&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Check the answer
-&lt;/span&gt;  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// Check the answer&lt;/span&gt;
+  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;num_elems&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;data&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="n"&gt;fprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;stderr&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Failed: %u&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -1177,11 +1158,10 @@ have to:&lt;/p&gt;
 
   &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Save the code as &lt;code&gt;vec_add.c&lt;/code&gt; and compile with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;gcc vec_add.c -lOpenCL
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;gcc vec_add.c -lOpenCL
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Enjoy the result!&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="id3" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
@@ -1212,9 +1192,8 @@ following line from &lt;code&gt;/etc/default/grub&lt;/code&gt;:&lt;/p&gt;
 GRUB_HIDDEN_TIMEOUT=0
 &lt;/pre&gt;
 &lt;p&gt;And update the GRUB with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Mon, 17 Nov 2014 23:50:00 +0800</pubDate><guid>tag:logan.tw,2014-11-17:posts/2014/11/17/fix-grub2-warning/</guid><category>linux</category><category>grub</category></item><item><title>GitHub Pages and HTTPS</title><link>http://logan.tw/posts/2014/11/16/github-pages-and-https/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt; supports HTTPS protocol.  It will be good to prefer HTTPS to
 HTTP.  However, I found that if the URLs are not written carefully, the
@@ -1264,64 +1243,57 @@ manage the certificates.  Let's start.&lt;/p&gt;
 &lt;div class="section" id="create-a-certificate-authority"&gt;
 &lt;h2&gt;Create a Certificate Authority&lt;/h2&gt;
 &lt;p&gt;Create directory to save everything:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir MyCA
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir MyCA
 &lt;span class="nv"&gt;$ &lt;/span&gt;chmod &lt;span class="m"&gt;700&lt;/span&gt; MyCA
 &lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;MyCA
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Copy the tools:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;cp /usr/lib/ssl/misc/CA.pl .
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;cp /usr/lib/ssl/misc/CA.pl .
 &lt;span class="nv"&gt;$ &lt;/span&gt;cp /etc/ssl/openssl.cnf .
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Edit the configurations to fit your need, and finally create the certificate
 for your CA:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newca
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newca
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;By default, the &lt;code&gt;cacert.pem&lt;/code&gt; will be generated at
 &lt;code&gt;demoCA/cacert.pem&lt;/code&gt;.  Install this certificate as an authority in your
 browser.  You can also check the fingerprint with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;openssl x509 -fingerprint -noout -in cacert.pem
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;openssl x509 -fingerprint -noout -in cacert.pem
 &lt;span class="nv"&gt;$ &lt;/span&gt;openssl x509 -sha256 -fingerprint -noout -in cacert.pem
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="generate-certificates-for-your-service"&gt;
 &lt;h2&gt;Generate Certificates for Your Service&lt;/h2&gt;
 &lt;p&gt;To create the SSL certificate for your service:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# Create a certificate request
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newreq
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create a certificate request&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -newreq
 
-&lt;span class="c"&gt;# Sign a certificate request
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -sign
-&lt;/pre&gt;
+&lt;span class="c"&gt;# Sign a certificate request&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;./CA.pl -sign
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The generated &lt;code&gt;newkey.pem&lt;/code&gt; and &lt;code&gt;newcert.pem&lt;/code&gt; are the private key
 and the certificate respectively.&lt;/p&gt;
 &lt;p&gt;Please notice that the &lt;code&gt;newkey.pem&lt;/code&gt; has been encrypted with a passpharse.
 Under some situation, you have to decrypt it before installing the certificate
 (e.g. Apache2).  Here's the command to decrypt the private key:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;openssl rsa -in newkey.pem -out newkey.nopass.pem
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;openssl rsa -in newkey.pem -out newkey.nopass.pem
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 15 Nov 2014 02:30:00 +0800</pubDate><guid>tag:logan.tw,2014-11-15:posts/2014/11/15/ssl-certificate/</guid><category>https</category><category>apache2</category><category>ssl</category></item><item><title>C++ std::list Operations</title><link>http://logan.tw/posts/2014/11/14/c-stdlist-operations/</link><description>&lt;p&gt;To sort the doubly linked list &lt;code&gt;std::list&lt;/code&gt;, we can simply call the
 &lt;code&gt;sort()&lt;/code&gt; member function.  For example,&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;list&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;list&amp;gt;&lt;/span&gt;
+
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
 
-  &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;  &lt;span class="c1"&gt;// Sort the std::list!
-&lt;/span&gt;
+  &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sort&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;  &lt;span class="c1"&gt;// Sort the std::list!&lt;/span&gt;
+
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nl"&gt;x&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can't replace &lt;code&gt;xs.sort()&lt;/code&gt; with &lt;code&gt;std::sort(xs)&lt;/code&gt;, because the
 &lt;code&gt;std::sort()&lt;/code&gt; function from &lt;code&gt;&amp;lt;algorithm&amp;gt;&lt;/code&gt; header requires random
 access iterator as the input argument.  Unfortunately, &lt;code&gt;std::list&lt;/code&gt; only
@@ -1330,39 +1302,37 @@ an &lt;code&gt;std::list&lt;/code&gt;-specific sort function.&lt;/p&gt;
 &lt;p&gt;To move the nodes in &lt;code&gt;std::list&lt;/code&gt;, we can call the member function
 &lt;code&gt;splice()&lt;/code&gt;.  For example, we can move the second element to the beginning
 of the list with:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;list&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;list&amp;gt;&lt;/span&gt;
+
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;{&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;};&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Find the iterator to the second element
-&lt;/span&gt;  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+  &lt;span class="c1"&gt;// Find the iterator to the second element&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
   &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Move the second node to the beginning of xs
-&lt;/span&gt;  &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Move the second node to the beginning of xs&lt;/span&gt;
+  &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;auto&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="nl"&gt;x&lt;/span&gt; &lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The &lt;code&gt;splice()&lt;/code&gt; function can move the a sequence of nodes from one list
 to the other as well.  For example,&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;algorithm&amp;gt;
-#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;list&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;algorithm&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;list&amp;gt;&lt;/span&gt;
+
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;move_nelements&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;dst&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="c1"&gt;// Find the iterator to the n-th element
-&lt;/span&gt;  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+  &lt;span class="c1"&gt;// Find the iterator to the n-th element&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
   &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;advance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Move the elements
-&lt;/span&gt;  &lt;span class="n"&gt;dst&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dst&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Move the elements&lt;/span&gt;
+  &lt;span class="n"&gt;dst&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;dst&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;it&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
 
 &lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1375,14 +1345,13 @@ to the other as well.  For example,&lt;/p&gt;
     &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To test our understanding, let's write our &lt;code&gt;merge_sort()&lt;/code&gt; for
 &lt;code&gt;std::list&lt;/code&gt;.  Here's the code:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="cp"&gt;#include &amp;lt;algorithm&amp;gt;
-#include &amp;lt;iostream&amp;gt;
-#include &amp;lt;list&amp;gt;
-&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;algorithm&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;iostream&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;list&amp;gt;&lt;/span&gt;
+
 &lt;span class="k"&gt;template&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="k"&gt;typename&lt;/span&gt; &lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;typename&lt;/span&gt; &lt;span class="n"&gt;Alloc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;typename&lt;/span&gt; &lt;span class="n"&gt;Compare&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
 &lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="n"&gt;merge_sort_helper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Alloc&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
                        &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;num_elem&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
@@ -1390,8 +1359,8 @@ to the other as well.  For example,&lt;/p&gt;
   &lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;T&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Alloc&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="k"&gt;typedef&lt;/span&gt; &lt;span class="k"&gt;typename&lt;/span&gt; &lt;span class="n"&gt;list&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;iterator&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Induction basis: List with small number of elements.
-&lt;/span&gt;  &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_elem&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="c1"&gt;// Induction basis: List with small number of elements.&lt;/span&gt;
+  &lt;span class="k"&gt;switch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_elem&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
   &lt;span class="k"&gt;case&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
@@ -1401,36 +1370,36 @@ to the other as well.  For example,&lt;/p&gt;
       &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="nf"&gt;second&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
       &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
       &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_less_than&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-        &lt;span class="c1"&gt;// Swap the node if they are not ordered
-&lt;/span&gt;        &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+        &lt;span class="c1"&gt;// Swap the node if they are not ordered&lt;/span&gt;
+        &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
       &lt;span class="p"&gt;}&lt;/span&gt;
       &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Partition
-&lt;/span&gt;  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;num_elem&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Partition&lt;/span&gt;
+  &lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;num_elem&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="nf"&gt;mid_iter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
   &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;advance&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;mid_iter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Split the list
-&lt;/span&gt;  &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="c1"&gt;// Split the list&lt;/span&gt;
+  &lt;span class="n"&gt;list&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mid_iter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Sort the xs and ys
-&lt;/span&gt;  &lt;span class="n"&gt;merge_sort_helper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;is_less_than&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="c1"&gt;// Sort the xs and ys&lt;/span&gt;
+  &lt;span class="n"&gt;merge_sort_helper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;is_less_than&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
   &lt;span class="n"&gt;merge_sort_helper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_elem&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;mid&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;is_less_than&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-  &lt;span class="c1"&gt;// Merge the ys back to xs
-&lt;/span&gt;  &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;xs_it&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="c1"&gt;// Merge the ys back to xs&lt;/span&gt;
+  &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;xs_it&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;xs_end&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;ys_it&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
   &lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;ys_end&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
 
   &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs_it&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;xs_end&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class="n"&gt;ys_it&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;ys_end&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;is_less_than&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;ys_it&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;xs_it&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="c1"&gt;// *ys_it is less than *xs_it, thus insert ys_it before xs_it.
-&lt;/span&gt;      &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs_it&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ys_it&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+      &lt;span class="c1"&gt;// *ys_it is less than *xs_it, thus insert ys_it before xs_it.&lt;/span&gt;
+      &lt;span class="n"&gt;xs&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;splice&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;xs_it&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ys&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;ys_it&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
       &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;xs_it&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
     &lt;span class="p"&gt;}&lt;/span&gt;
@@ -1452,7 +1421,7 @@ to the other as well.  For example,&lt;/p&gt;
      &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;cout&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;endl&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
    &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Let's call it a day.  In this article, we have introduced the usage of
 &lt;code&gt;std::list&amp;lt;T&amp;gt;::sort()&lt;/code&gt; and &lt;code&gt;std::list::splice()&lt;/code&gt;.  Hope you enjoy
 this article.&lt;/p&gt;
@@ -1465,8 +1434,7 @@ would adopt a conservative approach:&lt;/p&gt;
 &lt;li&gt;Swap the container.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;For example, to remove odd numbers from a set:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1475,7 +1443,7 @@ would adopt a conservative approach:&lt;/p&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;swap&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;result&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, this code is inefficient for two reasons:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
 &lt;li&gt;Elements copy overhead -- If the container is hold heavy elements, e.g.
@@ -1496,32 +1464,30 @@ elements.&lt;/blockquote&gt;
 &lt;p&gt;Thus, for associative containers (including &lt;code&gt;std::set&lt;/code&gt;, &lt;code&gt;std::map&lt;/code&gt;,
 &lt;code&gt;std::multiset&lt;/code&gt;, and &lt;code&gt;std::multimap&lt;/code&gt;), we can directly erase the
 elements from the container:&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds_2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds_2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="c1"&gt;// Move to next element.
-&lt;/span&gt;    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;erase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;// Erase current element and post increase iterator.
-&lt;/span&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;  &lt;span class="c1"&gt;// Move to next element.&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+      &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;erase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;// Erase current element and post increase iterator.&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, please be careful that following code &lt;code&gt;remove_odds_3()&lt;/code&gt; is not
 equivalent to &lt;code&gt;remove_odds_2()&lt;/code&gt; because the &lt;code&gt;erase()&lt;/code&gt; function will
 invalidate the iterator to the erased element.  According to 24.2.1 #5 and #10,
 any operations on the invalid iterator except the destruction (including
 &lt;code&gt;++i&lt;/code&gt;) will in result undefined behavior.&lt;/p&gt;
-&lt;pre class="code c++ literal-block"&gt;
-&lt;span class="c1"&gt;// XXX Incorrect code to demostrate undefined behavior
-&lt;/span&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds_3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// XXX Incorrect code to demostrate undefined behavior&lt;/span&gt;
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds_3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-      &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;erase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;// erase() will invalidate the iterator it.
-&lt;/span&gt;    &lt;span class="p"&gt;}&lt;/span&gt;
+      &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;erase&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;// erase() will invalidate the iterator it.&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
   &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;span class="p"&gt;}&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To complete our discussion, it is important to know that there is &lt;em&gt;no such
 guarantee&lt;/em&gt; for &lt;strong&gt;sequence containers&lt;/strong&gt; &lt;a class="footnote-reference" href="#list" id="id2"&gt;[2]&lt;/a&gt; and &lt;strong&gt;unordered associative
 containers&lt;/strong&gt; (23.2.5 #14).  We should either fall back to the conservative
@@ -1545,9 +1511,8 @@ containers, such as &lt;code&gt;std::vector&lt;/code&gt; and &lt;code&gt;std::de
 &lt;/table&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Thu, 13 Nov 2014 22:38:00 +0800</pubDate><guid>tag:logan.tw,2014-11-13:posts/2014/11/13/c-associative-container-and-iterator-validness/</guid><category>cxx</category><category>stl</category></item><item><title>Git Merge Base and Checkout</title><link>http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/</link><description>&lt;p&gt;Today I have learned two different usages of &lt;code&gt;git&lt;/code&gt; command.  First, to
 list the &lt;strong&gt;least common ancestor&lt;/strong&gt; of two refs, we may use following command:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;git merge-base --octopus &amp;lt;commit_1&amp;gt; &amp;lt;commit_2&amp;gt; ... &amp;lt;commit_n&amp;gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git merge-base --octopus &amp;lt;commit_1&amp;gt; &amp;lt;commit_2&amp;gt; ... &amp;lt;commit_n&amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Please notice that &lt;code&gt;--octopus&lt;/code&gt; is mandatory; otherwise, &lt;code&gt;git&lt;/code&gt;
 will create a hypothetical commit &lt;code&gt;M&lt;/code&gt;, which merges &lt;code&gt;commit_2&lt;/code&gt; ..
 &lt;code&gt;commit_n&lt;/code&gt;, and then compute the common ancestor of &lt;code&gt;commit_1&lt;/code&gt; and
@@ -1557,13 +1522,12 @@ ancestor.  If such commit is not available, then &lt;code&gt;git&lt;/code&gt; wi
 error.&lt;/p&gt;
 &lt;p&gt;The second usage I have learned is that we can create a &lt;strong&gt;orphan branch&lt;/strong&gt; with
 following commands:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;git checkout --orphan &amp;lt;new-branch-name&amp;gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git checkout --orphan &amp;lt;new-branch-name&amp;gt;
 &lt;span class="nv"&gt;$ &lt;/span&gt;git reset
 &lt;span class="nv"&gt;$ &lt;/span&gt;rm -rf *
 ... add files ...
 &lt;span class="nv"&gt;$ &lt;/span&gt;git commit
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The orphan branch will be completely independent of the existing branches.
 This is helpful when creating &lt;a class="reference external" href="https://pages.github.com/"&gt;GitHub Pages&lt;/a&gt; branch.&lt;/p&gt;
 </description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Thu, 13 Nov 2014 22:04:00 +0800</pubDate><guid>tag:logan.tw,2014-11-13:posts/2014/11/13/git-merge-base-and-checkout/</guid><category>git</category><category>tips</category></item><item><title>Soundness and Completeness of the Type System</title><link>http://logan.tw/posts/2014/11/12/soundness-and-completeness-of-the-type-system/</link><description>&lt;p&gt;In the section 6 of  &lt;a class="reference external" href="https://class.coursera.org/proglang-003"&gt;Programming Languages&lt;/a&gt; course, Dan Grossman discussed

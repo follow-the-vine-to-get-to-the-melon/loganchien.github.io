@@ -65,8 +65,7 @@ implementation.  Some extra care should be paid if the programmer didn't
 specify the desturctor.  For example, in the following code, the base class
 <code>A</code> has a virtual destructor and the derived class <code>B</code> does not
 define any destructor.  What will happen when after running <code>delete a</code>?</p>
-<pre class="code c++ literal-block">
-<span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
   <span class="k">virtual</span> <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
 <span class="p">};</span>
@@ -78,7 +77,7 @@ define any destructor.  What will happen when after running <code>delete a</code
   <span class="n">A</span> <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
   <span class="k">delete</span> <span class="n">a</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>If your compiler is following the <a class="reference external" href="https://mentorembedded.github.io/cxx-abi/abi.html">Itanium C++ ABI</a>, then the compiler will
 synthesize two functions <code>_ZN1BD0Ev()</code> and <code>_ZN1BD2Ev()</code>.</p>
 <ul class="simple">
@@ -96,8 +95,7 @@ table and pass the object address to the corresponding function, which is
 <p>In fact, if you define the destructor in the derived class, then your destructor
 will be part of the <code>_ZN1BD2Ev()</code>.  You can check the behavior with the
 following code:</p>
-<pre class="code c++ literal-block">
-<span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="k">throw</span> <span class="p">();</span>
+<div class="highlight"><pre><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="k">throw</span> <span class="p">();</span>
 
 <span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -115,7 +113,7 @@ following code:</p>
   <span class="n">A</span> <span class="o">*</span><span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
   <span class="k">delete</span> <span class="n">a</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>p.s. You can generate the LLVM assembly with <code>clang++ -S -emit-llvm</code>
 which is more readable.</p>
 </div>
@@ -146,10 +144,10 @@ which is more readable.</p>
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -166,7 +164,7 @@ which is more readable.</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

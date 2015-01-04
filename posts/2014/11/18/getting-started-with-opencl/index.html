@@ -64,14 +64,13 @@ Applications</a>.  The code should work with other OpenCL implementation as well
 <div class="section" id="kernel-functions">
 <h2>Kernel Functions</h2>
 <p>First, we have to write a <strong>kernel function</strong> which will be run on the devices:</p>
-<pre class="code c++ literal-block">
-<span class="n">__kernel</span> <span class="kt">void</span> <span class="nf">vec_add</span><span class="p">(</span><span class="n">__global</span> <span class="kt">int</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
+<div class="highlight"><pre><span class="n">__kernel</span> <span class="kt">void</span> <span class="nf">vec_add</span><span class="p">(</span><span class="n">__global</span> <span class="kt">int</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
                       <span class="n">__global</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">in1</span><span class="p">,</span>
                       <span class="n">__global</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">in2</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">get_global_id</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
   <span class="n">out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">in1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">in2</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>Since the OpenCL run-time will launch many work items, we can simply process
 one element at once.  As a result, we are only adding <code>in1[i]</code> and
 <code>in2[i]</code> and assigning the result to <code>out[i]</code>.</p>
@@ -114,12 +113,11 @@ have to:</p>
 <li>Release the resources.</li>
 </ul>
 <p>Here is the complete host program for the vector addition example <a class="footnote-reference" href="#id4" id="id2">[2]</a>:</p>
-<pre class="code c++ literal-block">
-<span class="cp">#include &lt;CL/cl.h&gt;
-</span>
-<span class="cp">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-</span>
+<div class="highlight"><pre><span class="cp">#include &lt;CL/cl.h&gt;</span>
+
+<span class="cp">#include &lt;stdio.h&gt;</span>
+<span class="cp">#include &lt;stdlib.h&gt;</span>
+
 <span class="kt">int</span> <span class="nf">read_file</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">**</span><span class="n">output</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">FILE</span><span class="o">*</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;rb&quot;</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">fp</span><span class="p">)</span> <span class="p">{</span>
@@ -144,8 +142,8 @@ have to:</p>
 <span class="kt">void</span> <span class="nf">run_vec_add</span><span class="p">(</span><span class="kt">size_t</span> <span class="n">num_elems</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">cl_int</span><span class="o">*</span> <span class="n">data</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">cl_int</span> <span class="n">err</span><span class="p">;</span>
 
-  <span class="c1">// Query platforms and devices
-</span>  <span class="n">cl_platform_id</span> <span class="n">platform</span><span class="p">;</span>
+  <span class="c1">// Query platforms and devices</span>
+  <span class="n">cl_platform_id</span> <span class="n">platform</span><span class="p">;</span>
   <span class="n">err</span> <span class="o">=</span> <span class="n">clGetPlatformIDs</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">platform</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
   <span class="n">cl_device_id</span> <span class="n">device</span><span class="p">;</span>
@@ -156,11 +154,11 @@ have to:</p>
     <span class="mi">0</span>
   <span class="p">};</span>
 
-  <span class="c1">// Create context
-</span>  <span class="n">cl_context</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">clCreateContext</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">device</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
+  <span class="c1">// Create context</span>
+  <span class="n">cl_context</span> <span class="n">ctx</span> <span class="o">=</span> <span class="n">clCreateContext</span><span class="p">(</span><span class="n">prop</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">device</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
 
-  <span class="c1">// Create program
-</span>  <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">program_file</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="c1">// Create program</span>
+  <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">program_file</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
   <span class="kt">size_t</span> <span class="n">program_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="n">read_file</span><span class="p">(</span><span class="o">&amp;</span><span class="n">program_file</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">program_size</span><span class="p">,</span> <span class="s">&quot;vec_add.cl&quot;</span><span class="p">);</span>
 
@@ -172,24 +170,24 @@ have to:</p>
 
   <span class="n">free</span><span class="p">(</span><span class="n">program_file</span><span class="p">);</span>
 
-  <span class="c1">// Allocate memory buffers (on the device)
-</span>  <span class="n">cl_mem</span> <span class="n">a</span> <span class="o">=</span> <span class="n">clCreateBuffer</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">CL_MEM_READ_ONLY</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
+  <span class="c1">// Allocate memory buffers (on the device)</span>
+  <span class="n">cl_mem</span> <span class="n">a</span> <span class="o">=</span> <span class="n">clCreateBuffer</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">CL_MEM_READ_ONLY</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
   <span class="n">cl_mem</span> <span class="n">b</span> <span class="o">=</span> <span class="n">clCreateBuffer</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">CL_MEM_READ_ONLY</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
   <span class="n">cl_mem</span> <span class="n">c</span> <span class="o">=</span> <span class="n">clCreateBuffer</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">CL_MEM_WRITE_ONLY</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
 
-  <span class="c1">// Create command queue
-</span>  <span class="n">cl_command_queue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">clCreateCommandQueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="c1">// Create command queue</span>
+  <span class="n">cl_command_queue</span> <span class="n">queue</span> <span class="o">=</span> <span class="n">clCreateCommandQueue</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">device</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
-  <span class="c1">// Enqueue the write buffer commands
-</span>  <span class="n">cl_event</span> <span class="n">wb_events</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+  <span class="c1">// Enqueue the write buffer commands</span>
+  <span class="n">cl_event</span> <span class="n">wb_events</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
 
   <span class="n">err</span> <span class="o">=</span> <span class="n">clEnqueueWriteBuffer</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">CL_FALSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
                              <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wb_events</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span>
   <span class="n">err</span> <span class="o">=</span> <span class="n">clEnqueueWriteBuffer</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">CL_FALSE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span>
                              <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">wb_events</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
 
-  <span class="c1">// Enqueue the kernel execution command
-</span>  <span class="n">cl_kernel</span> <span class="n">kernel</span> <span class="o">=</span> <span class="n">clCreateKernel</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="s">&quot;vec_add&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
+  <span class="c1">// Enqueue the kernel execution command</span>
+  <span class="n">cl_kernel</span> <span class="n">kernel</span> <span class="o">=</span> <span class="n">clCreateKernel</span><span class="p">(</span><span class="n">program</span><span class="p">,</span> <span class="s">&quot;vec_add&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">err</span><span class="p">);</span>
   <span class="n">err</span> <span class="o">=</span> <span class="n">clSetKernelArg</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cl_mem</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">);</span>
   <span class="n">err</span> <span class="o">=</span> <span class="n">clSetKernelArg</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cl_mem</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">);</span>
   <span class="n">err</span> <span class="o">=</span> <span class="n">clSetKernelArg</span><span class="p">(</span><span class="n">kernel</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cl_mem</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
@@ -200,15 +198,15 @@ have to:</p>
                                <span class="o">&amp;</span><span class="n">num_elems</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">wb_events</span><span class="p">,</span>
                                <span class="o">&amp;</span><span class="n">kernel_event</span><span class="p">);</span>
 
-  <span class="c1">// Enqueue the read buffer command
-</span>  <span class="n">err</span> <span class="o">=</span> <span class="n">clEnqueueReadBuffer</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">CL_TRUE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="c1">// Enqueue the read buffer command</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">clEnqueueReadBuffer</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">CL_TRUE</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span>
                             <span class="o">&amp;</span><span class="n">kernel_event</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
 
-  <span class="c1">// Wait until every commands are finished
-</span>  <span class="n">err</span> <span class="o">=</span> <span class="n">clFinish</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span>
+  <span class="c1">// Wait until every commands are finished</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">clFinish</span><span class="p">(</span><span class="n">queue</span><span class="p">);</span>
 
-  <span class="c1">// Release the resources
-</span>  <span class="n">clReleaseMemObject</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
+  <span class="c1">// Release the resources</span>
+  <span class="n">clReleaseMemObject</span><span class="p">(</span><span class="n">a</span><span class="p">);</span>
   <span class="n">clReleaseMemObject</span><span class="p">(</span><span class="n">b</span><span class="p">);</span>
   <span class="n">clReleaseMemObject</span><span class="p">(</span><span class="n">c</span><span class="p">);</span>
   <span class="n">clReleaseKernel</span><span class="p">(</span><span class="n">kernel</span><span class="p">);</span>
@@ -221,19 +219,19 @@ have to:</p>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">cl_int</span> <span class="n">i</span><span class="p">;</span>
 
-  <span class="c1">// Prepare the input data
-</span>  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">num_elems</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
+  <span class="c1">// Prepare the input data</span>
+  <span class="k">const</span> <span class="kt">size_t</span> <span class="n">num_elems</span> <span class="o">=</span> <span class="mi">10000000</span><span class="p">;</span>
   <span class="k">const</span> <span class="kt">size_t</span> <span class="n">buf_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">cl_int</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_elems</span><span class="p">;</span>
   <span class="n">cl_int</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="n">cl_int</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">buf_size</span><span class="p">);</span>
   <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_elems</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="c1">// Run the OpenCL program
-</span>  <span class="n">run_vec_add</span><span class="p">(</span><span class="n">num_elems</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+  <span class="c1">// Run the OpenCL program</span>
+  <span class="n">run_vec_add</span><span class="p">(</span><span class="n">num_elems</span><span class="p">,</span> <span class="n">buf_size</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
 
-  <span class="c1">// Check the answer
-</span>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_elems</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Check the answer</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_elems</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;Failed: %u</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">i</span><span class="p">);</span>
     <span class="p">}</span>
@@ -241,11 +239,10 @@ have to:</p>
 
   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>Save the code as <code>vec_add.c</code> and compile with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>gcc vec_add.c -lOpenCL
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>gcc vec_add.c -lOpenCL
+</pre></div>
 <p>Enjoy the result!</p>
 <table class="docutils footnote" frame="void" id="id3" rules="none">
 <colgroup><col class="label" /><col /></colgroup>
@@ -292,10 +289,10 @@ code should handled properly in a robust software.</td></tr>
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -312,7 +309,7 @@ code should handled properly in a robust software.</td></tr>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

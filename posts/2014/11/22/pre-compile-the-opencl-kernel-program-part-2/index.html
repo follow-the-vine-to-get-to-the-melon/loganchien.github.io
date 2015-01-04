@@ -75,16 +75,15 @@ greater than or equal to the size returned in the second step.</li>
 <code>clGetProgramInfo(program, CL_PROGRAM_BINARIES, ...)</code>.</li>
 </ol>
 <p>Here's the code listing:</p>
-<pre class="code c++ literal-block">
-<span class="n">cl_int</span> <span class="nf">write_binaries</span><span class="p">(</span><span class="n">cl_program</span> <span class="n">program</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">num_devices</span><span class="p">,</span>
+<div class="highlight"><pre><span class="n">cl_int</span> <span class="nf">write_binaries</span><span class="p">(</span><span class="n">cl_program</span> <span class="n">program</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">num_devices</span><span class="p">,</span>
                       <span class="n">cl_uint</span> <span class="n">platform_idx</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">unsigned</span> <span class="n">i</span><span class="p">;</span>
   <span class="n">cl_int</span> <span class="n">err</span> <span class="o">=</span> <span class="n">CL_SUCCESS</span><span class="p">;</span>
   <span class="kt">size_t</span> <span class="o">*</span><span class="n">binaries_size</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
   <span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">**</span><span class="n">binaries_ptr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 
-  <span class="c1">// Read the binaries size
-</span>  <span class="kt">size_t</span> <span class="n">binaries_size_alloc_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_devices</span><span class="p">;</span>
+  <span class="c1">// Read the binaries size</span>
+  <span class="kt">size_t</span> <span class="n">binaries_size_alloc_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">size_t</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_devices</span><span class="p">;</span>
   <span class="n">binaries_size</span> <span class="o">=</span> <span class="p">(</span><span class="kt">size_t</span> <span class="o">*</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">binaries_size_alloc_size</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">binaries_size</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">err</span> <span class="o">=</span> <span class="n">CL_OUT_OF_HOST_MEMORY</span><span class="p">;</span>
@@ -97,8 +96,8 @@ greater than or equal to the size returned in the second step.</li>
     <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="c1">// Read the binaries
-</span>  <span class="kt">size_t</span> <span class="n">binaries_ptr_alloc_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_devices</span><span class="p">;</span>
+  <span class="c1">// Read the binaries</span>
+  <span class="kt">size_t</span> <span class="n">binaries_ptr_alloc_size</span> <span class="o">=</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span> <span class="o">*</span> <span class="n">num_devices</span><span class="p">;</span>
   <span class="n">binaries_ptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">**</span><span class="p">)</span><span class="n">malloc</span><span class="p">(</span><span class="n">binaries_ptr_alloc_size</span><span class="p">);</span>
   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">binaries_ptr</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">err</span> <span class="o">=</span> <span class="n">CL_OUT_OF_HOST_MEMORY</span><span class="p">;</span>
@@ -120,20 +119,20 @@ greater than or equal to the size returned in the second step.</li>
     <span class="k">goto</span> <span class="n">cleanup</span><span class="p">;</span>
   <span class="p">}</span>
 
-  <span class="c1">// Write the binaries to file
-</span>  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_devices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// Create output file name
-</span>    <span class="kt">char</span> <span class="n">filename</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
+  <span class="c1">// Write the binaries to file</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_devices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// Create output file name</span>
+    <span class="kt">char</span> <span class="n">filename</span><span class="p">[</span><span class="mi">128</span><span class="p">];</span>
     <span class="n">snprintf</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="s">&quot;cl-out_%u-%u.bin&quot;</span><span class="p">,</span>
              <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">platform_idx</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span><span class="p">)</span><span class="n">i</span><span class="p">);</span>
 
-    <span class="c1">// Write the binary to the output file
-</span>    <span class="n">write_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">binaries_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">binaries_size</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+    <span class="c1">// Write the binary to the output file</span>
+    <span class="n">write_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">binaries_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">binaries_size</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
   <span class="p">}</span>
 
 <span class="nl">cleanup</span><span class="p">:</span>
-  <span class="c1">// Free the return value buffer
-</span>  <span class="k">if</span> <span class="p">(</span><span class="n">binaries_ptr</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// Free the return value buffer</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">binaries_ptr</span><span class="p">)</span> <span class="p">{</span>
     <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">num_devices</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
       <span class="n">free</span><span class="p">(</span><span class="n">binaries_ptr</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
     <span class="p">}</span>
@@ -143,7 +142,7 @@ greater than or equal to the size returned in the second step.</li>
 
   <span class="k">return</span> <span class="n">err</span><span class="p">;</span>
 <span class="p">}</span>
-</pre>
+</pre></div>
 <p>Based on these OpenCL APIs, I have written a simple OpenCL kernel program
 compiler to translate <code>.cl</code> files into pre-compiled binaries.  Please
 refer to <a class="reference external" href="https://github.com/loganchien/opencl-examples/blob/master/cl-compile/cl-compile.c">cl-compile.c</a> for the source code.</p>
@@ -178,10 +177,10 @@ official intermediate representation for OpenCL kernel programs.</p>
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -198,7 +197,7 @@ official intermediate representation for OpenCL kernel programs.</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

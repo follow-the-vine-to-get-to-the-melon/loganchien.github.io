@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>GitHub Pages and HTTPS</title>
+  <title>Count Trailing Zeros</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,37 +52,42 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">GitHub Pages and HTTPS</h1>
-      <p class="meta"><time datetime="2014-11-16T23:31:00+08:00" pubdate>Sun 16 November 2014</time></p>
+      <h1 class="entry-title">Count Trailing Zeros</h1>
+      <p class="meta"><time datetime="2014-12-17T23:34:00+08:00" pubdate>Wed 17 December 2014</time></p>
 </header>
 
-  <div class="entry-content"><p><a class="reference external" href="https://pages.github.com">GitHub Pages</a> supports HTTPS protocol.  It will be good to prefer HTTPS to
-HTTP.  However, I found that if the URLs are not written carefully, the
-user might be redirected to HTTP URLs.</p>
-<p>For unknown reason, <a class="reference external" href="https://pages.github.com">GitHub Pages</a> are redirecting the directories without
-trailing slash to the HTTP URLs.  For example, the following URL:</p>
-<pre class="literal-block">
-https://loganchien.github.io/cert
-</pre>
-<p>will be redirected to:</p>
-<pre class="literal-block">
-http://loganchien.github.io/cert/
-</pre>
-<p>To avoid this pitfall, please make sure that your URLs are ending with trailing
-slash if they are pointing to directories.  For example,</p>
-<pre class="code literal-block">
-https://loganchien.github.io/cert/
-</pre>
-<p>This URL won't be redirected and work as expected.</p>
+  <div class="entry-content"><p>How to count the number of trailing zeros of an integer?  The simplest way is
+to use the built-in function <code>__builtin_ctz()</code>:</p>
+<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>What will happen if we don't have <code>__builtin_ctz()</code>?  If we have another
+built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>
+(the number of set bits), then we can compute the number of trailing zeros with:</p>
+<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">__popcount</span><span class="p">((</span><span class="n">n</span> <span class="o">&amp;</span> <span class="o">-</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Note: Assume that <a class="reference external" href="http://en.wikipedia.org/wiki/Two%27s_complement">two's complement</a> is adopted for negation and substract,
+the expression <code>(n &amp; -n)</code> will leave only the last set-bit in the input
+integer.  Next, the <code>-1</code> operation will set the bits lower than the last
+set-bit.  And finally, you can get the number of trailing zeros with
+<code>__popcount()</code>.</p>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://en.wikipedia.org/wiki/Find_first_set">Wikipedia: Find First Set</a> (retrived on 2014/12/17)</li>
+</ul>
+</div>
 </div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2014-11-16T23:31:00+08:00" pubdate>Sun 16 November 2014</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/github/">github</a>
-    <a class="category" href="http://logan.tw/tag/https/">https</a>
+<time datetime="2014-12-17T23:34:00+08:00" pubdate>Wed 17 December 2014</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/compiler/">compiler</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

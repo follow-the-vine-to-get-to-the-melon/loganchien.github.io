@@ -21,6 +21,11 @@
 <changefreq>weekly</changefreq>
 <priority>0.80</priority>
 </url><url>
+<loc>http://logan.tw/posts/2014/12/17/count-trailing-zeros/</loc>
+<lastmod>2014-12-17</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.80</priority>
+</url><url>
 <loc>http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</loc>
 <lastmod>2014-12-15</lastmod>
 <changefreq>weekly</changefreq>
@@ -168,6 +173,11 @@
 </url><url>
 <loc>http://logan.tw/tag/clang/</loc>
 <lastmod>2014-11-26</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/compiler/</loc>
+<lastmod>2014-12-17</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>

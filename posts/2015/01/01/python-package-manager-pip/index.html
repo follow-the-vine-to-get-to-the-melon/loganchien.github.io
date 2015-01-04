@@ -63,33 +63,28 @@ dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">
 <div class="section" id="install-packages">
 <h2>Install Packages</h2>
 <p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index</a>:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install package1 package2 package3
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install package1 package2 package3
+</pre></div>
 <p>For example, we can install <a class="reference external" href="https://www.djangoproject.com/">Django</a> and its dependencies with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install django
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install django
+</pre></div>
 <p>In some scenario, we have to install the package with specific version.  We can
 achieve this with the version qualifier:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install <span class="s1">'django==1.5'</span>
-<span class="nv">$ </span>pip install <span class="s1">'django&gt;=1.7'</span>
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s1">&#39;django==1.5&#39;</span>
+<span class="nv">$ </span>pip install <span class="s1">&#39;django&gt;=1.7&#39;</span>
+</pre></div>
 <p>We can also write a <code>requirements.txt</code> with various packages, for example:</p>
 <pre class="code literal-block">
 django-sendfile
 django&gt;=1.7
 </pre>
 <p>And then install packages with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install -r requirements.txt
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install -r requirements.txt
+</pre></div>
 <p>Some projects have extra requirements.  To install those requirements, we
 have to specify the name in the brackets, for example:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install waliki<span class="o">[</span>all<span class="o">]</span>
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install waliki<span class="o">[</span>all<span class="o">]</span>
+</pre></div>
 </div>
 <div class="section" id="install-packages-for-development">
 <h2>Install Packages for Development</h2>
@@ -97,40 +92,34 @@ have to specify the name in the brackets, for example:</p>
 to <a class="reference external" href="https://pypi.python.org">Python Package Index</a>, we can install them by specifying the tarball URLs.</p>
 <p>For example, we can install the latest <a class="reference external" href="https://www.djangoproject.com/">Django</a> packages from their master
 branch with:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install https://github.com/django/django/tarball/master
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install https://github.com/django/django/tarball/master
+</pre></div>
 <p>We can also install the package from the local file system with the
 <code>file://</code> protocol:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install <span class="s2">&quot;file:///path/to/the/package#egg=name&quot;</span>
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s2">&quot;file:///path/to/the/package#egg=name&quot;</span>
+</pre></div>
 <p>For example, to install latest <a class="reference external" href="https://github.com/mgaitan/waliki">Waliki</a> from Git repository:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
+<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
 <span class="nv">$ </span><span class="nb">cd </span>waliki
 <span class="nv">$ </span>pip install <span class="s2">&quot;file://</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">#egg=waliki[all]&quot;</span>
-</pre>
+</pre></div>
 <p>Sometimes, it is more convenient use the Python files in-place, so that we
 don't have to reinstall the package after changing any files.  We can achieve
 this with <code>-e</code> option:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip install -e path/to/the/package
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip install -e path/to/the/package
+</pre></div>
 <p>For example:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
+<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
 <span class="nv">$ </span><span class="nb">cd </span>waliki
 <span class="nv">$ </span>pip install -e .<span class="o">[</span>all<span class="o">]</span>
-</pre>
+</pre></div>
 <p>With <code>pip install -e</code>, we can save a lot of development time!</p>
 </div>
 <div class="section" id="uninstall-packages">
 <h2>Uninstall Packages</h2>
 <p>Finally, we can remove the package with the <code>pip uninstall</code> command:</p>
-<pre class="code bash literal-block">
-<span class="nv">$ </span>pip uninstall package-name
-</pre>
+<div class="highlight"><pre><span class="nv">$ </span>pip uninstall package-name
+</pre></div>
 </div>
 </div>
     <footer>
@@ -161,10 +150,10 @@ this with <code>-e</code> option:</p>
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
+          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">LLVM Obfuscator</a>
+          <a href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">Autossh and Ubuntu Upstart Daemon</a>
       </li>
     </ul>
   </section>
@@ -181,7 +170,7 @@ this with <code>-e</code> option:</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

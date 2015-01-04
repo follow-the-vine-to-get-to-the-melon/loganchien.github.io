@@ -55,21 +55,19 @@ your keyboard.&lt;/p&gt;
 &lt;p&gt;Here are the instructions:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Install the input methods&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# To install gcin:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# To install gcin:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
 
-&lt;span class="c"&gt;# To install hime:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
-&lt;/pre&gt;
+&lt;span class="c"&gt;# To install hime:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Install the &lt;a class="reference external" href="http://chewing.im/"&gt;chewing&lt;/a&gt; packages if you are interested in:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="c"&gt;# For gcin users:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# For gcin users:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
 
-&lt;span class="c"&gt;# For hime users:
-&lt;/span&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
-&lt;/pre&gt;
+&lt;span class="c"&gt;# For hime users:&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Change the system settings for input method system:&lt;/p&gt;
 &lt;ol class="arabic simple"&gt;
@@ -94,23 +92,20 @@ problem, we have to install the Unity package built by the third-party.&lt;/p&gt
 &lt;p&gt;Here are the instructions for Ubuntu 14.04 &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Add APT repository for systray&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Edit configuration&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
 Package: *
 Pin: release &lt;span class="nv"&gt;o&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;LP-PPA-gurqn-systray-trusty
 Pin-Priority: 600
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Update APT&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
 &lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get upgrade
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Reboot the system (logout and login again)&lt;/p&gt;
 &lt;/li&gt;
@@ -147,9 +142,8 @@ following line from &lt;code&gt;/etc/default/grub&lt;/code&gt;:&lt;/p&gt;
 GRUB_HIDDEN_TIMEOUT=0
 &lt;/pre&gt;
 &lt;p&gt;And update the GRUB with:&lt;/p&gt;
-&lt;pre class="code bash literal-block"&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
 </summary><category term="linux"></category><category term="grub"></category></entry><entry><title>First Post</title><link href="http://logan.tw/posts/2014/11/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-11:posts/2014/11/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
 &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
