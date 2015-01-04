@@ -26,6 +26,11 @@
 <changefreq>weekly</changefreq>
 <priority>0.80</priority>
 </url><url>
+<loc>http://logan.tw/posts/2014/12/16/risc-v-microprocessor/</loc>
+<lastmod>2014-12-16</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.80</priority>
+</url><url>
 <loc>http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/</loc>
 <lastmod>2014-12-15</lastmod>
 <changefreq>weekly</changefreq>
@@ -253,6 +258,11 @@
 </url><url>
 <loc>http://logan.tw/tag/plt/</loc>
 <lastmod>2014-11-12</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/processor/</loc>
+<lastmod>2014-12-16</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>

@@ -28,7 +28,84 @@ You can copy the line and replace &lt;code&gt;wheezy&lt;/code&gt; with &lt;code&
 &lt;p&gt;For example, to install &lt;code&gt;git&lt;/code&gt; from the backports:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports git
 &lt;/pre&gt;&lt;/div&gt;
-</summary><category term="linux"></category><category term="debian"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+</summary><category term="linux"></category><category term="debian"></category></entry><entry><title>RISC-V Microprocessor</title><link href="http://logan.tw/posts/2014/12/16/risc-v-microprocessor/" rel="alternate"></link><updated>2014-12-16T23:20:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-16:posts/2014/12/16/risc-v-microprocessor/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt; is an instruction set architecture (ISA) released by UC Berkeley.
+Besides, a high performance, power efficient, and royalty-free open source
+implementation &lt;a class="reference external" href="https://github.com/ucb-bar"&gt;Rocket Chip&lt;/a&gt; is available.&lt;/p&gt;
+&lt;p&gt;RISC-V was developed by Krste Asanović and David A. Patterson.  In their
+&lt;a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf"&gt;technical report&lt;/a&gt;, they claimed that an open instruction set can benefit both
+academic and industry.  They gave three arguments:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;strong&gt;Greater innovation&lt;/strong&gt; -- If there is an open instruction set and open
+implementations, we could have greater innovation since the developers or
+researchers can change the ISA, evaluate their new deisgn, and compare their
+design with the others.  This is not possible with current proprietary ISA
+licensing models.  Since most of the licensing models disallow the change of
+ISA.  Some licensing model even prohibits the change of the ISA
+implementations.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Open development&lt;/strong&gt; -- If the instruction set and its implementation is
+developed in open, more developers can read and audit the source code and
+find the possible errors.  It is well-known that the open model works for
+operating system and compiler toolchain.  And RISC-V is the one to fill in
+the missing piece for microprocessors.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Reduce cost&lt;/strong&gt; -- If the ecosystem becomes mature, the price of the baseline
+chip will become as low as the manufacture cost since everyone can download
+the reference implementation and ask the IC foundries to produce the chip.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;The design of the instruction set is yet anther question.  The choice of the
+instruction is important since the ISA will last for several decades.  A good
+design should include the essential features and exclude the unnecessary
+features.  For example, it is necessary to have load/store instructions for
+byte, short, float, and double; but it is unnecessary to include &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Delay_slot"&gt;delay slot&lt;/a&gt;
+and &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Register_window"&gt;register window&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Krste and David predict that there are three trends for the computer evolution:
+IoT devices, personal mobile devices, and warehouse-scale computers.  Thus,
+RISC-V follows these design concepts:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;strong&gt;Base plus extension ISA&lt;/strong&gt; -- More applications are accelerating the
+computation with &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Application-specific_integrated_circuit"&gt;ASIC&lt;/a&gt;, thus we have to leave the space for further
+extension of the core instruction set.  This implies that we should leave
+sufficient encoding space for extensions.  As a result, RISC-V has a core
+instruction set with several extensions.  The bit operations, SIMD
+instructions, and compact instructions are defined as the optional
+extensions.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Compact instruction set encoding&lt;/strong&gt; -- On the memory limited IoT devices,
+the code size will be an issue.  It will be helpful to have compact
+instruction set encoding.  There is a compact instruction extension which
+encodes the popular instructions in 16-bit (instead of 32-bit).  This is
+similar to the Thumb instruction set for ARM, which has been proved to be
+useful to reduce the code size.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Quadruple-precision floating point arithmetic&lt;/strong&gt; -- There are several
+WSC applications using quadruple-precision arithmetic to process a lot of
+data nowadays.  It will be a good idea to include them to the instruction
+set.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Support 32-bit, 64-bit and even 128-bit address space&lt;/strong&gt; -- The
+32-bit address space is still important to the IoT devices due to their
+limited memory.  However, 64-bit address make more sense for the other
+applications.  Although there is no 128-bit usage at the moment, we have to
+leave sufficient room for extension.  If we don't plan for larger address
+space in the early stage, it may be difficult to workaround in the future.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;We can compare RISC-V with OpenRISC.  &lt;a class="reference external" href="http://openrisc.github.io"&gt;OpenRISC&lt;/a&gt; is an open source ISA as
+well.  However, due to the encoding of the immediate value, there is little
+encoding space left for extension.  Besides, it lacks for compact instruction
+encoding and quadrupe-precision arithmetics.  Furthermore, when RISC-V was
+developed, OpenRISC does not have 64-bit address space support at the time
+(although OpenRISC have 64-bit support now.)&lt;/p&gt;
+&lt;p&gt;In conclusion, &lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt; is an open source ISA which work hard to fulfill the
+design goals mentioned above.  Besides, we can
+&lt;a class="reference external" href="http://riscv.org/download.html#tab_isa-sim"&gt;download the compiler and simulator&lt;/a&gt; right now.  A non-profit organization
+&lt;a class="reference external" href="http://www.lowrisc.org"&gt;lowRISC&lt;/a&gt; is developing the development board for RISC-V.  I am looking
+forward to the future of &lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf"&gt;Instruction Sets Should Be Free: The Case for RISC-V&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://s3-us-west-1.amazonaws.com/riscv.org/riscv-spec-v2.0.pdf"&gt;User-level ISA Specification v2.0&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2011/EECS-2011-63.html"&gt;Improving Energy Efficiency and Reducing Code Size with RISC-V Compressed&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.eejournal.com/archives/articles/20141210-risc-v/"&gt;EE Journal: Berkeley's RISC-V Wants to Be Free&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="processor"></category><category term="compiler"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
 was quite disappointed with the sound quality.  Fortunately, after searching on
 the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
 quality.&lt;/p&gt;
