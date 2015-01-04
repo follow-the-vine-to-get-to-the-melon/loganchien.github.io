@@ -108,8 +108,8 @@ problem is related to the <code>filetype</code> command in the <code>.vimrc</cod
 </pre></div>
 <p>Or alternatively, add following lines to your <code>.vimrc</code>:</p>
 <div class="highlight"><pre><span class="c">&quot; Disable auto folding</span>
-<span class="k">au</span> <span class="nb">FileType</span> mkd <span class="k">setlocal</span> <span class="nb">nofoldenable</span>
-<span class="k">au</span> <span class="nb">FileType</span> rst <span class="k">setlocal</span> <span class="nb">nofoldenable</span>
+<span class="k">au</span> <span class="nb">FileType</span> mkd <span class="k">setlocal</span> <span class="nb">nofoldenable</span> <span class="nb">foldmethod</span><span class="p">=</span>manual
+<span class="k">au</span> <span class="nb">FileType</span> rst <span class="k">setlocal</span> <span class="nb">nofoldenable</span> <span class="nb">foldmethod</span><span class="p">=</span>manual
 </pre></div>
 </div>
 <div class="section" id="vim-plugins-which-i-have-installed">

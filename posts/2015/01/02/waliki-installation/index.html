@@ -190,7 +190,7 @@ encountered any problems.</p>
 
 <span class="k">def</span> <span class="nf">activate_virtualenv</span><span class="p">(</span><span class="n">env_dir</span><span class="p">):</span>
     <span class="n">ver</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
-    <span class="n">ver</span> <span class="o">=</span> <span class="s">&#39;python&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">ver</span> <span class="o">=</span> <span class="s">&#39;python&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="c"># Path to executables and site-packages.</span>
     <span class="n">bin_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s">&#39;bin&#39;</span><span class="p">)</span>

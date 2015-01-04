@@ -313,8 +313,8 @@ problem is related to the &lt;code&gt;filetype&lt;/code&gt; command in the &lt;c
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Or alternatively, add following lines to your &lt;code&gt;.vimrc&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;quot; Disable auto folding&lt;/span&gt;
-&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; mkd &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt;
-&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; rst &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt;
+&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; mkd &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt; &lt;span class="nb"&gt;foldmethod&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;manual
+&lt;span class="k"&gt;au&lt;/span&gt; &lt;span class="nb"&gt;FileType&lt;/span&gt; rst &lt;span class="k"&gt;setlocal&lt;/span&gt; &lt;span class="nb"&gt;nofoldenable&lt;/span&gt; &lt;span class="nb"&gt;foldmethod&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;manual
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="vim-plugins-which-i-have-installed"&gt;
