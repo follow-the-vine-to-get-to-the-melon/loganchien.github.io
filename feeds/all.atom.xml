@@ -264,7 +264,35 @@ this with &lt;code&gt;-e&lt;/code&gt; option:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;pip uninstall package-name
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="python"></category><category term="linux"></category></entry><entry><title>Debian Backports</title><link href="http://logan.tw/posts/2014/12/20/debian-backports/" rel="alternate"></link><updated>2014-12-20T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</id><summary type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
+</summary><category term="python"></category><category term="linux"></category></entry><entry><title>2014 Year End Review</title><link href="http://logan.tw/posts/2014/12/31/2014-year-end-review/" rel="alternate"></link><updated>2014-12-31T23:54:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-31:posts/2014/12/31/2014-year-end-review/</id><summary type="html">&lt;p&gt;It's the end of 2014.  It has been an amazing year with a lot of astonishing
+moments!&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;This is my first year to work as a &lt;em&gt;full-time software engineer&lt;/em&gt;.  I have
+learned a lot from the real world software development, including the PMD,
+annaul planning, software schedule estimation, and etc.  Besides, I have
+become the person who is responsible for some project.  However, I feel that
+I still have a lot to learn.&lt;/li&gt;
+&lt;li&gt;In the early June, I have been to &lt;a class="reference external" href="https://plus.google.com/photos/114533678157511059717/albums/6022083547074183473"&gt;Peng-hu&lt;/a&gt; with Chun-hung.  It is my first
+time to take the &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Propeller_%28aeronautics%29"&gt;propeller&lt;/a&gt;.  It is my first time to pick &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Sea_urchin"&gt;urchins&lt;/a&gt; from
+the sea.  During the trip, I have eaten the &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Sea_urchin"&gt;urchins&lt;/a&gt; and cactaceae
+ice-cream.  It was an interesting experience to me.&lt;/li&gt;
+&lt;li&gt;In the late August, I have been to Tai-tung to have a trip with Chih-yu.
+This is my first backpack travel with my friends.  We have built a sand
+castle on the beach, and we have seen the hot balloons at Luye.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I have been changed a lot this year.  First, I decided to exercise everyday to
+keep my body in shape.  I have lost a lot of weight, and several physical
+examination indices have come back to normal.  Second, I have changed my view
+to the life.  At the beginning of the year, I am a work acholic and often work
+overtime.  However, I burned out in the middle of year.  That's the reason why
+I decided to take a trip.  I realized that I still have to work for more than
+20 years.  It is important to balance the work and the life.  Besides, it would
+be good to leave more time for myself.  Third, I feel that there are still a
+lot to learn as a professional software engineer and life hacker.  I decided to
+write more notes and blog posts, so that I can have some retrospection in the
+end of year.&lt;/p&gt;
+&lt;p&gt;Hoping that I can become a better person next year.&lt;/p&gt;
+</summary><category term="diary"></category></entry><entry><title>Debian Backports</title><link href="http://logan.tw/posts/2014/12/20/debian-backports/" rel="alternate"></link><updated>2014-12-20T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</id><summary type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
 packages are very old and well-tested.  However, this become a problem to me.&lt;/p&gt;
 &lt;p&gt;Since &lt;a class="reference external" href="http://www.git-scm.org/"&gt;Git&lt;/a&gt; 1.9, we have to run the following command to silence a warning
 when we are running &lt;code&gt;git push&lt;/code&gt;.&lt;/p&gt;

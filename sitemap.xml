@@ -16,6 +16,11 @@
 <changefreq>weekly</changefreq>
 <priority>0.80</priority>
 </url><url>
+<loc>http://logan.tw/posts/2014/12/31/2014-year-end-review/</loc>
+<lastmod>2014-12-31</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.80</priority>
+</url><url>
 <loc>http://logan.tw/posts/2014/12/20/debian-backports/</loc>
 <lastmod>2014-12-20</lastmod>
 <changefreq>weekly</changefreq>
@@ -152,7 +157,7 @@
 <priority>0.50</priority>
 </url><url>
 <loc>http://logan.tw/category/misc/</loc>
-<lastmod>2014-12-20</lastmod>
+<lastmod>2014-12-31</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -193,6 +198,11 @@
 </url><url>
 <loc>http://logan.tw/tag/debian/</loc>
 <lastmod>2014-12-20</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/diary/</loc>
+<lastmod>2014-12-31</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
