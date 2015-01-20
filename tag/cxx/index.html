@@ -53,6 +53,28 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </h1>
+      <p class="meta"><time datetime="2015-01-20T23:17:00+08:00" pubdate>Tue 20 January 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
+keys in an instance of <code>std::multimap</code>, how could we list all of the
+corresponding values?  For example:</p>
+<div class="highlight"><pre><span class="cp">#include &lt;map&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std ...</span></pre></div></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">C++ Virtual Destructor and Inheritence</a>
       </h1>
       <p class="meta"><time datetime="2014-12-09T19:00:00+08:00" pubdate>Tue 09 December 2014</time></p>
@@ -141,6 +163,9 @@ would adopt a conservative approach:</p>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </li>
+      <li class="post">
           <a href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">C++ Virtual Destructor and Inheritence</a>
       </li>
       <li class="post">
@@ -192,7 +217,7 @@ would adopt a conservative approach:</p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014  - Logan -
+    Copyright &copy;  2014-2015  - Logan -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
     <script type="text/javascript">

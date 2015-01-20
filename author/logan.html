@@ -53,6 +53,28 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </h1>
+      <p class="meta"><time datetime="2015-01-20T23:17:00+08:00" pubdate>Tue 20 January 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
+keys in an instance of <code>std::multimap</code>, how could we list all of the
+corresponding values?  For example:</p>
+<div class="highlight"><pre><span class="cp">#include &lt;map&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std ...</span></pre></div></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2015/01/02/waliki-installation/">Waliki Installation</a>
       </h1>
       <p class="meta"><time datetime="2015-01-02T11:20:00+08:00" pubdate>Fri 02 January 2015</time></p>
@@ -209,23 +231,6 @@ base class pointer even if the object is an instance ...</p></div>
     <a rel="full-article" href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-26T23:03:00+08:00" pubdate>Wed 26 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>In this post, I would like to introduce the <a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html">bugpoint</a> command line tool.
-This is a automatic test case reduction tool which can help us generate
-minimal test case.</p>
-<p>As a compiler developer, the first step to debug is to create a minimal test
-case which can still reproduce the ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="http://logan.tw/author/logan2.html">&larr; Older</a>
 
@@ -235,6 +240,9 @@ case which can still reproduce the ...</p></div>
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </li>
       <li class="post">
           <a href="http://logan.tw/posts/2015/01/02/waliki-installation/">Waliki Installation</a>
       </li>
@@ -246,9 +254,6 @@ case which can still reproduce the ...</p></div>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">Count Trailing Zeros</a>
       </li>
     </ul>
   </section>

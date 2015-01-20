@@ -53,6 +53,28 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </h1>
+      <p class="meta"><time datetime="2015-01-20T23:17:00+08:00" pubdate>Tue 20 January 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
+keys in an instance of <code>std::multimap</code>, how could we list all of the
+corresponding values?  For example:</p>
+<div class="highlight"><pre><span class="cp">#include &lt;map&gt;</span>
+<span class="cp">#include &lt;iostream&gt;</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std ...</span></pre></div></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2015/01/01/python-package-manager-pip/">Python Package Manager: PIP</a>
       </h1>
       <p class="meta"><time datetime="2015-01-01T00:14:00+08:00" pubdate>Thu 01 January 2015</time></p>
@@ -205,24 +227,6 @@ the <code>using</code> directives.  These ...</p></div>
     <a rel="full-article" href="http://logan.tw/posts/2014/11/20/c-private-inheritence-and-using-directive/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/">OpenCL 1.2 Manual Pages</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-19T22:37:00+08:00" pubdate>Wed 19 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>There is a package for <a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/">OpenCL 1.2 manual pages</a> in the Ubuntu repository.  To
-install the <code>opencl-1.2-man-doc</code> package, please run this command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install opencl-1.2-man-doc
-</pre></div>
-<p>After installing this package, we can check the OpenCL API with <code>man</code>
-command.  For example, run <code>man 3 clGetPlatformIDs</code> to read ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/19/opencl-12-manual-pages/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="http://logan.tw/category/programming/index2.html">&larr; Older</a>
 
@@ -232,6 +236,9 @@ command.  For example, run <code>man 3 clGetPlatformIDs</code> to read ...</p></
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
+      </li>
       <li class="post">
           <a href="http://logan.tw/posts/2015/01/01/python-package-manager-pip/">Python Package Manager: PIP</a>
       </li>
@@ -243,9 +250,6 @@ command.  For example, run <code>man 3 clGetPlatformIDs</code> to read ...</p></
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">C++ Virtual Destructor and Inheritence</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
       </li>
     </ul>
   </section>
