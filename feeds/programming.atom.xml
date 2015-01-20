@@ -1022,11 +1022,19 @@ containers&lt;/strong&gt; (23.2.4 #9) guarantees that:&lt;/p&gt;
 &lt;blockquote&gt;
 The &lt;code&gt;insert()&lt;/code&gt; and &lt;code&gt;emplace()&lt;/code&gt; members shall not affect the
 validity of iterators and references to container &lt;a class="footnote-reference" href="#typo" id="id1"&gt;[1]&lt;/a&gt;, and the
-&lt;code&gt;erase()&lt;/code&gt; shall invalidate only iterators and references to the erased
-elements.&lt;/blockquote&gt;
+&lt;code&gt;erase()&lt;/code&gt; shall invalidate only iterators and references to the
+erased elements.&lt;/blockquote&gt;
+&lt;p&gt;Besides, the &lt;strong&gt;unordered associative containers&lt;/strong&gt; (23.2.5 #14) guarantees that:&lt;/p&gt;
+&lt;blockquote&gt;
+The &lt;code&gt;insert()&lt;/code&gt; and &lt;code&gt;emplace()&lt;/code&gt; members shall not affect the
+validity of references to container elements, but may invalidate all
+iterators to the container &lt;a class="footnote-reference" href="#uac" id="id2"&gt;[2]&lt;/a&gt;.  The &lt;code&gt;erase()&lt;/code&gt; members shall
+invalidate only iterators and references to the erased elements.&lt;/blockquote&gt;
 &lt;p&gt;Thus, for associative containers (including &lt;code&gt;std::set&lt;/code&gt;, &lt;code&gt;std::map&lt;/code&gt;,
-&lt;code&gt;std::multiset&lt;/code&gt;, and &lt;code&gt;std::multimap&lt;/code&gt;), we can directly erase the
-elements from the container:&lt;/p&gt;
+&lt;code&gt;std::multiset&lt;/code&gt;, and &lt;code&gt;std::multimap&lt;/code&gt;) and unordered associative
+containers (including &lt;code&gt;std::unorderd_set&lt;/code&gt;, &lt;code&gt;std::unordered_map&lt;/code&gt;,
+&lt;code&gt;std::unordered_multiset&lt;/code&gt;, &lt;code&gt;std::unordered_multimap&lt;/code&gt;), we can
+directly erase the elements from the container:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;remove_odds_2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
   &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;set&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;::&lt;/span&gt;&lt;span class="n"&gt;iterator&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;begin&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;!=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;end&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt; &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
@@ -1052,10 +1060,9 @@ any operations on the invalid iterator except the destruction (including
 &lt;span class="p"&gt;}&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To complete our discussion, it is important to know that there is &lt;em&gt;no such
-guarantee&lt;/em&gt; for &lt;strong&gt;sequence containers&lt;/strong&gt; &lt;a class="footnote-reference" href="#list" id="id2"&gt;[2]&lt;/a&gt; and &lt;strong&gt;unordered associative
-containers&lt;/strong&gt; (23.2.5 #14).  We should either fall back to the conservative
-copy-and-swap approach or restart from &lt;code&gt;c.begin()&lt;/code&gt; after removing any
-elements.&lt;/p&gt;
+guarantee&lt;/em&gt; for &lt;strong&gt;sequence containers&lt;/strong&gt; &lt;a class="footnote-reference" href="#list" id="id3"&gt;[3]&lt;/a&gt;.  We should either fall back to
+the conservative copy-and-swap approach or restart from &lt;code&gt;c.begin()&lt;/code&gt; after
+removing any elements.&lt;/p&gt;
 &lt;table class="docutils footnote" frame="void" id="typo" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
@@ -1064,10 +1071,20 @@ and references to &lt;em&gt;container&lt;/em&gt;&amp;quot;.   The &amp;quot;&lt;
 &amp;quot;&lt;em&gt;elements&lt;/em&gt;.&amp;quot;&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+&lt;table class="docutils footnote" frame="void" id="uac" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;Please notice that the unordered associative containers do not always
+guarantee the iterator validness on &lt;code&gt;insert()&lt;/code&gt;, since the iterator
+will be invalidated when the hash table is resized.  Read 23.2.5 #15 for
+more details.  However, this is not related to this post because we are
+focusing on the &lt;code&gt;erase()&lt;/code&gt; function.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;table class="docutils footnote" frame="void" id="list" rules="none"&gt;
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
-&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id2"&gt;[2]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;As a special case, &lt;code&gt;std::list&lt;/code&gt; gives extra guarantee on
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id3"&gt;[3]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;As a special case, &lt;code&gt;std::list&lt;/code&gt; gives extra guarantee on
 &lt;code&gt;insert()&lt;/code&gt; and &lt;code&gt;erase()&lt;/code&gt;.  But this does not apply to sequence
 containers, such as &lt;code&gt;std::vector&lt;/code&gt; and &lt;code&gt;std::deque&lt;/code&gt;, in general.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
