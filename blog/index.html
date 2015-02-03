@@ -53,6 +53,23 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">C++11 Unique Pointer</a>
+      </h1>
+      <p class="meta"><time datetime="2015-01-31T23:04:00+08:00" pubdate>Sat 31 January 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>C++11 introduced three new <a class="reference external" href="http://en.cppreference.com/w/cpp/memory">smart pointer class templates</a>:
+<code>std::unique_ptr</code>, <code>std::shared_ptr</code>, and <code>std::weak_ptr</code>.
+These smart pointer class templates are designed to replace the old
+<a class="reference external" href="http://en.cppreference.com/w/cpp/memory/auto_ptr">std::auto_ptr</a> smart pointer, which is known to have some defect and
+deprecated now.  In this post, I would like to give a ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
       </h1>
       <p class="meta"><time datetime="2015-01-20T23:17:00+08:00" pubdate>Tue 20 January 2015</time></p>
@@ -215,22 +232,6 @@ deobfuscate the binaries ...</p></div>
     <a rel="full-article" href="http://logan.tw/posts/2014/12/09/llvm-obfuscator/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">C++ Virtual Destructor and Inheritence</a>
-      </h1>
-      <p class="meta"><time datetime="2014-12-09T19:00:00+08:00" pubdate>Tue 09 December 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>It is a well-known idiom to define a virtual destructor for the classes with
-virtual functions.  If we don't define a virtual destructor, then the base
-class destructor will be invoked when you are deleting the object through the
-base class pointer even if the object is an instance ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
     <a class="prev" href="http://logan.tw/blog/index2.html">&larr; Older</a>
 
@@ -240,6 +241,9 @@ base class pointer even if the object is an instance ...</p></div>
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">C++11 Unique Pointer</a>
+      </li>
       <li class="post">
           <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
       </li>
@@ -251,9 +255,6 @@ base class pointer even if the object is an instance ...</p></div>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2014/12/31/2014-year-end-review/">2014 Year End Review</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2014/12/20/debian-backports/">Debian Backports</a>
       </li>
     </ul>
   </section>
