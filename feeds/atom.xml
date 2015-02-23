@@ -1,5 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-01-31T23:04:00+08:00</updated><entry><title>C++11 Unique Pointer</title><link href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/" rel="alternate"></link><updated>2015-01-31T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-01-31:posts/2015/01/31/c11-unique-pointer/</id><summary type="html">&lt;p&gt;C++11 introduced three new &lt;a class="reference external" href="http://en.cppreference.com/w/cpp/memory"&gt;smart pointer class templates&lt;/a&gt;:
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-02-21T23:02:00+08:00</updated><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
+the size of the output file, and download the rest of the file from the server.
+I can even restart the download task with a &lt;strong&gt;different URI&lt;/strong&gt;.  This &lt;em&gt;feature&lt;/em&gt;
+is not available in many sophisticated download managers.&lt;/p&gt;
+&lt;p&gt;Recently, I came across &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt;, which is a command line download manager
+which supports lots of protocols, including HTTP, FTP, BitTorrents, and etc.
+Similar to &lt;code&gt;wget&lt;/code&gt;, I can resume the download tasks without problems!  And
+there are several features which are not available in &lt;code&gt;wget&lt;/code&gt;:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Multiple tasks and scheduling&lt;/li&gt;
+&lt;li&gt;Split the download task and download the file in parallel&lt;/li&gt;
+&lt;li&gt;Web UI&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;... and etc&lt;/em&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In this post, I would like to give a brief introduction to &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Before we can start our discussion, we have to install &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; first.&lt;/p&gt;
+&lt;p&gt;To install &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; on Ubuntu (or Debian), run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install aria2
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Besides, check the file permission of your &lt;code&gt;.netrc&lt;/code&gt; file.  It should be
+600, i.e. only the owner can read or write the file.  You can change the
+file permission with following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;chmod &lt;span class="m"&gt;600&lt;/span&gt; ~/.netrc
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="download-files-with-aria2"&gt;
+&lt;h2&gt;Download Files with Aria2&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; is similar to &lt;code&gt;wget&lt;/code&gt; command line tool.  We can simply download
+the files with &lt;code&gt;aria2c&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For example, to download the Debian 7.8 minimal CD image:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can specify the output file name with &lt;code&gt;-o&lt;/code&gt; option:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To resume a download task, we can specify the &lt;code&gt;-c&lt;/code&gt; option:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If we wish to download a file parallelly, we can try the &lt;code&gt;-x&lt;/code&gt; option:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -x&lt;span class="o"&gt;[&lt;/span&gt;num-parts&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -x2 &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;  &lt;span class="c"&gt;# Split the task into two parts.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="run-aria2-as-a-daemon"&gt;
+&lt;h2&gt;Run Aria2 as a Daemon&lt;/h2&gt;
+&lt;p&gt;If we wish to use &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; as a download manager, we should run &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; as a
+daemon.&lt;/p&gt;
+&lt;p&gt;To start the Aria2 daemon:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;By default, &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; will perform 5 tasks at the same time, to change the
+number of concurrent download tasks, we can specify the &lt;code&gt;-j&lt;/code&gt; option:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all -j&lt;span class="o"&gt;[&lt;/span&gt;num-parallel&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For example, to download the files sequentially:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all -j1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After starting the Aria2 daemon, click here for the &lt;a class="reference external" href="http://ziahamza.github.io/webui-aria2/"&gt;Aria2 Web UI&lt;/a&gt;.  You can
+add/remove the download tasks in the &lt;a class="reference external" href="http://ziahamza.github.io/webui-aria2/"&gt;Aria2 Web UI&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="control-daemon-with-aria2rpc"&gt;
+&lt;h2&gt;Control Daemon with aria2rpc&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; provides a command line tool, &lt;code&gt;aria2rpc&lt;/code&gt;, to control the daemon.
+However, it is not installed by default.&lt;/p&gt;
+&lt;p&gt;To obtain &lt;code&gt;aria2rpc&lt;/code&gt;, run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;cat /usr/share/doc/aria2/xmlrpc/aria2rpc.gz &lt;span class="p"&gt;|&lt;/span&gt; gzip -d &amp;gt; aria2rpc
+&lt;span class="nv"&gt;$ &lt;/span&gt;chmod +x aria2rpc
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After these steps, move &lt;code&gt;aria2rpc&lt;/code&gt; to your &lt;code&gt;$PATH&lt;/code&gt;, so that we
+can run &lt;code&gt;aria2rpc&lt;/code&gt; directly.&lt;/p&gt;
+&lt;p&gt;Now, we can add a download task with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc addUri &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;options&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;task-id&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After adding a download task, an ID will be printed.  We can remove a task
+with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc remove &lt;span class="o"&gt;[&lt;/span&gt;task-id&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You may find more usages with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc --help
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="aria2"></category></entry><entry><title>C++11 Unique Pointer</title><link href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/" rel="alternate"></link><updated>2015-01-31T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-01-31:posts/2015/01/31/c11-unique-pointer/</id><summary type="html">&lt;p&gt;C++11 introduced three new &lt;a class="reference external" href="http://en.cppreference.com/w/cpp/memory"&gt;smart pointer class templates&lt;/a&gt;:
 &lt;code&gt;std::unique_ptr&lt;/code&gt;, &lt;code&gt;std::shared_ptr&lt;/code&gt;, and &lt;code&gt;std::weak_ptr&lt;/code&gt;.
 These smart pointer class templates are designed to replace the old
 &lt;a class="reference external" href="http://en.cppreference.com/w/cpp/memory/auto_ptr"&gt;std::auto_ptr&lt;/a&gt; smart pointer, which is known to have some defect and

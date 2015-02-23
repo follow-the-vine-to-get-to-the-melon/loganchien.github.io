@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2015-01-31</lastmod>
+<lastmod>2015-02-21</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/02/21/using-aria2-download-manager/</loc>
+<lastmod>2015-02-21</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2015/01/31/c11-unique-pointer/</loc>
 <lastmod>2015-01-31</lastmod>
@@ -167,7 +172,7 @@
 <priority>0.50</priority>
 </url><url>
 <loc>http://logan.tw/category/misc/</loc>
-<lastmod>2014-12-31</lastmod>
+<lastmod>2015-02-21</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -183,6 +188,11 @@
 </url><url>
 <loc>http://logan.tw/tag/apache2/</loc>
 <lastmod>2014-11-15</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/aria2/</loc>
+<lastmod>2015-02-21</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -252,7 +262,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/linux/</loc>
-<lastmod>2015-01-01</lastmod>
+<lastmod>2015-02-21</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -342,7 +352,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan.html</loc>
-<lastmod>2015-01-31</lastmod>
+<lastmod>2015-02-21</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>
