@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>RISC-V Microprocessor</title>
+  <title>Git Ignore File</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,85 +52,31 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">RISC-V Microprocessor</h1>
-      <p class="meta"><time datetime="2014-12-16T23:20:00+08:00" pubdate>Tue 16 December 2014</time></p>
+      <h1 class="entry-title">Git Ignore File</h1>
+      <p class="meta"><time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time></p>
 </header>
 
-  <div class="entry-content"><p><a class="reference external" href="http://riscv.org">RISC-V</a> is an instruction set architecture (ISA) released by UC Berkeley.
-Besides, a high performance, power efficient, and royalty-free open source
-implementation <a class="reference external" href="https://github.com/ucb-bar">Rocket Chip</a> is available.</p>
-<p>RISC-V was developed by Krste Asanović and David A. Patterson.  In their
-<a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf">technical report</a>, they claimed that an open instruction set can benefit both
-academic and industry.  They gave three arguments:</p>
-<ol class="arabic simple">
-<li><strong>Greater innovation</strong> -- If there is an open instruction set and open
-implementations, we could have greater innovation since the developers or
-researchers can change the ISA, evaluate their new deisgn, and compare their
-design with the others.  This is not possible with current proprietary ISA
-licensing models.  Since most of the licensing models disallow the change of
-ISA.  Some licensing model even prohibits the change of the ISA
-implementations.</li>
-<li><strong>Open development</strong> -- If the instruction set and its implementation is
-developed in open, more developers can read and audit the source code and
-find the possible errors.  It is well-known that the open model works for
-operating system and compiler toolchain.  And RISC-V is the one to fill in
-the missing piece for microprocessors.</li>
-<li><strong>Reduce cost</strong> -- If the ecosystem becomes mature, the price of the baseline
-chip will become as low as the manufacture cost since everyone can download
-the reference implementation and ask the IC foundries to produce the chip.</li>
-</ol>
-<p>The design of the instruction set is yet anther question.  The choice of the
-instruction is important since the ISA will last for several decades.  A good
-design should include the essential features and exclude the unnecessary
-features.  For example, it is necessary to have load/store instructions for
-byte, short, float, and double; but it is unnecessary to include <a class="reference external" href="http://en.wikipedia.org/wiki/Delay_slot">delay slot</a>
-and <a class="reference external" href="http://en.wikipedia.org/wiki/Register_window">register window</a>.</p>
-<p>Krste and David predict that there are three trends for the computer evolution:
-IoT devices, personal mobile devices, and warehouse-scale computers.  Thus,
-RISC-V follows these design concepts:</p>
-<ol class="arabic simple">
-<li><strong>Base plus extension ISA</strong> -- More applications are accelerating the
-computation with <a class="reference external" href="http://en.wikipedia.org/wiki/Application-specific_integrated_circuit">ASIC</a>, thus we have to leave the space for further
-extension of the core instruction set.  This implies that we should leave
-sufficient encoding space for extensions.  As a result, RISC-V has a core
-instruction set with several extensions.  The bit operations, SIMD
-instructions, and compact instructions are defined as the optional
-extensions.</li>
-<li><strong>Compact instruction set encoding</strong> -- On the memory limited IoT devices,
-the code size will be an issue.  It will be helpful to have compact
-instruction set encoding.  There is a compact instruction extension which
-encodes the popular instructions in 16-bit (instead of 32-bit).  This is
-similar to the Thumb instruction set for ARM, which has been proved to be
-useful to reduce the code size.</li>
-<li><strong>Quadruple-precision floating point arithmetic</strong> -- There are several
-WSC applications using quadruple-precision arithmetic to process a lot of
-data nowadays.  It will be a good idea to include them to the instruction
-set.</li>
-<li><strong>Support 32-bit, 64-bit and even 128-bit address space</strong> -- The
-32-bit address space is still important to the IoT devices due to their
-limited memory.  However, 64-bit address make more sense for the other
-applications.  Although there is no 128-bit usage at the moment, we have to
-leave sufficient room for extension.  If we don't plan for larger address
-space in the early stage, it may be difficult to workaround in the future.</li>
-</ol>
-<p>We can compare RISC-V with OpenRISC.  <a class="reference external" href="http://openrisc.github.io">OpenRISC</a> is an open source ISA as
-well.  However, due to the encoding of the immediate value, there is little
-encoding space left for extension.  Besides, it lacks for compact instruction
-encoding and quadrupe-precision arithmetics.  Furthermore, when RISC-V was
-developed, OpenRISC does not have 64-bit address space support at the time
-(although OpenRISC have 64-bit support now.)</p>
-<p>In conclusion, <a class="reference external" href="http://riscv.org">RISC-V</a> is an open source ISA which work hard to fulfill the
-design goals mentioned above.  Besides, we can
-<a class="reference external" href="http://riscv.org/download.html#tab_isa-sim">download the compiler and simulator</a> right now.  A non-profit organization
-<a class="reference external" href="http://www.lowrisc.org">lowRISC</a> is developing the development board for RISC-V.  I am looking
-forward to the future of <a class="reference external" href="http://riscv.org">RISC-V</a>.</p>
+  <div class="entry-content"><p>In some circumstances, we would like to ignore the files (or directories) under
+the Git repository base directory.  How could we do this?  For example, assume
+that we have a Git repository with following files:</p>
+<div class="highlight"><pre>out/bin/conv
+preprocessed/out/gen-case1.h
+preprocessed/out/gen-case2.h
+preprocessed/input.txt
+conv.cpp
+</pre></div>
+<p>If we would like to ignore the <code>out</code> directory but not the
+<code>preprocessed/out</code> directory, then we can add following line to
+<code>.gitignore</code> file:</p>
+<div class="highlight"><pre>/out
+</pre></div>
+<p>Please notice that there is an <strong>leading slash character</strong> at the beginning of
+the path.  Without the leading slash, all of the files (or directories) named
+after <code>out</code> will be ignored.</p>
 <div class="section" id="reference">
 <h2>Reference</h2>
 <ul class="simple">
-<li><a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf">Instruction Sets Should Be Free: The Case for RISC-V</a></li>
-<li><a class="reference external" href="https://s3-us-west-1.amazonaws.com/riscv.org/riscv-spec-v2.0.pdf">User-level ISA Specification v2.0</a></li>
-<li><a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2011/EECS-2011-63.html">Improving Energy Efficiency and Reducing Code Size with RISC-V Compressed</a></li>
-<li><a class="reference external" href="http://www.eejournal.com/archives/articles/20141210-risc-v/">EE Journal: Berkeley's RISC-V Wants to Be Free</a></li>
+<li><a class="reference external" href="http://git-scm.com/docs/gitignore">http://git-scm.com/docs/gitignore</a></li>
 </ul>
 </div>
 </div>
@@ -139,9 +85,8 @@ forward to the future of <a class="reference external" href="http://riscv.org">R
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2014-12-16T23:20:00+08:00" pubdate>Tue 16 December 2014</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/processor/">processor</a>
-    <a class="category" href="http://logan.tw/tag/compiler/">compiler</a>
+<time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/git/">git</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

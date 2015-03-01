@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><atom:link href="http://logan.tw/feeds/rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 21 Feb 2015 23:02:00 +0800</lastBuildDate><item><title>Using Aria2 Download Manager</title><link>http://logan.tw/posts/2015/02/21/using-aria2-download-manager/</link><description>&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><atom:link href="http://logan.tw/feeds/rss.xml" rel="self"></atom:link><lastBuildDate>Sat, 28 Feb 2015 14:19:00 +0800</lastBuildDate><item><title>Git Ignore File</title><link>http://logan.tw/posts/2015/02/28/git-ignore-file/</link><description>&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
+the Git repository base directory.  How could we do this?  For example, assume
+that we have a Git repository with following files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;out/bin/conv
+preprocessed/out/gen-case1.h
+preprocessed/out/gen-case2.h
+preprocessed/input.txt
+conv.cpp
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If we would like to ignore the &lt;code&gt;out&lt;/code&gt; directory but not the
+&lt;code&gt;preprocessed/out&lt;/code&gt; directory, then we can add following line to
+&lt;code&gt;.gitignore&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/out
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Please notice that there is an &lt;strong&gt;leading slash character&lt;/strong&gt; at the beginning of
+the path.  Without the leading slash, all of the files (or directories) named
+after &lt;code&gt;out&lt;/code&gt; will be ignored.&lt;/p&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://git-scm.com/docs/gitignore"&gt;http://git-scm.com/docs/gitignore&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 28 Feb 2015 14:19:00 +0800</pubDate><guid>tag:logan.tw,2015-02-28:posts/2015/02/28/git-ignore-file/</guid><category>git</category></item><item><title>Using Aria2 Download Manager</title><link>http://logan.tw/posts/2015/02/21/using-aria2-download-manager/</link><description>&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
 resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
 the size of the output file, and download the rest of the file from the server.
 I can even restart the download task with a &lt;strong&gt;different URI&lt;/strong&gt;.  This &lt;em&gt;feature&lt;/em&gt;

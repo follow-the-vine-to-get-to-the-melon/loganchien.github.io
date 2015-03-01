@@ -1,5 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-02-21T23:02:00+08:00</updated><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-02-28T14:19:00+08:00</updated><entry><title>Git Ignore File</title><link href="http://logan.tw/posts/2015/02/28/git-ignore-file/" rel="alternate"></link><updated>2015-02-28T14:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-28:posts/2015/02/28/git-ignore-file/</id><summary type="html">&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
+the Git repository base directory.  How could we do this?  For example, assume
+that we have a Git repository with following files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;out/bin/conv
+preprocessed/out/gen-case1.h
+preprocessed/out/gen-case2.h
+preprocessed/input.txt
+conv.cpp
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If we would like to ignore the &lt;code&gt;out&lt;/code&gt; directory but not the
+&lt;code&gt;preprocessed/out&lt;/code&gt; directory, then we can add following line to
+&lt;code&gt;.gitignore&lt;/code&gt; file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/out
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Please notice that there is an &lt;strong&gt;leading slash character&lt;/strong&gt; at the beginning of
+the path.  Without the leading slash, all of the files (or directories) named
+after &lt;code&gt;out&lt;/code&gt; will be ignored.&lt;/p&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://git-scm.com/docs/gitignore"&gt;http://git-scm.com/docs/gitignore&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="git"></category></entry><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
 resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
 the size of the output file, and download the rest of the file from the server.
 I can even restart the download task with a &lt;strong&gt;different URI&lt;/strong&gt;.  This &lt;em&gt;feature&lt;/em&gt;
