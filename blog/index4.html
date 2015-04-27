@@ -53,6 +53,25 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<div class="highlight"><pre><span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre></div>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2014/11/12/soundness-and-completeness-of-the-type-system/">Soundness and Completeness of the Type System</a>
       </h1>
       <p class="meta"><time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time></p>
@@ -95,6 +114,9 @@ more frequently.</p>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
+      </li>
+      <li class="post">
           <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
       </li>
       <li class="post">
@@ -105,9 +127,6 @@ more frequently.</p>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/01/02/waliki-installation/">Waliki Installation</a>
       </li>
     </ul>
   </section>
@@ -124,7 +143,7 @@ more frequently.</p>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/lcov/">lcov</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

@@ -1,5 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-02-28T14:19:00+08:00</updated><entry><title>Git Ignore File</title><link href="http://logan.tw/posts/2015/02/28/git-ignore-file/" rel="alternate"></link><updated>2015-02-28T14:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-28:posts/2015/02/28/git-ignore-file/</id><summary type="html">&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-04-28T01:28:00+08:00</updated><entry><title>Check Code Coverage with Clang and LCOV</title><link href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/" rel="alternate"></link><updated>2015-04-28T01:28:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-04-28:posts/2015/04/28/check-code-coverage-with-clang-and-lcov/</id><summary type="html">&lt;p&gt;Code coverage is a metric to show the code being untested.  It can be considered
+as a hint to add more test cases.  When we are writing C/C++, the most notable
+code coverage testing tool is &lt;a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html"&gt;gcov&lt;/a&gt;, which is a GCC built-in coverage testing
+tool.  Besides, we can collect the results and generate beautiful HTML output
+with &lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt;, which is an extension to &lt;a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html"&gt;gcov&lt;/a&gt;.  &lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt; was originally
+developed for &lt;a class="reference external" href="http://linux-test-project.github.io/"&gt;Linux Test Project&lt;/a&gt; and then further extended for user space
+programs.&lt;/p&gt;
+&lt;p&gt;Although LLVM/Clang can generate some gcov-like files to track the code
+coverage, it requires some extra work to generate HTMLs with &lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt;.  That's
+the reason why I am writing this post.&lt;/p&gt;
+&lt;div class="section" id="build-and-install-clang"&gt;
+&lt;h2&gt;Build and Install Clang&lt;/h2&gt;
+&lt;p&gt;To support code coverage instrumentation, we have to build LLVM and clang with
+&lt;a class="reference external" href="http://compiler-rt.llvm.org/"&gt;compiler-rt&lt;/a&gt; &lt;a class="reference internal" href="#clang-rt-profile"&gt;[1]&lt;/a&gt;.  Here are the instructions to build a nightly build:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Checkout llvm&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;git clone http://llvm.org/git/llvm.git
+
+&lt;span class="c"&gt;# Checkout compiler-rt&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;llvm/projects
+&lt;span class="nv"&gt;$ &lt;/span&gt;git clone http://llvm.org/git/compiler-rt.git
+
+&lt;span class="c"&gt;# Checkout clang&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ../tools
+&lt;span class="nv"&gt;$ &lt;/span&gt;git clone http://llvm.org/git/clang.git
+
+&lt;span class="c"&gt;# Build and install llvm and clang&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ../..
+&lt;span class="nv"&gt;$ &lt;/span&gt;mkdir llvm-build
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;cd &lt;/span&gt;llvm-build
+&lt;span class="nv"&gt;$ &lt;/span&gt;../llvm/configure --prefix&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ..&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;/llvm-install&amp;quot;&lt;/span&gt; &lt;span class="se"&gt;\&lt;/span&gt;
+                    --enable-optimized
+&lt;span class="nv"&gt;$ &lt;/span&gt;make -j8
+&lt;span class="nv"&gt;$ &lt;/span&gt;make install
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-a-wrapper-script-for-lcov"&gt;
+&lt;h2&gt;Create a Wrapper Script for LCOV&lt;/h2&gt;
+&lt;p&gt;LLVM has a fast development speed, thus the &lt;code&gt;llvm-cov&lt;/code&gt; command line
+options have been changed, and &lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt; can no longer recognize it.  Thus, we
+have to create a script &lt;code&gt;llvm-gcov.sh&lt;/code&gt; to workaround the problem:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class="nb"&gt;exec &lt;/span&gt;llvm-cov gcov &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="nv"&gt;$@&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;chmod +x llvm-gcov.sh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build-your-application"&gt;
+&lt;h2&gt;Build Your Application&lt;/h2&gt;
+&lt;p&gt;To track the code coverage, clang has to instrument your application.  You have
+to compile your application with two extra options:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;-fprofile-arcs -ftest-coverage
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;For example, given the &lt;code&gt;test.c&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;stdio.h&amp;gt;&lt;/span&gt;
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="n"&gt;argc&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;argc&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;GOT: %s&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;argv&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We should compile the file with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;clang -fprofile-arcs -ftest-coverage test.c
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You will notice that there is an extra file &lt;code&gt;test.gcno&lt;/code&gt; being generated.
+It is some data structure for run-time supporting library.&lt;/p&gt;
+&lt;p&gt;Notice that if you are compiling the source code in two steps, i.e. compiling
+the source code with &lt;code&gt;-c&lt;/code&gt; option, then you have to add &lt;code&gt;--coverage&lt;/code&gt;
+to the LDFLAGS so that the program can linked with the run-time library
+properly &lt;a class="reference internal" href="#llvm-gcov-writeout"&gt;[2]&lt;/a&gt;.  For example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Compile the object file test.c&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;clang -fprofile-arcs -ftest-coverage -c test.c
+
+&lt;span class="c"&gt;# Link the program&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;clang --coverage test.o -o a.out
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="run-your-application"&gt;
+&lt;h2&gt;Run Your Application&lt;/h2&gt;
+&lt;p&gt;Now, we can run the application (or the test cases.)  If everything goes well,
+then several &lt;code&gt;*.gcda&lt;/code&gt; will be generated.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Run the program or the test cases.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;./a.out
+
+&lt;span class="c"&gt;# List the *.gcda files&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;ls *.gcda
+test.gcda
+
+&lt;span class="c"&gt;# Read the *.gcda with llvm-cov&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;llvm-cov gcov -f -b test.gcda
+Function &lt;span class="s1"&gt;&amp;#39;main&amp;#39;&lt;/span&gt;
+Lines executed:50.00% of 4
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+No calls
+
+File &lt;span class="s1"&gt;&amp;#39;test.c&amp;#39;&lt;/span&gt;
+Lines executed:50.00% of 4
+Branches executed:100.00% of 2
+Taken at least once:50.00% of 2
+No calls
+test.c:creating &lt;span class="s1"&gt;&amp;#39;test.c.gcov&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="collect-the-results"&gt;
+&lt;h2&gt;Collect the Results&lt;/h2&gt;
+&lt;p&gt;Finally, we can collect the results and generate HTML files.  However, please
+notice that LLVM is generating GCOV files with old version (approximately equal
+to gcc 4.2), thus it is likely to be incompatible with the &lt;code&gt;gcov&lt;/code&gt; command.
+As a result, we have to specify &lt;code&gt;--gcov-tool&lt;/code&gt; while running &lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Collect the code coverage results&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;lcov --directory . &lt;span class="se"&gt;\&lt;/span&gt;
+       --base-directory . &lt;span class="se"&gt;\&lt;/span&gt;
+       --gcov-tool llvm-gcov.sh &lt;span class="se"&gt;\&lt;/span&gt;
+       --capture -o cov.info
+
+&lt;span class="c"&gt;# Generate HTML files.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;genhtml cov.info -o output
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;p.s. Notice that we should specify our wrapper script &lt;code&gt;llvm-gcov.sh&lt;/code&gt;
+&lt;a class="reference internal" href="#create-a-wrapper-script-for-lcov"&gt;created earlier&lt;/a&gt; instead of &lt;code&gt;llvm-cov&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Now, we can see the code coverage report at &lt;code&gt;output/index.html&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, I have introduced how to generate code coverage report with
+&lt;a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php"&gt;lcov&lt;/a&gt; while building the application with clang.  Hope you enjoy this article.
+Feel free to let me know if you have any questions.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="troubleshooting"&gt;
+&lt;h2&gt;Troubleshooting&lt;/h2&gt;
+&lt;div class="section" id="can-t-find-libclang-rt-profile-x86-64-a"&gt;
+&lt;span id="clang-rt-profile"&gt;&lt;/span&gt;&lt;h3&gt;Can't Find libclang_rt.profile-x86_64.a&lt;/h3&gt;
+&lt;p&gt;If you see following link error message, it means that you haven't built clang
+with compiler-rt:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;/usr/bin/ld: cannot find libclang_rt.profile-x86_64.a: No such file or directory
+clang-3.7: error: linker command failed with exit code 1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="link-error-while-building-application"&gt;
+&lt;span id="llvm-gcov-writeout"&gt;&lt;/span&gt;&lt;h3&gt;Link Error While Building Application&lt;/h3&gt;
+&lt;p&gt;Without the &lt;code&gt;--coverage&lt;/code&gt; option, you might see:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;test.o: In function `__llvm_gcov_writeout&amp;#39;:
+test.c:(.text+0xf2): undefined reference to `llvm_gcda_start_file&amp;#39;
+test.c:(.text+0x118): undefined reference to `llvm_gcda_emit_function&amp;#39;
+test.c:(.text+0x12c): undefined reference to `llvm_gcda_emit_arcs&amp;#39;
+test.c:(.text+0x131): undefined reference to `llvm_gcda_summary_info&amp;#39;
+test.c:(.text+0x136): undefined reference to `llvm_gcda_end_file&amp;#39;
+test.o: In function `__llvm_gcov_init&amp;#39;:
+test.c:(.text+0x1a9): undefined reference to `llvm_gcov_init&amp;#39;
+clang-3.7: error: linker command failed with exit code 1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</summary><category term="llvm"></category><category term="clang"></category><category term="lcov"></category><category term="test"></category></entry><entry><title>Git Ignore File</title><link href="http://logan.tw/posts/2015/02/28/git-ignore-file/" rel="alternate"></link><updated>2015-02-28T14:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-28:posts/2015/02/28/git-ignore-file/</id><summary type="html">&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
 the Git repository base directory.  How could we do this?  For example, assume
 that we have a Git repository with following files:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;out/bin/conv
