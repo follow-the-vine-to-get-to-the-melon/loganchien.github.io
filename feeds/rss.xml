@@ -153,7 +153,225 @@ clang-3.7: error: linker command failed with exit code 1
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Tue, 28 Apr 2015 01:28:00 +0800</pubDate><guid>tag:logan.tw,2015-04-28:posts/2015/04/28/check-code-coverage-with-clang-and-lcov/</guid><category>llvm</category><category>clang</category><category>lcov</category><category>test</category></item><item><title>Git Ignore File</title><link>http://logan.tw/posts/2015/02/28/git-ignore-file/</link><description>&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Tue, 28 Apr 2015 01:28:00 +0800</pubDate><guid>tag:logan.tw,2015-04-28:posts/2015/04/28/check-code-coverage-with-clang-and-lcov/</guid><category>llvm</category><category>clang</category><category>lcov</category><category>test</category></item><item><title>Trace Source Code with Vim and Ctags</title><link>http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/</link><description>&lt;p&gt;&lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;Ctags&lt;/a&gt; is a source code indexing tool.  With &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;, we can easily find the
+definitions of the classes, functions, and variables.  According to my
+experiences, &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt; can significantly reduce the time to browse the source
+code.  In this post, I would like to give a brief introduction to &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt; and
+&lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;First, we have to install &lt;code&gt;exuberant-ctags&lt;/code&gt; package for &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;.  On
+Ubuntu or Debian, we can install &lt;code&gt;exuberant-ctags&lt;/code&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install exuberant-ctags
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, I would suggest to &lt;em&gt;tweak&lt;/em&gt; the &lt;code&gt;.vimrc&lt;/code&gt; as well.  By default,
+&lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; will only load the &lt;strong&gt;tags file&lt;/strong&gt; from:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;the current working directory, or&lt;/li&gt;
+&lt;li&gt;the directory containing the opened source file.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For example, if you have opened the file &lt;code&gt;foo/bar.c&lt;/code&gt;, then &lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; will
+only check the &lt;strong&gt;tags file&lt;/strong&gt; named after &lt;code&gt;tags&lt;/code&gt;, &lt;code&gt;TAGS&lt;/code&gt;,
+&lt;code&gt;foo/tags&lt;/code&gt;, or &lt;code&gt;foo/TAGS&lt;/code&gt;.  However, the &lt;strong&gt;tags file&lt;/strong&gt; in the
+parent directories, such as &lt;code&gt;../../tags&lt;/code&gt; won't be considered.&lt;/p&gt;
+&lt;p&gt;To ask &lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; to search for &lt;strong&gt;tags file&lt;/strong&gt; in the parent directories, we should
+add an extra semicolon &lt;code&gt;;&lt;/code&gt; after &lt;code&gt;./tags&lt;/code&gt; and &lt;code&gt;./TAGS&lt;/code&gt;.  For
+example,&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;set&lt;/span&gt; &lt;span class="k"&gt;tags&lt;/span&gt;&lt;span class="p"&gt;=&lt;/span&gt;.&lt;span class="sr"&gt;/tags;,./&lt;/span&gt;TAGS;&lt;span class="p"&gt;,&lt;/span&gt;&lt;span class="k"&gt;tags&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;TAGS
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, if you wish to put the generated &lt;strong&gt;tags file&lt;/strong&gt; in the &lt;code&gt;.git&lt;/code&gt;
+directory so that the &lt;strong&gt;tags file&lt;/strong&gt; won't be added to git repository, then you
+may wish to add the following snippets to the &lt;code&gt;.vimrc&lt;/code&gt; as well:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;&amp;quot; Check .git/tags for ctags file.&lt;/span&gt;
+&lt;span class="k"&gt;fun&lt;/span&gt;&lt;span class="p"&gt;!&lt;/span&gt; FindTagsFileInGitDir&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;file&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="nb"&gt;path&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; fnamemodify&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;a&lt;/span&gt;:&lt;span class="k"&gt;file&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;:p:h&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="nb"&gt;path&lt;/span&gt; &lt;span class="p"&gt;!=&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;let&lt;/span&gt; fname &lt;span class="p"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;path&lt;/span&gt; . &lt;span class="s1"&gt;&amp;#39;/.git/tags&amp;#39;&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; filereadable&lt;span class="p"&gt;(&lt;/span&gt;fname&lt;span class="p"&gt;)&lt;/span&gt;
+      &lt;span class="k"&gt;silent&lt;/span&gt;&lt;span class="p"&gt;!&lt;/span&gt; exec &lt;span class="s1"&gt;&amp;#39;set tags+=&amp;#39;&lt;/span&gt; . fname
+    &lt;span class="k"&gt;endif&lt;/span&gt;
+    &lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="nb"&gt;path&lt;/span&gt; &lt;span class="p"&gt;=&lt;/span&gt; fnamemodify&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;path&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;:h&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+  &lt;span class="k"&gt;endwhile&lt;/span&gt;
+&lt;span class="k"&gt;endfun&lt;/span&gt;
+
+augroup CtagsGroup
+  autocmd&lt;span class="p"&gt;!&lt;/span&gt;
+  autocmd &lt;span class="nb"&gt;BufRead&lt;/span&gt; * &lt;span class="k"&gt;call&lt;/span&gt; FindTagsFileInGitDir&lt;span class="p"&gt;(&lt;/span&gt;expand&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;afile&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+augroup END
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This snippet allows &lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; to search for the &lt;strong&gt;tags file&lt;/strong&gt; in the &lt;code&gt;.git&lt;/code&gt;
+directory of the parent directories of the source file, such as
+&lt;code&gt;../../.git/tags&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="usage"&gt;
+&lt;h2&gt;Usage&lt;/h2&gt;
+&lt;p&gt;After installation, we have to generate the &lt;strong&gt;tags file&lt;/strong&gt; as the index.  We
+can generate the &lt;strong&gt;tags file&lt;/strong&gt; with the following commands:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ctags -R &lt;span class="o"&gt;[&lt;/span&gt;dir&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;ctags -R -f &lt;span class="o"&gt;[&lt;/span&gt;tags-file&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;dir&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;ctags --tag-relative&lt;span class="o"&gt;=&lt;/span&gt;yes -R -f &lt;span class="o"&gt;[&lt;/span&gt;tags-file&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;dir&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Usually, I prefer to run this command in the git repository:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ctags --tag-relative&lt;span class="o"&gt;=&lt;/span&gt;yes -R -f .git/tags .
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is highly recommended to add &lt;code&gt;--tag-relative=yes&lt;/code&gt; to the &lt;code&gt;ctags&lt;/code&gt;
+command.  Without this option, &lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; won't be able to open the correct source
+file under certain circumstances.&lt;/p&gt;
+&lt;p&gt;Sometimes, there might be some special naming convention in your project.  To
+index those files, we can change the programming language map with
+&lt;code&gt;--langmap&lt;/code&gt; option.  For example, to treat the &lt;code&gt;.inc&lt;/code&gt; file
+extension as C++ source code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;ctags --langmap&lt;span class="o"&gt;=&lt;/span&gt;c++:+*.inc ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This options &lt;em&gt;adds&lt;/em&gt; &lt;code&gt;.inc&lt;/code&gt; to the C++ file extensions (in addition to the
+default file extensions such as &lt;code&gt;.c&lt;/code&gt;, &lt;code&gt;.cpp&lt;/code&gt;, and etc.)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="vim-keys"&gt;
+&lt;h2&gt;Vim Keys&lt;/h2&gt;
+&lt;p&gt;After generating the &lt;strong&gt;tags file&lt;/strong&gt;, we can browse the source code with
+&lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; and &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;.  &lt;a class="reference external" href="http://www.vim.org"&gt;Vim&lt;/a&gt; has excellent built-in support for &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;.
+We can simply jump to or preview the definition with a little key stroke.
+Here are some combinations for your reference.&lt;/p&gt;
+&lt;div class="section" id="basic-usage"&gt;
+&lt;h3&gt;Basic Usage&lt;/h3&gt;
+&lt;p&gt;First, we can jump to the matching patterns with the &lt;code&gt;:ta&lt;/code&gt; command.
+If we are not satisfied by the first match, we can jump to the &lt;em&gt;next match&lt;/em&gt;
+with &lt;code&gt;:tn&lt;/code&gt;.  Conversely, we can jump to the &lt;em&gt;previous match&lt;/em&gt; with
+&lt;code&gt;:tN&lt;/code&gt;.  We can also list all matches with &lt;code&gt;:ts&lt;/code&gt;.&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="25%" /&gt;
+&lt;col width="75%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Command&lt;/th&gt;
+&lt;th class="head"&gt;Usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;:ta [pattern]&lt;/td&gt;
+&lt;td&gt;Jump to the best matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ta /[regex]&lt;/td&gt;
+&lt;td&gt;Jump to the best matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ts [pattern]&lt;/td&gt;
+&lt;td&gt;List the tags and jump to the selected one&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ts /[regex]&lt;/td&gt;
+&lt;td&gt;List the tags and jump to the selected one&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:tn&lt;/td&gt;
+&lt;td&gt;Jump to next matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:tN&lt;/td&gt;
+&lt;td&gt;Jump to previous matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Here are some tips to search for the &lt;strong&gt;keyword pointed by the cursor&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;To show the best matching in the new window, press &lt;code&gt;Ctrl+W&lt;/code&gt; then
+&lt;code&gt;]&lt;/code&gt;.  &lt;strong&gt;(This is my favorite!)&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;To list all matchings and show the selected one in the new window, press
+&lt;code&gt;Ctrl+W&lt;/code&gt; then &lt;code&gt;g]&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;To jump to the best matching directly, press &lt;code&gt;Ctrl+]&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;To list all matchings and jump to selected one, press &lt;code&gt;g]&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;To search a pattern by selection, press &lt;code&gt;v&lt;/code&gt; to enter visual mode,
+select the text, and press either &lt;code&gt;Ctrl+]&lt;/code&gt; or &lt;code&gt;g]&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="preview-window"&gt;
+&lt;h4&gt;Preview Window&lt;/h4&gt;
+&lt;p&gt;The &lt;strong&gt;preview window&lt;/strong&gt; is a separated window that will pop up on the top for
+quick reference.  Unlike the &amp;quot;&lt;code&gt;Ctrl-W&lt;/code&gt; then &lt;code&gt;]&lt;/code&gt;&amp;quot; command mentioned
+above, the cursor won't be moved to the preview window.&lt;/p&gt;
+&lt;p&gt;To preview the keywords pointed by the cursor, press &lt;code&gt;Ctrl-W&lt;/code&gt; and
+&lt;code&gt;}&lt;/code&gt;.  Alternatively, we can open the preview window by the &lt;code&gt;:pt&lt;/code&gt;
+command.  To close the preview window, use the &lt;code&gt;:pc&lt;/code&gt; command.&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="25%" /&gt;
+&lt;col width="75%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Command&lt;/th&gt;
+&lt;th class="head"&gt;Usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;:pt [pattern]&lt;/td&gt;
+&lt;td&gt;Preview the best matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ptn&lt;/td&gt;
+&lt;td&gt;Preview the next matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ptN&lt;/td&gt;
+&lt;td&gt;Preview the previous matching tag&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:pc&lt;/td&gt;
+&lt;td&gt;Close the preview window&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="tag-stack"&gt;
+&lt;h3&gt;Tag Stack&lt;/h3&gt;
+&lt;p&gt;If we jump to a matching tag with &lt;code&gt;:ta&lt;/code&gt; or &lt;code&gt;g]&lt;/code&gt;, we may wish to go
+back and forth.  When we jump to a new tag, the current position will be pushed
+to the &lt;strong&gt;tag stack&lt;/strong&gt;.  To go back to previous position (i.e. pop the tag
+stack), we can use the &lt;code&gt;:po&lt;/code&gt; command.  To go forward, we can use the
+&lt;code&gt;:ta&lt;/code&gt; command.&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="23%" /&gt;
+&lt;col width="77%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Command&lt;/th&gt;
+&lt;th class="head"&gt;Usage&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;:tags&lt;/td&gt;
+&lt;td&gt;List the tag stack&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:po&lt;/td&gt;
+&lt;td&gt;Pop the tag stack (go up)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:[n]po&lt;/td&gt;
+&lt;td&gt;Pop &lt;code&gt;n&lt;/code&gt; items from the tag stack (go up)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:ta&lt;/td&gt;
+&lt;td&gt;Push the tag stack (go down)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;:[n]ta&lt;/td&gt;
+&lt;td&gt;Push &lt;code&gt;n&lt;/code&gt; items to the tag stack (go down)&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we gave a brief introduction to the basic usages of &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;.  We
+have mentioned some handy &lt;code&gt;.vimrc&lt;/code&gt; tweaks and some important &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;
+option.  Besides, we have walked through several useful &lt;a class="reference external" href="http://www.vim.org"&gt;vim&lt;/a&gt; commands for
+code browsing and navigation.  This should would be sufficient for most
+use cases.  You can find more materials from the references.&lt;/p&gt;
+&lt;p&gt;Last, but not the least, I would like to say that &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt; is an amazing source
+code indexing tool.  I found my programming productivity has been significantly
+improved by &lt;a class="reference external" href="http://ctags.sourceforge.net/"&gt;ctags&lt;/a&gt;.  Hope you enjoy it too.  Happy coding!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Andrew Stewart, &lt;a class="reference external" href="http://andrew.stwrt.ca/posts/vim-ctags"&gt;Vim and Ctags&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Vim Wikia, &lt;a class="reference external" href="http://vim.wikia.com/wiki/Browsing_programs_with_tags"&gt;Browsing programs with tags&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Vim Documentation, &lt;a class="reference external" href="http://vimdoc.sourceforge.net/htmldoc/tagsrch.html#tags"&gt;Tags and special searches&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Tue, 10 Mar 2015 23:01:00 +0800</pubDate><guid>tag:logan.tw,2015-03-10:posts/2015/03/10/trace-source-code-with-vim-and-ctags/</guid><category>c</category><category>cxx</category><category>vim</category><category>ctags</category></item><item><title>Git Ignore File</title><link>http://logan.tw/posts/2015/02/28/git-ignore-file/</link><description>&lt;p&gt;In some circumstances, we would like to ignore the files (or directories) under
 the Git repository base directory.  How could we do this?  For example, assume
 that we have a Git repository with following files:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;out/bin/conv

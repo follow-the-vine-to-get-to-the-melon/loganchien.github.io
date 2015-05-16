@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Trace Source Code with Vim and Ctags</title>
+  <meta name="author" content="Logan">
+
+  <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Logan's Note Atom Feed" />
+  <link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate"
+        title="Logan's Note RSS Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="http://logan.tw/favicon.png" rel="icon">
+  <link href="http://logan.tw/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="http://logan.tw/theme/js/modernizr-2.0.js"></script>
+  <script src="http://logan.tw/theme/js/ender.js"></script>
+  <script src="http://logan.tw/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="http://logan.tw/">Logan's Note</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://logan.tw/feeds/atom.xml" rel="subscribe-atom">Atom</a></li>
+  <li><a href="http://logan.tw/feeds/rss.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+
+<ul class="main-navigation">
+    <li><a href="/">home</a></li>
+    <li><a href="/blog/">blog</a></li>
+    <li><a href="/archives/">archives</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Trace Source Code with Vim and Ctags</h1>
+      <p class="meta"><time datetime="2015-03-10T23:01:00+08:00" pubdate>Tue 10 March 2015</time></p>
+</header>
+
+  <div class="entry-content"><p><a class="reference external" href="http://ctags.sourceforge.net/">Ctags</a> is a source code indexing tool.  With <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>, we can easily find the
+definitions of the classes, functions, and variables.  According to my
+experiences, <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> can significantly reduce the time to browse the source
+code.  In this post, I would like to give a brief introduction to <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> and
+<a class="reference external" href="http://www.vim.org">vim</a>.</p>
+<div class="section" id="installation">
+<h2>Installation</h2>
+<p>First, we have to install <code>exuberant-ctags</code> package for <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.  On
+Ubuntu or Debian, we can install <code>exuberant-ctags</code> with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install exuberant-ctags
+</pre></div>
+<p>Second, I would suggest to <em>tweak</em> the <code>.vimrc</code> as well.  By default,
+<a class="reference external" href="http://www.vim.org">vim</a> will only load the <strong>tags file</strong> from:</p>
+<ol class="arabic simple">
+<li>the current working directory, or</li>
+<li>the directory containing the opened source file.</li>
+</ol>
+<p>For example, if you have opened the file <code>foo/bar.c</code>, then <a class="reference external" href="http://www.vim.org">vim</a> will
+only check the <strong>tags file</strong> named after <code>tags</code>, <code>TAGS</code>,
+<code>foo/tags</code>, or <code>foo/TAGS</code>.  However, the <strong>tags file</strong> in the
+parent directories, such as <code>../../tags</code> won't be considered.</p>
+<p>To ask <a class="reference external" href="http://www.vim.org">vim</a> to search for <strong>tags file</strong> in the parent directories, we should
+add an extra semicolon <code>;</code> after <code>./tags</code> and <code>./TAGS</code>.  For
+example,</p>
+<div class="highlight"><pre><span class="k">set</span> <span class="k">tags</span><span class="p">=</span>.<span class="sr">/tags;,./</span>TAGS;<span class="p">,</span><span class="k">tags</span><span class="p">,</span>TAGS
+</pre></div>
+<p>Third, if you wish to put the generated <strong>tags file</strong> in the <code>.git</code>
+directory so that the <strong>tags file</strong> won't be added to git repository, then you
+may wish to add the following snippets to the <code>.vimrc</code> as well:</p>
+<div class="highlight"><pre><span class="c">&quot; Check .git/tags for ctags file.</span>
+<span class="k">fun</span><span class="p">!</span> FindTagsFileInGitDir<span class="p">(</span><span class="k">file</span><span class="p">)</span>
+  <span class="k">let</span> <span class="nb">path</span> <span class="p">=</span> fnamemodify<span class="p">(</span><span class="k">a</span>:<span class="k">file</span><span class="p">,</span> <span class="s1">&#39;:p:h&#39;</span><span class="p">)</span>
+  <span class="k">while</span> <span class="nb">path</span> <span class="p">!=</span> <span class="s1">&#39;/&#39;</span>
+    <span class="k">let</span> fname <span class="p">=</span> <span class="nb">path</span> . <span class="s1">&#39;/.git/tags&#39;</span>
+    <span class="k">if</span> filereadable<span class="p">(</span>fname<span class="p">)</span>
+      <span class="k">silent</span><span class="p">!</span> exec <span class="s1">&#39;set tags+=&#39;</span> . fname
+    <span class="k">endif</span>
+    <span class="k">let</span> <span class="nb">path</span> <span class="p">=</span> fnamemodify<span class="p">(</span><span class="nb">path</span><span class="p">,</span> <span class="s1">&#39;:h&#39;</span><span class="p">)</span>
+  <span class="k">endwhile</span>
+<span class="k">endfun</span>
+
+augroup CtagsGroup
+  autocmd<span class="p">!</span>
+  autocmd <span class="nb">BufRead</span> * <span class="k">call</span> FindTagsFileInGitDir<span class="p">(</span>expand<span class="p">(</span><span class="s2">&quot;&lt;afile&gt;&quot;</span><span class="p">))</span>
+augroup END
+</pre></div>
+<p>This snippet allows <a class="reference external" href="http://www.vim.org">vim</a> to search for the <strong>tags file</strong> in the <code>.git</code>
+directory of the parent directories of the source file, such as
+<code>../../.git/tags</code>.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage</h2>
+<p>After installation, we have to generate the <strong>tags file</strong> as the index.  We
+can generate the <strong>tags file</strong> with the following commands:</p>
+<div class="highlight"><pre><span class="nv">$ </span>ctags -R <span class="o">[</span>dir<span class="o">]</span>
+<span class="nv">$ </span>ctags -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
+<span class="nv">$ </span>ctags --tag-relative<span class="o">=</span>yes -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
+</pre></div>
+<p>Usually, I prefer to run this command in the git repository:</p>
+<div class="highlight"><pre><span class="nv">$ </span>ctags --tag-relative<span class="o">=</span>yes -R -f .git/tags .
+</pre></div>
+<p>It is highly recommended to add <code>--tag-relative=yes</code> to the <code>ctags</code>
+command.  Without this option, <a class="reference external" href="http://www.vim.org">vim</a> won't be able to open the correct source
+file under certain circumstances.</p>
+<p>Sometimes, there might be some special naming convention in your project.  To
+index those files, we can change the programming language map with
+<code>--langmap</code> option.  For example, to treat the <code>.inc</code> file
+extension as C++ source code:</p>
+<div class="highlight"><pre><span class="nv">$ </span>ctags --langmap<span class="o">=</span>c++:+*.inc ...
+</pre></div>
+<p>This options <em>adds</em> <code>.inc</code> to the C++ file extensions (in addition to the
+default file extensions such as <code>.c</code>, <code>.cpp</code>, and etc.)</p>
+</div>
+<div class="section" id="vim-keys">
+<h2>Vim Keys</h2>
+<p>After generating the <strong>tags file</strong>, we can browse the source code with
+<a class="reference external" href="http://www.vim.org">vim</a> and <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.  <a class="reference external" href="http://www.vim.org">Vim</a> has excellent built-in support for <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.
+We can simply jump to or preview the definition with a little key stroke.
+Here are some combinations for your reference.</p>
+<div class="section" id="basic-usage">
+<h3>Basic Usage</h3>
+<p>First, we can jump to the matching patterns with the <code>:ta</code> command.
+If we are not satisfied by the first match, we can jump to the <em>next match</em>
+with <code>:tn</code>.  Conversely, we can jump to the <em>previous match</em> with
+<code>:tN</code>.  We can also list all matches with <code>:ts</code>.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Command</th>
+<th class="head">Usage</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>:ta [pattern]</td>
+<td>Jump to the best matching tag</td>
+</tr>
+<tr><td>:ta /[regex]</td>
+<td>Jump to the best matching tag</td>
+</tr>
+<tr><td>:ts [pattern]</td>
+<td>List the tags and jump to the selected one</td>
+</tr>
+<tr><td>:ts /[regex]</td>
+<td>List the tags and jump to the selected one</td>
+</tr>
+<tr><td>:tn</td>
+<td>Jump to next matching tag</td>
+</tr>
+<tr><td>:tN</td>
+<td>Jump to previous matching tag</td>
+</tr>
+</tbody>
+</table>
+<p>Here are some tips to search for the <strong>keyword pointed by the cursor</strong>:</p>
+<ul class="simple">
+<li>To show the best matching in the new window, press <code>Ctrl+W</code> then
+<code>]</code>.  <strong>(This is my favorite!)</strong></li>
+<li>To list all matchings and show the selected one in the new window, press
+<code>Ctrl+W</code> then <code>g]</code>.</li>
+<li>To jump to the best matching directly, press <code>Ctrl+]</code>.</li>
+<li>To list all matchings and jump to selected one, press <code>g]</code>.</li>
+<li>To search a pattern by selection, press <code>v</code> to enter visual mode,
+select the text, and press either <code>Ctrl+]</code> or <code>g]</code>.</li>
+</ul>
+<div class="section" id="preview-window">
+<h4>Preview Window</h4>
+<p>The <strong>preview window</strong> is a separated window that will pop up on the top for
+quick reference.  Unlike the &quot;<code>Ctrl-W</code> then <code>]</code>&quot; command mentioned
+above, the cursor won't be moved to the preview window.</p>
+<p>To preview the keywords pointed by the cursor, press <code>Ctrl-W</code> and
+<code>}</code>.  Alternatively, we can open the preview window by the <code>:pt</code>
+command.  To close the preview window, use the <code>:pc</code> command.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="25%" />
+<col width="75%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Command</th>
+<th class="head">Usage</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>:pt [pattern]</td>
+<td>Preview the best matching tag</td>
+</tr>
+<tr><td>:ptn</td>
+<td>Preview the next matching tag</td>
+</tr>
+<tr><td>:ptN</td>
+<td>Preview the previous matching tag</td>
+</tr>
+<tr><td>:pc</td>
+<td>Close the preview window</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="tag-stack">
+<h3>Tag Stack</h3>
+<p>If we jump to a matching tag with <code>:ta</code> or <code>g]</code>, we may wish to go
+back and forth.  When we jump to a new tag, the current position will be pushed
+to the <strong>tag stack</strong>.  To go back to previous position (i.e. pop the tag
+stack), we can use the <code>:po</code> command.  To go forward, we can use the
+<code>:ta</code> command.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="23%" />
+<col width="77%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Command</th>
+<th class="head">Usage</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>:tags</td>
+<td>List the tag stack</td>
+</tr>
+<tr><td>:po</td>
+<td>Pop the tag stack (go up)</td>
+</tr>
+<tr><td>:[n]po</td>
+<td>Pop <code>n</code> items from the tag stack (go up)</td>
+</tr>
+<tr><td>:ta</td>
+<td>Push the tag stack (go down)</td>
+</tr>
+<tr><td>:[n]ta</td>
+<td>Push <code>n</code> items to the tag stack (go down)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we gave a brief introduction to the basic usages of <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.  We
+have mentioned some handy <code>.vimrc</code> tweaks and some important <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>
+option.  Besides, we have walked through several useful <a class="reference external" href="http://www.vim.org">vim</a> commands for
+code browsing and navigation.  This should would be sufficient for most
+use cases.  You can find more materials from the references.</p>
+<p>Last, but not the least, I would like to say that <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> is an amazing source
+code indexing tool.  I found my programming productivity has been significantly
+improved by <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.  Hope you enjoy it too.  Happy coding!</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li>Andrew Stewart, <a class="reference external" href="http://andrew.stwrt.ca/posts/vim-ctags">Vim and Ctags</a></li>
+<li>Vim Wikia, <a class="reference external" href="http://vim.wikia.com/wiki/Browsing_programs_with_tags">Browsing programs with tags</a></li>
+<li>Vim Documentation, <a class="reference external" href="http://vimdoc.sourceforge.net/htmldoc/tagsrch.html#tags">Tags and special searches</a></li>
+</ul>
+</div>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2015-03-10T23:01:00+08:00" pubdate>Tue 10 March 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/c/">c</a>
+    <a class="category" href="http://logan.tw/tag/cxx/">cxx</a>
+    <a class="category" href="http://logan.tw/tag/vim/">vim</a>
+    <a class="category" href="http://logan.tw/tag/ctags/">ctags</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/">Trace Source Code with Vim and Ctags</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/">Using Aria2 Download Manager</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">C++11 Unique Pointer</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="http://logan.tw/category/misc/">misc</a></li>
+        <li><a href="http://logan.tw/category/programming/">programming</a></li>
+        <li><a href="http://logan.tw/category/web/">web</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/ctags/">ctags</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/c/">c</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/lcov/">lcov</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+
+
+    <section>
+        <h1>Social</h1>
+        <ul>
+            <li><a href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate">RSS</a></li>
+            <li><a href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate">Atom</a></li>
+            <li><a href="http://facebook.com/loganchien" target="_blank">facebook</a></li>
+            <li><a href="http://plus.google.com/+LoganChienTW" target="_blank">google+</a></li>
+            <li><a href="http://github.com/loganchien" target="_blank">github</a></li>
+            <li><a href="https://www.linkedin.com/in/loganchien" target="_blank">linkedin</a></li>
+        </ul>
+    </section>
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://logan.tw" target="_blank">Web</a></li>
+            <li><a href="http://blog.logan.tw" target="_blank">Blog (Taiwan)</a></li>
+        </ul>
+    </section>
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014-2015  - Logan -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-57011197-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-57011197-1');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>
