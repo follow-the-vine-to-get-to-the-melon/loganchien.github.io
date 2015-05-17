@@ -1,5 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-02-21T23:02:00+08:00</updated><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-05-17T01:44:00+08:00</updated><entry><title>Grub Install and Btrfs Root File System</title><link href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/" rel="alternate"></link><updated>2015-05-17T01:44:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-17:posts/2015/05/17/grub-install-and-btrfs-root-file-system/</id><summary type="html">&lt;p&gt;Recently, the Linux operating system on my laptop no longer boots.  It seems
+that the boot sector for &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; bootloader is corrupted.  I tried to
+&lt;strong&gt;reinstall GRUB&lt;/strong&gt; with an Ubuntu LiveCD; however, I have encountered some
+problem related to &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; file system (which is the file system for my root
+mount point &lt;code&gt;/&lt;/code&gt;.)&lt;/p&gt;
+&lt;p&gt;After several attempts, I finally reinstalled &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; to the hard disk.  I feel
+that it will be good idea to write the steps down, since I can't find any
+useful suggestion at the time of writing.&lt;/p&gt;
+&lt;div class="section" id="preparation"&gt;
+&lt;h2&gt;Preparation&lt;/h2&gt;
+&lt;p&gt;Before changing anything, it will be better to understand the situation
+beforehand.  Check the status and find the correct device file with &lt;code&gt;sudo
+fdisk -l&lt;/code&gt; command or the &lt;a class="reference external" href="http://gparted.org/"&gt;GParted&lt;/a&gt; GUI tool.&lt;/p&gt;
+&lt;p&gt;For example, on my laptop, the main hard drive is &lt;code&gt;/dev/SDA&lt;/code&gt;, and
+according to the result of &lt;code&gt;fdisk&lt;/code&gt;:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;/dev/SDA1&lt;/code&gt; is the partition for the EFI firmwares, which is a FAT32
+partition.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/dev/SDA4&lt;/code&gt; is the &lt;strong&gt;root file system&lt;/strong&gt; for the Linux installation,
+which is a &lt;cite&gt;Btrfs&lt;/cite&gt; partition.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Besides, I would like to reinstall &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; to &lt;code&gt;/dev/SDA&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="steps"&gt;
+&lt;h2&gt;Steps&lt;/h2&gt;
+&lt;p&gt;After gathering the necessary information, we can start our work.  In summary,
+there are three steps:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Mount the file systems.&lt;/li&gt;
+&lt;li&gt;Switch to the root file system with &lt;code&gt;chroot&lt;/code&gt; command and fix the
+problem inside the chroot.&lt;/li&gt;
+&lt;li&gt;Unmount the file systems.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I will elobrate them in the following paragraphs.&lt;/p&gt;
+&lt;div class="section" id="mount-the-file-systems"&gt;
+&lt;h3&gt;Mount the File Systems&lt;/h3&gt;
+&lt;p&gt;First, create a directory as a mount point for &lt;strong&gt;root file system&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mkdir mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, mount the &lt;strong&gt;root file system&lt;/strong&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mount -o &lt;span class="nv"&gt;subvol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;@ /dev/SDA4 mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Notice that it is &lt;em&gt;required&lt;/em&gt; to specify the &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; subvolume with the
+&lt;code&gt;-o subvol=&lt;/code&gt; option.  We will explain this later.  On the default Ubuntu
+installation, the subvolume for the root file system is named after &lt;code&gt;&amp;#64;&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Third, mount the special file system for the &lt;strong&gt;chroot&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; i in dev dev/pts sys proc run&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo mount --bind /&lt;span class="nv"&gt;$i&lt;/span&gt; mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Fourth, if you are using &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface"&gt;UEFI&lt;/a&gt;, you should mount the EFI boot partition
+as well:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mount /dev/SDA1 mnt/boot/efi
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="change-root-and-reinstall-grub"&gt;
+&lt;h3&gt;Change Root and Reinstall GRUB&lt;/h3&gt;
+&lt;p&gt;Now, we can switch to the root file system with the &lt;code&gt;chroot&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chroot mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the chroot, we can reinstall the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; bootloader with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; grub-install /dev/SDA
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Remarks: If you see the error messages like &amp;quot;&lt;code&gt;cannot find a device for
+...&lt;/code&gt;&amp;quot;, then it is possible that some partition is not mounted properly.  As a
+result, &lt;code&gt;grub-probe&lt;/code&gt; can't detect the devices for the existing
+configuration.&lt;/p&gt;
+&lt;p&gt;For example, in my first attempt, I have seen the following error message:&lt;/p&gt;
+&lt;blockquote&gt;
+grub-install: error: cannot find a device for /boot/grub (is /dev mounted?)&lt;/blockquote&gt;
+&lt;p&gt;This is due to the fact that the &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; subvolume was mentioned in the
+configuration file but I didn't specify the &lt;code&gt;subvol=&lt;/code&gt; option when I was
+mounting the root file system in the first attempt.  If you encounter similar
+error messages, double check the &lt;code&gt;/etc/fstab&lt;/code&gt; and the mount options.&lt;/p&gt;
+&lt;p&gt;Now, we can verify the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; installation and update the configuration files
+with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; grub-install --recheck /dev/SDA
+
+&amp;gt; update-grub
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally, leave the chroot with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; &lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="unmount-the-file-systems"&gt;
+&lt;h3&gt;Unmount the File Systems&lt;/h3&gt;
+&lt;p&gt;Now, we would like to unmount the file systems so that the changes can be
+flushed properly.&lt;/p&gt;
+&lt;p&gt;First, unmount the EFI partition (if available):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo umount mnt/boot/efi
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, unmount the special file systems:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; i in run proc sys dev/pts dev&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo umount mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, unmount the root file systems and delete the mount point:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo umount mnt
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo rmdir mnt
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;That's all.  You can reboot the computer now!  Hoping this will fix your
+problem.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://howtoubuntu.org/how-to-repair-restore-reinstall-grub-2-with-a-ubuntu-live-cd"&gt;How to Repair, Restore, or Reinstall Grub 2 with a Ubuntu Live CD or USB&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
 resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
 the size of the output file, and download the rest of the file from the server.
 I can even restart the download task with a &lt;strong&gt;different URI&lt;/strong&gt;.  This &lt;em&gt;feature&lt;/em&gt;

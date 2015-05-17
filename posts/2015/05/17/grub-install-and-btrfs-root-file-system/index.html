@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Autossh and Ubuntu Upstart Daemon</title>
+  <title>Grub Install and Btrfs Root File System</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,114 +52,115 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">Autossh and Ubuntu Upstart Daemon</h1>
-      <p class="meta"><time datetime="2014-12-15T18:04:00+08:00" pubdate>Mon 15 December 2014</time></p>
+      <h1 class="entry-title">Grub Install and Btrfs Root File System</h1>
+      <p class="meta"><time datetime="2015-05-17T01:44:00+08:00" pubdate>Sun 17 May 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>Since I am sharing the network without public IP, I would like to maintain a
-SSH tunnel so that I can connect to my desktop from the remote site.  After
-searching the web, I found that <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> fits my needs.  <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> is a
-utility that can start and monitor the SSH tunnel.  If the connections are
-broken, then <a class="reference external" href="http://www.harding.motd.ca/autossh/">Autossh</a> will restart the SSH connection automatically.</p>
-<p>In this post, I would like to introduce how to setup an autossh daemon with
-<a class="reference external" href="http://upstart.ubuntu.com">Ubuntu Upstart</a>.</p>
-<div class="section" id="setup-local-host">
-<h2>Setup Local Host</h2>
-<p>First, create a new user:</p>
-<div class="highlight"><pre><span class="c"># Create a new user named &quot;autossh&quot;</span>
-<span class="nv">$ </span>sudo adduser --system --group --disabled-password autossh
-
-<span class="c"># Login as autossh</span>
-autossh:~<span class="nv">$ </span>sudo su autossh
-</pre></div>
-<p>Second, record the remote SSH server key:</p>
-<div class="highlight"><pre>autossh:~<span class="nv">$ </span>ssh-keyscan <span class="o">[</span>remote<span class="o">]</span> &gt;&gt; ~/.ssh/known_hosts
-</pre></div>
-<p>Third, create SSH public keys:</p>
-<div class="highlight"><pre><span class="c"># Create SSH private and public keys</span>
-autossh:~<span class="nv">$ </span>ssh-keygen -t rsa
-Enter file in which to save the key <span class="o">(</span>/home/autossh/.ssh/id_rsa<span class="o">)</span>: <span class="o">[</span>enter<span class="o">]</span>
-Created directory <span class="s1">&#39;/home/autossh/.ssh&#39;</span>.
-Enter passphrase <span class="o">(</span>empty <span class="k">for</span> no passphrase<span class="o">)</span>: <span class="o">[</span>enter<span class="o">]</span>
-Enter same passphrase again: <span class="o">[</span>enter<span class="o">]</span>
-
-<span class="c"># Print the public key</span>
-autossh:~<span class="nv">$ </span>cat ~/.ssh/id_rsa.pub
-<span class="o">[</span>copy the output line<span class="o">]</span>
-</pre></div>
-<p>Fourth, logout and disable the shell:</p>
-<div class="highlight"><pre>autossh:~<span class="nv">$ </span><span class="nb">exit</span>
-<span class="nv">$ </span>sudo chsh --shell /bin/false autossh
-</pre></div>
-</div>
-<div class="section" id="setup-remote-host">
-<h2>Setup Remote Host</h2>
-<p>First, create a new user:</p>
-<div class="highlight"><pre><span class="c"># Login to the remote host</span>
-<span class="nv">$ </span>ssh <span class="o">[</span>user<span class="o">]</span>@<span class="o">[</span>remote<span class="o">]</span>
-
-<span class="c"># Create a new user</span>
-remote:~<span class="nv">$ </span>sudo adduser --system --group --shell /bin/false <span class="se">\</span>
-                       --disabled-password autossh
-</pre></div>
-<p>Second, add the authorized public key:</p>
-<div class="highlight"><pre><span class="c"># Create directory for authorized keys</span>
-remote:~<span class="nv">$ </span>sudo mkdir -p /home/autossh/.ssh
-
-<span class="c"># Add new public key</span>
-remote:~<span class="nv">$ </span>sudo vi /home/autossh/.ssh/authorized_keys
-<span class="o">[</span>paste the public key<span class="o">]</span>
-
-<span class="c"># Change the owner of the file</span>
-remote:~<span class="nv">$ </span>sudo chown -R autossh:autossh /home/autossh/.ssh
-</pre></div>
-<p>We have finished the configuration on the remote host, logout from the remote
-host with:</p>
-<div class="highlight"><pre>remote:~<span class="nv">$ </span><span class="nb">exit</span>
-</pre></div>
-</div>
-<div class="section" id="setup-upstart-configuration-file">
-<h2>Setup Upstart Configuration File</h2>
-<p>Let's add the Ubuntu Upstart configuration file.</p>
-<p>First, create new upstart configuration with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo vim /etc/init/autossh.conf
-</pre></div>
-<p>Add following lines to the file:</p>
-<div class="highlight"><pre>description &quot;autossh daemon for ssh tunnel&quot;
-
-start on net-device-up IFACE=eth0
-stop on runlevel [01S6]
-
-setuid autossh
-
-respawn
-respawn limit 5 60
-
-script
-export AUTOSSH_FIRST_POLL=30
-export AUTOSSH_GATETIME=0
-export AUTOSSH_POLL=60
-autossh -M [daemon-port] -N -R [remote-port]:localhost:22 [remote] -i /home/autossh/.ssh/id_rsa
-end script
-</pre></div>
-<p>Change the variables properly.</p>
+  <div class="entry-content"><p>Recently, the Linux operating system on my laptop no longer boots.  It seems
+that the boot sector for <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> bootloader is corrupted.  I tried to
+<strong>reinstall GRUB</strong> with an Ubuntu LiveCD; however, I have encountered some
+problem related to <a class="reference external" href="https://btrfs.wiki.kernel.org/">Btrfs</a> file system (which is the file system for my root
+mount point <code>/</code>.)</p>
+<p>After several attempts, I finally reinstalled <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> to the hard disk.  I feel
+that it will be good idea to write the steps down, since I can't find any
+useful suggestion at the time of writing.</p>
+<div class="section" id="preparation">
+<h2>Preparation</h2>
+<p>Before changing anything, it will be better to understand the situation
+beforehand.  Check the status and find the correct device file with <code>sudo
+fdisk -l</code> command or the <a class="reference external" href="http://gparted.org/">GParted</a> GUI tool.</p>
+<p>For example, on my laptop, the main hard drive is <code>/dev/SDA</code>, and
+according to the result of <code>fdisk</code>:</p>
 <ul class="simple">
-<li><code>[daemon-port]</code> can be any number larger than 8000.</li>
-<li><code>[remote-port]</code> is the remote port that will be opened on remote host
-which will be mapped to local port.</li>
-<li>For the exported environment variables, you can refer to the <a class="reference external" href="http://manpages.ubuntu.com/manpages/utopic/en/man1/autossh.1.html">autossh manual
-pages</a> for further details.  Usually, you would like to set
-<code>AUTOSSH_GATETIME</code> to zero.</li>
+<li><code>/dev/SDA1</code> is the partition for the EFI firmwares, which is a FAT32
+partition.</li>
+<li><code>/dev/SDA4</code> is the <strong>root file system</strong> for the Linux installation,
+which is a <cite>Btrfs</cite> partition.</li>
 </ul>
-<p>Finally, start the service now:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo service autossh start
+<p>Besides, I would like to reinstall <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> to <code>/dev/SDA</code>.</p>
+</div>
+<div class="section" id="steps">
+<h2>Steps</h2>
+<p>After gathering the necessary information, we can start our work.  In summary,
+there are three steps:</p>
+<ol class="arabic simple">
+<li>Mount the file systems.</li>
+<li>Switch to the root file system with <code>chroot</code> command and fix the
+problem inside the chroot.</li>
+<li>Unmount the file systems.</li>
+</ol>
+<p>I will elobrate them in the following paragraphs.</p>
+<div class="section" id="mount-the-file-systems">
+<h3>Mount the File Systems</h3>
+<p>First, create a directory as a mount point for <strong>root file system</strong>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo mkdir mnt
 </pre></div>
-<p>After these steps, the SSH tunnel should start to work now!</p>
+<p>Second, mount the <strong>root file system</strong> with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo mount -o <span class="nv">subvol</span><span class="o">=</span>@ /dev/SDA4 mnt
+</pre></div>
+<p>Notice that it is <em>required</em> to specify the <a class="reference external" href="https://btrfs.wiki.kernel.org/">Btrfs</a> subvolume with the
+<code>-o subvol=</code> option.  We will explain this later.  On the default Ubuntu
+installation, the subvolume for the root file system is named after <code>&#64;</code>.</p>
+<p>Third, mount the special file system for the <strong>chroot</strong>:</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in dev dev/pts sys proc run<span class="p">;</span> <span class="k">do</span> sudo mount --bind /<span class="nv">$i</span> mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
+</pre></div>
+<p>Fourth, if you are using <a class="reference external" href="http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a>, you should mount the EFI boot partition
+as well:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo mount /dev/SDA1 mnt/boot/efi
+</pre></div>
+</div>
+<div class="section" id="change-root-and-reinstall-grub">
+<h3>Change Root and Reinstall GRUB</h3>
+<p>Now, we can switch to the root file system with the <code>chroot</code> command:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo chroot mnt
+</pre></div>
+<p>In the chroot, we can reinstall the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> bootloader with:</p>
+<div class="highlight"><pre>&gt; grub-install /dev/SDA
+</pre></div>
+<p>Remarks: If you see the error messages like &quot;<code>cannot find a device for
+...</code>&quot;, then it is possible that some partition is not mounted properly.  As a
+result, <code>grub-probe</code> can't detect the devices for the existing
+configuration.</p>
+<p>For example, in my first attempt, I have seen the following error message:</p>
+<blockquote>
+grub-install: error: cannot find a device for /boot/grub (is /dev mounted?)</blockquote>
+<p>This is due to the fact that the <a class="reference external" href="https://btrfs.wiki.kernel.org/">Btrfs</a> subvolume was mentioned in the
+configuration file but I didn't specify the <code>subvol=</code> option when I was
+mounting the root file system in the first attempt.  If you encounter similar
+error messages, double check the <code>/etc/fstab</code> and the mount options.</p>
+<p>Now, we can verify the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> installation and update the configuration files
+with:</p>
+<div class="highlight"><pre>&gt; grub-install --recheck /dev/SDA
+
+&gt; update-grub
+</pre></div>
+<p>Finally, leave the chroot with:</p>
+<div class="highlight"><pre>&gt; <span class="nb">exit</span>
+</pre></div>
+</div>
+<div class="section" id="unmount-the-file-systems">
+<h3>Unmount the File Systems</h3>
+<p>Now, we would like to unmount the file systems so that the changes can be
+flushed properly.</p>
+<p>First, unmount the EFI partition (if available):</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo umount mnt/boot/efi
+</pre></div>
+<p>Second, unmount the special file systems:</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in run proc sys dev/pts dev<span class="p">;</span> <span class="k">do</span> sudo umount mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
+</pre></div>
+<p>Third, unmount the root file systems and delete the mount point:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo umount mnt
+
+<span class="nv">$ </span>sudo rmdir mnt
+</pre></div>
+<p>That's all.  You can reboot the computer now!  Hoping this will fix your
+problem.</p>
+</div>
 </div>
 <div class="section" id="reference">
 <h2>Reference</h2>
 <ul class="simple">
-<li><a class="reference external" href="http://www.ubuntugeek.com/automatically-restart-ssh-sessions-and-tunnels-using-autossh.html">Automatically restart SSH sessions and tunnels Using Autossh</a></li>
+<li><a class="reference external" href="http://howtoubuntu.org/how-to-repair-restore-reinstall-grub-2-with-a-ubuntu-live-cd">How to Repair, Restore, or Reinstall Grub 2 with a Ubuntu Live CD or USB</a></li>
 </ul>
 </div>
 </div>
@@ -168,11 +169,9 @@ pages</a> for further details.  Usually, you would like to set
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2014-12-15T18:04:00+08:00" pubdate>Mon 15 December 2014</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/ssh/">ssh</a>
-    <a class="category" href="http://logan.tw/tag/autossh/">autossh</a>
-    <a class="category" href="http://logan.tw/tag/upstart/">upstart</a>
-    <a class="category" href="http://logan.tw/tag/init/">init</a>
+<time datetime="2015-05-17T01:44:00+08:00" pubdate>Sun 17 May 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
+    <a class="category" href="http://logan.tw/tag/grub/">grub</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>
