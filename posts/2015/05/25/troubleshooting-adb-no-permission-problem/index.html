@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Git Ignore File</title>
+  <title>Troubleshooting adb No Permission Problem</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,31 +52,111 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">Git Ignore File</h1>
-      <p class="meta"><time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time></p>
+      <h1 class="entry-title">Troubleshooting adb No Permission Problem</h1>
+      <p class="meta"><time datetime="2015-05-25T21:59:00+08:00" pubdate>Mon 25 May 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>In some circumstances, we would like to ignore the files (or directories) under
-the Git repository base directory.  How could we do this?  For example, assume
-that we have a Git repository with following files:</p>
-<div class="highlight"><pre>out/bin/conv
-preprocessed/out/gen-case1.h
-preprocessed/out/gen-case2.h
-preprocessed/input.txt
-conv.cpp
+  <div class="entry-content"><p>I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
+the device to my computer and tried to list the devices with <code>adb
+devices</code> command.  But, unfortunately, I got the following error message:</p>
+<div class="highlight"><pre><span class="nv">$ </span>adb devices
+List of devices attached
+????????????    no permissions
 </pre></div>
-<p>If we would like to ignore the <code>out</code> directory but not the
-<code>preprocessed/out</code> directory, then we can add following line to
-<code>.gitignore</code> file:</p>
-<div class="highlight"><pre>/out
+<p>In the following of the post, I would like to explain how did I fix the
+problem.</p>
+<div class="section" id="adb-server-with-root-permission">
+<h2>ADB Server with Root Permission</h2>
+<p>First, we can run <code>adb</code> command with <strong>root</strong> permission, and check
+whether we can list the devices with <code>sudo</code>:</p>
+<div class="highlight"><pre><span class="c"># Stop the adb server (which will be restarted later.)</span>
+<span class="nv">$ </span>adb <span class="nb">kill</span>-server
+
+<span class="c"># Open a root shell.</span>
+<span class="nv">$ </span>sudo -s
+
+<span class="c"># Run &quot;adb device&quot; with in the root shell.</span>
+&gt; adb devices
+List of devices attached
+057d7cxx    device
+
+<span class="c"># Stop the adb server with root permission.</span>
+&gt; adb <span class="nb">kill</span>-server
+
+<span class="c"># Leave the root shell.</span>
+&gt; <span class="nb">exit</span>
 </pre></div>
-<p>Please notice that there is an <strong>leading slash character</strong> at the beginning of
-the path.  Without the leading slash, all of the files (or directories) named
-after <code>out</code> will be ignored.</p>
+<p>OK.  It seems that everything works fine with <strong>root</strong> permission.  If we can
+see the device with <strong>root</strong> permission, then the underlying problem is that
+the user is not allowed to access the USB device.</p>
+</div>
+<div class="section" id="configure-udev-for-usb-access">
+<h2>Configure udev for USB Access</h2>
+<p>To grant the USB access to an user, you can follow the instructions in
+<a class="reference external" href="http://source.android.com/source/initializing.html#configuring-usb-access">Configuring USB Access</a>.  In short, there are following steps:</p>
+<ol class="arabic">
+<li><p class="first">Create a new <strong>udev</strong> configuration file at
+<code>/etc/udev/rules.d/51-android.rules</code>.</p>
+</li>
+<li><p class="first">Copy the settings from <a class="reference external" href="http://source.android.com/source/initializing.html#configuring-usb-access">Configuring USB Access</a> and replace
+<code>&lt;username&gt;</code> with your Linux username.</p>
+</li>
+<li><p class="first">Reload the <strong>udev</strong> configuration with:</p>
+<pre class="literal-block">
+$ sudo udevadm control --reload-rules
+</pre>
+</li>
+<li><p class="first">Re-plug the Android device.</p>
+</li>
+</ol>
+<p>If you are lucky, this should work for you.</p>
+<p>However, it doesn't work for me because the <em>vendor ID</em> and <em>product</em> ID of my
+device are not listed in <a class="reference external" href="http://source.android.com/source/initializing.html#configuring-usb-access">Configuring USB Access</a>.  I have to figure out the
+<em>vendor ID</em> and <em>product ID</em> by myself.</p>
+</div>
+<div class="section" id="find-usb-vendor-and-product-id-for-udev-rules">
+<h2>Find USB Vendor and Product ID for udev Rules</h2>
+<p>We can check the USB <em>vendor ID</em> and <em>product ID</em> with <code>lsusb</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>lsusb
+Bus <span class="m">003</span> Device 013: ID 18d1:4ee7 Google Inc.
+</pre></div>
+<p>In this example, <code>18d1</code> is the <em>vendor ID</em> and <code>4ee7</code> is the
+<em>product ID</em> for my Android device.  Thus, I added the following rule:</p>
+<div class="highlight"><pre><span class="c"># adb protocol on flo (Nexus 7 2013)</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;usb&quot;</span>, ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">&quot;18d1&quot;</span>, ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">&quot;4ee7&quot;</span>, <span class="nv">MODE</span><span class="o">=</span><span class="s2">&quot;0600&quot;</span>, <span class="nv">OWNER</span><span class="o">=</span><span class="s2">&quot;&lt;username&gt;&quot;</span>
+</pre></div>
+<p>Now, we can reload the <strong>udev</strong> rules with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo udevadm control --reload-rules
+</pre></div>
+<p>After re-pluging the device, we should be able to see the devices with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>adb devices
+List of devices attached
+057d7cxx    device
+</pre></div>
+<p>However, notice that the bootloader has different <em>product ID</em>, thus we have
+have to reboot to bootloader mode:</p>
+<div class="highlight"><pre><span class="nv">$ </span>adb reboot bootloader
+
+<span class="nv">$ </span>lsusb
+Bus <span class="m">003</span> Device 013: ID 18d1:4ee0 Google Inc.
+</pre></div>
+<p>It seems that we have to add <code>18d1:4ee0</code> to udev rules as well:</p>
+<div class="highlight"><pre><span class="c"># fastboot protocol on flo (Nexus 7 2013)</span>
+<span class="nv">SUBSYSTEM</span><span class="o">==</span><span class="s2">&quot;usb&quot;</span>, ATTR<span class="o">{</span>idVendor<span class="o">}==</span><span class="s2">&quot;18d1&quot;</span>, ATTR<span class="o">{</span>idProduct<span class="o">}==</span><span class="s2">&quot;4ee0&quot;</span>, <span class="nv">MODE</span><span class="o">=</span><span class="s2">&quot;0600&quot;</span>, <span class="nv">OWNER</span><span class="o">=</span><span class="s2">&quot;&lt;username&gt;&quot;</span>
+</pre></div>
+<p>Reload the <strong>udev</strong> configuration again.</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo udevadm control --reload-rules
+</pre></div>
+<p>Finally, re-plug the USB device again.  Everything should work now!</p>
+<p>If this still doesn't work, then restart the <strong>udev</strong> service with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>sudo service udev restart
+</pre></div>
+<p>Hoping this post will help.</p>
+</div>
 <div class="section" id="reference">
 <h2>Reference</h2>
 <ul class="simple">
-<li><a class="reference external" href="http://git-scm.com/docs/gitignore">http://git-scm.com/docs/gitignore</a></li>
+<li>StackExchange: <a class="reference external" href="http://unix.stackexchange.com/questions/39370/how-to-reload-udev-rules-without-reboot">How to reload udev rules without reboot?</a></li>
 </ul>
 </div>
 </div>
@@ -85,8 +165,11 @@ after <code>out</code> will be ignored.</p>
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/git/">git</a>
+<time datetime="2015-05-25T21:59:00+08:00" pubdate>Mon 25 May 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/android/">android</a>
+    <a class="category" href="http://logan.tw/tag/udev/">udev</a>
+    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
+    <a class="category" href="http://logan.tw/tag/ubuntu/">ubuntu</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>

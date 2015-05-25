@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Git Ignore File</title>
+  <title>Logan's Note - android</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,68 +49,37 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Git Ignore File</h1>
-      <p class="meta"><time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time></p>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permission-problem/">Troubleshooting adb No Permission Problem</a>
+      </h1>
+      <p class="meta"><time datetime="2015-05-25T21:59:00+08:00" pubdate>Mon 25 May 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>In some circumstances, we would like to ignore the files (or directories) under
-the Git repository base directory.  How could we do this?  For example, assume
-that we have a Git repository with following files:</p>
-<div class="highlight"><pre>out/bin/conv
-preprocessed/out/gen-case1.h
-preprocessed/out/gen-case2.h
-preprocessed/input.txt
-conv.cpp
+  <div class="entry-content"><p>I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
+the device to my computer and tried to list the devices with <code>adb
+devices</code> command.  But, unfortunately, I got the following error message:</p>
+<div class="highlight"><pre><span class="nv">$ </span>adb devices
+List of devices attached
+????????????    no permissions
 </pre></div>
-<p>If we would like to ignore the <code>out</code> directory but not the
-<code>preprocessed/out</code> directory, then we can add following line to
-<code>.gitignore</code> file:</p>
-<div class="highlight"><pre>/out
-</pre></div>
-<p>Please notice that there is an <strong>leading slash character</strong> at the beginning of
-the path.  Without the leading slash, all of the files (or directories) named
-after <code>out</code> will be ignored.</p>
-<div class="section" id="reference">
-<h2>Reference</h2>
-<ul class="simple">
-<li><a class="reference external" href="http://git-scm.com/docs/gitignore">http://git-scm.com/docs/gitignore</a></li>
-</ul>
-</div>
-</div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Logan</span>
-  </span>
-<time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/git/">git</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
+<p>In the following of ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permission-problem/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permission-problem/">Troubleshooting adb No Permission Problem</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/">Grub Install and Btrfs Root File System</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/">Trace Source Code with Vim and Ctags</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
       </li>
     </ul>
   </section>
@@ -152,7 +121,7 @@ after <code>out</code> will be ignored.</p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014-2015  - Logan -
+    Copyright &copy;  2015  - Logan -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
     <script type="text/javascript">
