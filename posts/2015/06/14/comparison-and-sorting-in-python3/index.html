@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Comparison and Sorting in Python3</title>
+  <meta name="author" content="Logan">
+
+  <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
+        title="Logan's Note Atom Feed" />
+  <link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate"
+        title="Logan's Note RSS Feed" />
+
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="http://logan.tw/favicon.png" rel="icon">
+  <link href="http://logan.tw/theme/css/main.css" media="screen, projection"
+        rel="stylesheet" type="text/css">
+  <script src="http://logan.tw/theme/js/modernizr-2.0.js"></script>
+  <script src="http://logan.tw/theme/js/ender.js"></script>
+  <script src="http://logan.tw/theme/js/octopress.js" type="text/javascript"></script>
+
+  <link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+  <link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic"
+        rel="stylesheet" type="text/css">
+</head>
+
+<body>
+  <header role="banner"><hgroup>
+  <h1><a href="http://logan.tw/">Logan's Note</a></h1>
+</hgroup></header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="http://logan.tw/feeds/atom.xml" rel="subscribe-atom">Atom</a></li>
+  <li><a href="http://logan.tw/feeds/rss.xml" rel="subscribe-rss">RSS</a></li>
+</ul>
+
+
+
+<ul class="main-navigation">
+    <li><a href="/">Home</a></li>
+    <li><a href="/blog/">Blog</a></li>
+    <li><a href="/archives/">Archives</a></li>
+</ul></nav>
+  <div id="main">
+    <div id="content">
+<div>
+  <article class="hentry" role="article">
+<header>
+      <h1 class="entry-title">Comparison and Sorting in Python3</h1>
+      <p class="meta"><time datetime="2015-06-14T23:45:00+08:00" pubdate>Sun 14 June 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>Although I have written <a class="reference external" href="http://python.org">Python</a> for several years, I am still not very familiar
+with its idioms.  In particular, I don't quite understand how to compare and
+sort the objects in Python.  That's the reason why I am writing this article.</p>
+<p>The rest of this article consists of following sections:</p>
+<ol class="arabic simple">
+<li><a class="reference internal" href="#id1">Comparison Operators</a> -- lists the comparison operators.</li>
+<li><a class="reference internal" href="#built-in-types">Built-in Types</a> -- lists the <strong>semantics of the comparison operators</strong>
+corresponding to the operand types:<ol class="loweralpha">
+<li><a class="reference internal" href="#numbers-bool-int-and-float">Numbers: Bool, Int, and Float</a></li>
+<li><a class="reference internal" href="#complex-numbers">Complex Numbers</a></li>
+<li><a class="reference internal" href="#string">String</a></li>
+<li><a class="reference internal" href="#sequential-types-tuple-list-bytearray-and-bytes">Sequential Types: Tuple, List, ByteArray, and Bytes</a></li>
+<li><a class="reference internal" href="#sets-and-frozensets">Sets and FrozenSets</a></li>
+</ol>
+</li>
+<li><a class="reference internal" href="#user-defined-classes">User-defined Classes</a> -- discusses how to define our own comparison
+operators for the <strong>user-defined classes</strong>.</li>
+<li><a class="reference internal" href="#sort-the-list">Sort the List</a> -- will talk about how to customize the ordering while
+sorting the elements in a list.</li>
+</ol>
+<div class="section" id="id1">
+<span id="comparison-operators"></span><h2>Comparison Operators</h2>
+<p>There are <a class="reference external" href="https://docs.python.org/3.6/library/stdtypes.html#comparisons">several comparison operators</a> in Python.  All of them are listed in
+the following table:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="27%" />
+<col width="44%" />
+<col width="29%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Operator</th>
+<th class="head">Semantics</th>
+<th class="head">Override Method</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><code>&lt;</code></td>
+<td>Strictly less than</td>
+<td><code>__lt__</code></td>
+</tr>
+<tr><td><code>&lt;=</code></td>
+<td>Less than or equal</td>
+<td><code>__le__</code></td>
+</tr>
+<tr><td><code>&gt;</code></td>
+<td>Strictly greater than</td>
+<td><code>__gt__</code></td>
+</tr>
+<tr><td><code>&gt;=</code></td>
+<td>Greater than or equal</td>
+<td><code>__ge__</code></td>
+</tr>
+<tr><td><code>==</code></td>
+<td>Equal</td>
+<td><code>__eq__</code></td>
+</tr>
+<tr><td><code>!=</code></td>
+<td>Not equal</td>
+<td><code>__ne__</code></td>
+</tr>
+<tr><td><code>is</code></td>
+<td>Object identity</td>
+<td>Not overridable</td>
+</tr>
+<tr><td><code>is not</code></td>
+<td>Negated object identity</td>
+<td>Not overridable</td>
+</tr>
+</tbody>
+</table>
+<p>The six items from the beginning are the comparison operators that determine
+<strong>the order of the values</strong>.</p>
+<p>The last two items at the end are the <strong>identity operators</strong> which can tell
+whether the objects on both sides are the same, i.e. both the expressions are
+evaluated to same object.</p>
+<p>For what it's worth, it is a bad idea to compare <code>int</code> or <code>float</code>
+values with <code>is</code> or <code>is not</code> operator.  You will confront some
+non-intuitive results.  We will find out more examples in the following
+section.</p>
+</div>
+<div class="section" id="built-in-types">
+<h2>Built-in Types</h2>
+<p>There are several built-in types in Python 3.  Most of them have reasonable
+comparison ordering.  However, notice that <code>complex</code> numbers,
+<code>dict</code>, and <code>range</code> are not ordered.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="20%" />
+<col width="46%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Category</th>
+<th class="head">Types</th>
+<th class="head">Ordering</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Numberic</td>
+<td><code>bool</code>, <code>int</code>,
+<code>float</code></td>
+<td>Real number ordering</td>
+</tr>
+<tr><td>String</td>
+<td><code>str</code></td>
+<td>Unicode lexicographical</td>
+</tr>
+<tr><td>Sequential</td>
+<td><code>tuple</code>, <code>list</code>,
+<code>bytearray</code>, <code>bytes</code></td>
+<td>Element-wise</td>
+</tr>
+<tr><td>Set</td>
+<td><code>set</code>, <code>frozenset</code></td>
+<td>Subset</td>
+</tr>
+<tr><td><strong>Unordered</strong></td>
+<td><code>complex</code>,
+<code>dict</code>, <code>range</code>,
+<code>NoneType</code></td>
+<td>N/A
+(Equality comparable)</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="numbers-bool-int-and-float">
+<h3>Numbers: Bool, Int, and Float</h3>
+<p>The number types in <a class="reference external" href="http://python.org">Python</a> have reasonable comparison rules:</p>
+<ul class="simple">
+<li>For the <code>bool</code> values, <code>False</code> is equal to <code>0</code>, and
+<code>True</code> is equal to <code>1</code>.</li>
+<li>The <code>int</code> values are mapped to corresponding real numbers.</li>
+<li>Most <code>float</code> values are mapped to corresponding real numbers.
+Here are some special rules:<ul>
+<li><code>float('nan')</code> is a special floating point number which is standing
+for <em>not a number</em>.  NAN is not equal to all of the numbers.  Besides,
+<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code> will return <code>False</code>
+as well.</li>
+<li><code>float('inf')</code> will be treated as <em>infinite</em>.  It will be greater
+than other numbers.</li>
+<li><code>float('-inf')</code> will be treated as negative <em>infinite</em>.  It will be
+less than other numbers.</li>
+</ul>
+</li>
+</ul>
+<p>These examples demonstrate the simple cases with implicit type conversions:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">2</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">1.0</span> <span class="o">&lt;</span> <span class="mf">2.0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mf">1.2</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">-</span><span class="mf">0.0</span> <span class="o">==</span> <span class="mi">0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">-</span><span class="mf">0.0</span> <span class="o">==</span> <span class="mf">0.0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="bp">False</span> <span class="o">==</span> <span class="mf">0.0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="bp">True</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="bp">True</span>
+</pre></div>
+<p>Here are the examples for <code>float('nan')</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;nan&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">==</span> <span class="n">nan</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">!=</span> <span class="n">nan</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+<span class="bp">False</span>
+</pre></div>
+<p>Here are the examples for <code>float('inf')</code> and <code>float('-inf')</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">==</span> <span class="n">inf</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">!=</span> <span class="n">inf</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">&lt;</span> <span class="n">inf</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">&lt;</span> <span class="n">nan</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">&gt;</span> <span class="n">nan</span>
+<span class="bp">False</span>
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;-inf&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&lt;</span> <span class="n">ninf</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&lt;</span> <span class="n">nan</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&gt;</span> <span class="n">nan</span>
+<span class="bp">False</span>
+</pre></div>
+<p>Here are the examples which compare <code>float('inf')</code> with the maximum
+floating point number on the system and a huge integer numbers.</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">huge</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">5000</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mx</span> <span class="o">&lt;</span> <span class="n">huge</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">huge</span> <span class="o">&lt;</span> <span class="n">inf</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">mn</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">min</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="o">-</span><span class="n">huge</span> <span class="o">&lt;</span> <span class="n">mn</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">huge</span>
+<span class="bp">True</span>
+</pre></div>
+<p>Please notice that the floating point arithmetics are performed in binary.
+As a result, the outcome might be different from the one computed in decimal:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span>
+<span class="mf">0.30000000000000004</span>
+</pre></div>
+<p>By the way, <strong>DON'T</strong> compare <code>int</code> or <code>float</code> values with
+<strong>identity operators</strong> (<code>is</code> or <code>is not</code>.)  Some implementations
+will reuse the objects for small numbers and give <em>non-intuitive</em>,
+<em>unexpected</em>, and <em>surprising</em> results:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">3</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">16</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">)</span> <span class="ow">is</span> <span class="mh">0x40000000</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="mh">0x40000000</span>
+<span class="bp">True</span>
+</pre></div>
+</div>
+<div class="section" id="complex-numbers">
+<h3>Complex Numbers</h3>
+<p>We can compare the complex numbers with equality or inequality operators:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mf">1.4j</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.4j</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mf">1.4j</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.4</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">2j</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span>
+<span class="bp">True</span>
+</pre></div>
+<p>However, the <code>complex</code> numbers are unordered:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">1j</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">int</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">()</span>
+</pre></div>
+<p>Even if their imaginary parts are equal to zero, they are unordered either:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">complex</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="string">
+<h3>String</h3>
+<p>The <code>str</code> objects are ordered by lexicographical ordering.  In the other
+words, the characters in the strings are element-wise compared.  The characters
+are encoded in unicode and the comparison is case sensitive.  If two strings
+have common prefix, then the shorter one is less than the longer one.</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;b&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;b&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;aa&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;a&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;aa&#39;</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">==</span> <span class="s">&#39;A&#39;</span>
+<span class="bp">False</span>
+</pre></div>
+</div>
+<div class="section" id="sequential-types-tuple-list-bytearray-and-bytes">
+<h3>Sequential Types: Tuple, List, ByteArray, and Bytes</h3>
+<p>The sequential types, such as <code>tuple</code>, <code>list</code>, <code>bytearray</code>
+and <code>bytes</code>, are element-wise compared.  Like <code>str</code> objects, if two
+objects have common prefix, then the shorter one is less than the longer one.</p>
+<p>Here are the examples for <code>tuple</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">1</span><span class="p">,)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="bp">False</span>
+</pre></div>
+<p>Here are the examples for <code>list</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="bp">False</span>
+</pre></div>
+<p>Here are the examples for <code>bytes</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;abc&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;b&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;abc&#39;</span>
+<span class="bp">False</span>
+</pre></div>
+<p>We are allowed to compare <code>bytearray</code> with <code>bytes</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;aa&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<span class="bp">False</span>
+</pre></div>
+<p>We are also allowed to compare <code>tuple</code> and <code>list</code> with equality and
+inequality operations:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+<span class="bp">True</span>
+</pre></div>
+<p>But, unfortunately, we can't get the order between <code>tuple</code> object and
+<code>list</code> object without type conversion:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">tuple</span><span class="p">()</span>
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">()</span> <span class="o">&gt;</span> <span class="nb">list</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="sets-and-frozensets">
+<h3>Sets and FrozenSets</h3>
+<p>The <code>set</code> and <code>frozenset</code> instances are ordered by the <strong>subset</strong>
+relationship.  For example,</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span>
+<span class="bp">True</span>
+</pre></div>
+<p>Notice that <strong>subset</strong> is not a total order.  We can check this by adding
+<code>2</code> to <code>b</code>:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span>
+<span class="bp">False</span>
+</pre></div>
+<p>Of course, it is fine to compare <code>set</code> objects with <code>frozenset</code>
+objects:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">==</span> <span class="n">a</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">c</span>
+<span class="bp">True</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="user-defined-classes">
+<h2>User-defined Classes</h2>
+<p>We can declare a new class with a <code>class</code> statement.  For example, we can
+define a <code>Date</code> class in <code>date.py</code>:</p>
+<div class="highlight"><pre><span class="c">#!/usr/bin/env python3</span>
+
+<span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">year</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="n">month</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;{0}/{1:02}/{2:02}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;Date({0},{1},{2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+</pre></div>
+<p>What will happen if we compare two instances of <code>Date</code>?  By default, we
+can only compare them with <strong>equality/inequality operators</strong> and <strong>identity
+operators</strong>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>python3
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="ow">is</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">b</span>
+<span class="bp">True</span>
+</pre></div>
+<p>As we can see, the default behavior for <strong>equality/inequality operators</strong> are
+equal to the <strong>identity operators</strong>.</p>
+<p>If we compare the objects with other operators, such as <em>less-than operator</em>,
+then the <code>TypeError</code> exception will be raised:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+<span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
+  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="n">Date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">Date</span><span class="p">()</span>
+</pre></div>
+<div class="section" id="customize-the-equality-and-inequality-operators">
+<h3>Customize the Equality and Inequality Operators</h3>
+<p>We can customize the <strong>equality operators</strong> by overriding <code>__eq__</code>:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c"># ... skipped ...</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">month</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+</pre></div>
+<p>Let's try out:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">c</span>
+<span class="bp">False</span>
+</pre></div>
+<p>We can see that the <em>equality</em> operator works as expected.</p>
+<p>Let's look at the <em>inequality</em> operator.  If you don't have special logic, it
+is suggested to define <code>__ne__</code> in terms of <code>not</code> and <code>==</code>.
+For example:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c"># ... skipped ...</span>
+
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">c</span>
+<span class="bp">True</span>
+</pre></div>
+<p>On a side note, we should not assume <code>a == b</code> is complement with
+<code>a != b</code>.  This assumption may not be true in general.  Some class may
+return <code>True</code> on both cases.</p>
+<p><strong>Remarks</strong>: If you override <code>__eq__</code>, then you should override
+<code>__hash__</code> as well.  Otherwise, the object won't be hashable.  In the
+other words, we can't insert the objects to <code>set</code> and the objects can't
+be used as the key of <code>dict</code>.  Besides, we have to make sure that
+<code>a == b</code> implies <code>hash(a) == hash(b)</code>; otherwise, the uniqueness
+property of the <code>set</code> will become invalid.  Here's the <code>__hash__</code>
+function for our <code>Date</code> class:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c"># ... skipped ...</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="mi">20150614</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">set</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">])</span>
+<span class="p">{</span><span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">14</span><span class="p">),</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">15</span><span class="p">)}</span>
+</pre></div>
+</div>
+<div class="section" id="customize-the-ordering-comparison-operators">
+<h3>Customize the Ordering Comparison Operators</h3>
+<p>We can customize the ordering comparison operators by overriding <code>__lt__</code>,
+<code>__le__</code>, <code>__gt__</code>, and <code>__ge__</code>.  They are corresponding to
+<code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code> respectively.  For example:</p>
+<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c"># ... skipped ...</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</pre></div>
+<p>In our example, we simply implement <code>__lt__</code> by comparing the hash value
+of the object.  You may implement this with a series of integer comparisons and
+boolean arithmetics as well.  Here are the results:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">c</span>
+<span class="bp">True</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="n">a</span>
+<span class="bp">False</span>
+</pre></div>
+<p>However, you might be surprised that the following code works as expected even
+though we haven't overridden <code>__gt__</code> yet:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+<span class="bp">False</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">a</span>
+<span class="bp">True</span>
+</pre></div>
+<p>It is working because the <a class="reference external" href="http://python.org">Python</a> run-time will <em>reflect the comparison</em>.  If
+(1) the left-hand-side class does not override the corresponding method, or (2)
+the corresponding method returns <code>NotImplemented</code>, then the <a class="reference external" href="http://python.org">Python</a>
+run-time will <strong>swap the arguments</strong> and call the <strong>reflected method</strong>
+defined in the right-hand-side class.  Here are the mapppings:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="28%" />
+<col width="27%" />
+<col width="45%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Original</th>
+<th class="head">Reflects To</th>
+<th class="head">Mnemonic</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><code>__lt__(a, b)</code></td>
+<td><code>__gt__(b, a)</code></td>
+<td><code>a &lt; b</code> &lt;=&gt; <code>b &gt; a</code></td>
+</tr>
+<tr><td><code>__gt__(a, b)</code></td>
+<td><code>__lt__(b, a)</code></td>
+<td><em>(ditto)</em></td>
+</tr>
+<tr><td><code>__le__(a, b)</code></td>
+<td><code>__ge__(b, a)</code></td>
+<td><code>a &lt;= b</code> &lt;=&gt; <code>b &gt;= a</code></td>
+</tr>
+<tr><td><code>__ge__(a, b)</code></td>
+<td><code>__le__(b, a)</code></td>
+<td><em>(ditto)</em></td>
+</tr>
+<tr><td><code>__eq__(a, b)</code></td>
+<td><code>__eq__(b, a)</code></td>
+<td><code>a == b</code> &lt;=&gt; <code>b == a</code></td>
+</tr>
+<tr><td><code>__ne__(a, b)</code></td>
+<td><code>__ne__(b, a)</code></td>
+<td><code>a != b</code> &lt;=&gt; <code>b != a</code></td>
+</tr>
+</tbody>
+</table>
+<p>With the reflection rules, it will be sufficient to define a total ordering
+class by overriding <code>__eq__</code>, <code>__ne__</code>, <code>__lt__</code>, and
+<code>__le__</code>.</p>
+</div>
+<div class="section" id="total-ordering-decorator">
+<h3>Total Ordering Decorator</h3>
+<p>To define a <strong>class with total ordering</strong>, we should override all of
+<code>__eq__</code>, <code>__ne__</code>, <code>__lt__</code>, and <code>__le__</code>.  However,
+it might be cumbersome to override all of them.  It will be simpler to decorate
+the class with <code>functools.total_ordering</code>.</p>
+<p>With <code>functools.total_ordering</code> decorator, overriding <code>__eq__</code> and
+one of <code>__lt__</code>, <code>__le__</code>, <code>__gt__</code>, or <code>__ge__</code> is
+sufficient to define a total ordering class:</p>
+<div class="highlight"><pre><span class="kn">import</span> <span class="nn">functools</span>
+
+<span class="nd">@functools.total_ordering</span>
+<span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c"># ... skipped ...</span>
+
+    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">month</span> <span class="ow">and</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</pre></div>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">b</span><span class="p">)</span>
+<span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">c</span><span class="p">,</span> <span class="n">a</span> <span class="o">&gt;=</span> <span class="n">c</span><span class="p">)</span>
+<span class="p">(</span><span class="bp">False</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+</pre></div>
+<p>Althoguh it is much simpler to define a total ordering class with the
+decorator, it comes with the <em>performance penalty</em>.  If this has been proved to
+be a performance bottleneck, then it will be better to override six methods
+directly.</p>
+</div>
+</div>
+<div class="section" id="sort-the-list">
+<h2>Sort the List</h2>
+<p>We can sort the list with either <code>a.sort()</code> or <code>b = sorted(a)</code>.
+The former will sort the associate list and the later will create a new sorted
+list from the iteratables (and leave the argument unchanged).  Both of them
+will sort the elements by <em>less-than</em> comparison (i.e. in ascending order.)
+For example,</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
+<span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
+</pre></div>
+<p>The element type doesn't matter as long as they are pairwise comparable:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])])</span>
+<span class="p">[</span><span class="nb">set</span><span class="p">(),</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="nb">frozenset</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}),</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}]</span>
+</pre></div>
+<div class="section" id="sort-the-list-with-customized-ordering">
+<h3>Sort the List with Customized Ordering</h3>
+<p>If we want to sort the elements in different order, we can specify the <strong>key
+function</strong> to extract the key from the elements.</p>
+<p>First, let's sort the list of tuples with <code>sorted()</code> directly:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+<p>As what we have expected, the tuple are pairwisely compared.</p>
+<p>Second, let's sort the tuples by the first element:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+<p>As we can see, the tuples with <code>x[0]</code> equals to <code>0</code> comes before
+the tuples with <code>x[0]</code> equals to <code>1</code> or <code>2</code>.  However,
+<code>(0, 3)</code> and <code>(0, 2)</code> are not reordered.  This is due to the
+<strong>stable</strong> guarantee of the sorting algorithm.</p>
+<p>Third, the key function can <strong>return a new tuple</strong> as well.  For example, we
+can compare the second element first and then compare the first element.</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+<p>However, returning a new tuple might result in performance penalty since</p>
+<ol class="arabic simple">
+<li>we have to allocate new tuples from the heap, and</li>
+<li>the element-wise comparison for tuples might be more expensive than
+necessary.</li>
+</ol>
+<p>It will be better to return primitive types if it is possible.  For example, if
+it is guaranteed that both <code>x[0]</code> and <code>x[1]</code> are less than 1000,
+then we can simply sort the tuples with:</p>
+<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+<span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="wrap-up">
+<h2>Wrap Up</h2>
+<p>In this article, we have discussed the <a class="reference internal" href="#id1">Comparison Operators</a> that are
+available in the Python programming language.  Besides, we have discussed the
+semantics of the comparison operators for the <a class="reference internal" href="#built-in-types">Built-in Types</a> and how to
+create <a class="reference internal" href="#user-defined-classes">User-defined Classes</a> with specific ordering.  Finally, we have
+mentioned how to <a class="reference internal" href="#sort-the-list">Sort the List</a> with customized order by extracting the keys.</p>
+<p>Hope you enjoy this post!</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/reference/datamodel.html#object.__lt__">Python: Data Model</a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functools.html#functools.total_ordering">Python Module: functools.total_ordering</a></li>
+<li><a class="reference external" href="https://docs.python.org/3/library/functions.html#sorted">Python: sorted()</a></li>
+</ul>
+</div>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2015-06-14T23:45:00+08:00" pubdate>Sun 14 June 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/python/">python</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
+
+</div>
+<aside class="sidebar">
+  <section>
+    <h1>Recent Posts</h1>
+    <ul id="recent_posts">
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/">Comparison and Sorting in Python3</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/">Troubleshooting adb No Permissions Problem</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/">Grub Install and Btrfs Root File System</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
+      </li>
+    </ul>
+  </section>
+  <section>
+      
+    <h1>Categories</h1>
+    <ul id="recent_posts">
+        <li><a href="http://logan.tw/category/misc/">misc</a></li>
+        <li><a href="http://logan.tw/category/programming/">programming</a></li>
+        <li><a href="http://logan.tw/category/web/">web</a></li>
+    </ul>
+  </section>
+ 
+
+  <section>
+  <h1>Tags</h1>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/udev/">udev</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/ctags/">ctags</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/android/">android</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/c/">c</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/lcov/">lcov</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+
+
+    <section>
+        <h1>Social</h1>
+        <ul>
+            <li><a href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate">RSS</a></li>
+            <li><a href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate">Atom</a></li>
+            <li><a href="http://facebook.com/loganchien" target="_blank">facebook</a></li>
+            <li><a href="http://plus.google.com/+LoganChienTW" target="_blank">google+</a></li>
+            <li><a href="http://github.com/loganchien" target="_blank">github</a></li>
+            <li><a href="https://www.linkedin.com/in/loganchien" target="_blank">linkedin</a></li>
+        </ul>
+    </section>
+    <section>
+        <h1>Blogroll</h1>
+        <ul>
+            <li><a href="http://logan.tw" target="_blank">Web</a></li>
+            <li><a href="http://blog.logan.tw" target="_blank">Blog (Taiwan)</a></li>
+        </ul>
+    </section>
+
+</aside>    </div>
+  </div>
+  <footer role="contentinfo"><p>
+    Copyright &copy;  2014-2015  - Logan -
+  <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
+</p></footer>
+    <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-57011197-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-57011197-1');
+    ga('send', 'pageview');
+</script>
+</body>
+</html>

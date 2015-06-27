@@ -53,6 +53,39 @@
   		<article>
 <header>
       <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">C++ Virtual Destructor and Inheritence</a>
+      </h1>
+      <p class="meta"><time datetime="2014-12-09T19:00:00+08:00" pubdate>Tue 09 December 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>It is a well-known idiom to define a virtual destructor for the classes with
+virtual functions.  If we don't define a virtual destructor, then the base
+class destructor will be invoked when you are deleting the object through the
+base class pointer even if the object is an instance ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">LLVM Bugpoint</a>
+      </h1>
+      <p class="meta"><time datetime="2014-11-26T23:03:00+08:00" pubdate>Wed 26 November 2014</time></p>
+</header>
+
+  <div class="entry-content"><p>In this post, I would like to introduce the <a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html">bugpoint</a> command line tool.
+This is a automatic test case reduction tool which can help us generate
+minimal test case.</p>
+<p>As a compiler developer, the first step to debug is to create a minimal test
+case which can still reproduce the ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2014/11/26/llvm-bugpoint/">Read On &crarr;</a>
+  </footer>
+  		</article>
+  		<article>
+<header>
+      <h1 class="entry-title">
         <a href="http://logan.tw/posts/2014/11/25/vim-vundle/">Vim Vundle</a>
       </h1>
       <p class="meta"><time datetime="2014-11-25T22:41:00+08:00" pubdate>Tue 25 November 2014</time></p>
@@ -200,44 +233,8 @@ would adopt a conservative approach:</p>
     <a rel="full-article" href="http://logan.tw/posts/2014/11/13/c-associative-container-and-iterator-validness/">Read On &crarr;</a>
   </footer>
   		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
-list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
-</pre></div>
-<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
-will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
-<code>commit_n</code>, and ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/12/soundness-and-completeness-of-the-type-system/">Soundness and Completeness of the Type System</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-12T21:26:00+08:00" pubdate>Wed 12 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>In the section 6 of  <a class="reference external" href="https://class.coursera.org/proglang-003">Programming Languages</a> course, Dan Grossman discussed
-about the soundness and the completeness of the type system.  He said that:</p>
-<ul class="simple">
-<li>A type-system is <strong>sound</strong> implies that all of type-checked programs are
-correct (in the other words, all of the incorrect program can't be type
-checked ...</li></ul></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/12/soundness-and-completeness-of-the-type-system/">Read On &crarr;</a>
-  </footer>
-  		</article>
 <div class="pagination">
+    <a class="prev" href="http://logan.tw/category/programming/index3.html">&larr; Older</a>
 
     <a class="next" href="http://logan.tw/category/programming/index.html">Newer &rarr;</a>
   <br />
@@ -247,6 +244,12 @@ checked ...</li></ul></div>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
+          <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/">Comparison and Sorting in Python3</a>
+      </li>
+      <li class="post">
           <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
       </li>
       <li class="post">
@@ -254,12 +257,6 @@ checked ...</li></ul></div>
       </li>
       <li class="post">
           <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">C++11 Unique Pointer</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">C++ std::multimap and Equal Range</a>
       </li>
     </ul>
   </section>
@@ -276,7 +273,7 @@ checked ...</li></ul></div>
 
   <section>
   <h1>Tags</h1>
-    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/udev/">udev</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/ctags/">ctags</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/android/">android</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/c/">c</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/lcov/">lcov</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
+    <a href="http://logan.tw/tag/pelican/">pelican</a>,    <a href="http://logan.tw/tag/autossh/">autossh</a>,    <a href="http://logan.tw/tag/gcin/">gcin</a>,    <a href="http://logan.tw/tag/grub/">grub</a>,    <a href="http://logan.tw/tag/cxx/">cxx</a>,    <a href="http://logan.tw/tag/wsgi/">wsgi</a>,    <a href="http://logan.tw/tag/udev/">udev</a>,    <a href="http://logan.tw/tag/vim/">vim</a>,    <a href="http://logan.tw/tag/plt/">plt</a>,    <a href="http://logan.tw/tag/linux/">linux</a>,    <a href="http://logan.tw/tag/git/">git</a>,    <a href="http://logan.tw/tag/opencl/">opencl</a>,    <a href="http://logan.tw/tag/apache2/">apache2</a>,    <a href="http://logan.tw/tag/init/">init</a>,    <a href="http://logan.tw/tag/https/">https</a>,    <a href="http://logan.tw/tag/test/">test</a>,    <a href="http://logan.tw/tag/ctags/">ctags</a>,    <a href="http://logan.tw/tag/tips/">tips</a>,    <a href="http://logan.tw/tag/android/">android</a>,    <a href="http://logan.tw/tag/llvm/">llvm</a>,    <a href="http://logan.tw/tag/http/">http</a>,    <a href="http://logan.tw/tag/python/">python</a>,    <a href="http://logan.tw/tag/upstart/">upstart</a>,    <a href="http://logan.tw/tag/clang/">clang</a>,    <a href="http://logan.tw/tag/ssl/">ssl</a>,    <a href="http://logan.tw/tag/diary/">diary</a>,    <a href="http://logan.tw/tag/ssh/">ssh</a>,    <a href="http://logan.tw/tag/ubuntu/">ubuntu</a>,    <a href="http://logan.tw/tag/debian/">debian</a>,    <a href="http://logan.tw/tag/compiler/">compiler</a>,    <a href="http://logan.tw/tag/c/">c</a>,    <a href="http://logan.tw/tag/github/">github</a>,    <a href="http://logan.tw/tag/stl/">stl</a>,    <a href="http://logan.tw/tag/logic/">logic</a>,    <a href="http://logan.tw/tag/aria2/">aria2</a>,    <a href="http://logan.tw/tag/lcov/">lcov</a>,    <a href="http://logan.tw/tag/processor/">processor</a>,    <a href="http://logan.tw/tag/waliki/">waliki</a>  </section>
 
 
     <section>

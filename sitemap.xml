@@ -2,9 +2,19 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2015-05-25</lastmod>
+<lastmod>2015-06-27</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/06/27/global-git-ignore-file/</loc>
+<lastmod>2015-06-27</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/</loc>
+<lastmod>2015-06-14</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/</loc>
 <lastmod>2015-05-25</lastmod>
@@ -202,7 +212,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/programming/</loc>
-<lastmod>2015-04-28</lastmod>
+<lastmod>2015-06-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -272,7 +282,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/git/</loc>
-<lastmod>2015-02-28</lastmod>
+<lastmod>2015-06-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -307,7 +317,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/linux/</loc>
-<lastmod>2015-05-25</lastmod>
+<lastmod>2015-06-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -342,7 +352,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/python/</loc>
-<lastmod>2015-01-02</lastmod>
+<lastmod>2015-06-14</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -402,7 +412,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan.html</loc>
-<lastmod>2015-05-25</lastmod>
+<lastmod>2015-06-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>

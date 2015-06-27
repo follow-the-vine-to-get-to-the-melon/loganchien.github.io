@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Logan's Note - git</title>
+  <title>Global Git Ignore File</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,66 +49,60 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div class="blog-index">
-  		<article>
+<div>
+  <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
-      </h1>
+      <h1 class="entry-title">Global Git Ignore File</h1>
       <p class="meta"><time datetime="2015-06-27T21:19:00+08:00" pubdate>Sat 27 June 2015</time></p>
 </header>
 
   <div class="entry-content"><p>There are some files that shouldn't be tracked by <a class="reference external" href="http://git-scm.org">Git</a> at all.  For example,
 the temporary files created by the text editors, the Python bytecode, and etc.</p>
 <p>How could we ignore those files?  In the <a class="reference external" href="http://logan.tw/posts/2015/02/28/git-ignore-file/">previous post</a>, I have mentioned
-that we can create a <code>.gitignore</code> file and list ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
-      </h1>
-      <p class="meta"><time datetime="2015-02-28T14:19:00+08:00" pubdate>Sat 28 February 2015</time></p>
-</header>
+that we can create a <code>.gitignore</code> file and list the name patterns to be
+ignored.  However, the <code>.gitignore</code> file is managed by <a class="reference external" href="http://git-scm.org">Git</a> and should
+be version controlled.  It will be cumbersome to create <code>.gitignore</code>
+files for all repositories.</p>
+<p>Is it possible to create a <strong>global</strong> <code>.gitignore</code> file for all <a class="reference external" href="http://git-scm.org">Git</a>
+repositories?  Yes, of course we can.  We can create a <code>ignore</code> file in
+<code>$HOME/.config/git/ignore</code> and the listed name patterns will be ignored
+globally.</p>
+<p>For example, if we wish to ignore the <code>*.swp</code> files created by <a class="reference external" href="http://vim.org">Vim</a>,
+we can use the following commands:</p>
+<div class="highlight"><pre><span class="nv">$ </span>mkdir -p ~/.config/git
 
-  <div class="entry-content"><p>In some circumstances, we would like to ignore the files (or directories) under
-the Git repository base directory.  How could we do this?  For example, assume
-that we have a Git repository with following files:</p>
-<div class="highlight"><pre>out/bin/conv
-preprocessed/out/gen-case1.h
-preprocessed/out/gen-case2.h
-preprocessed/input.txt
-conv ...</pre></div></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Read On &crarr;</a>
-  </footer>
-  		</article>
-  		<article>
-<header>
-      <h1 class="entry-title">
-        <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
-      </h1>
-      <p class="meta"><time datetime="2014-11-13T22:04:00+08:00" pubdate>Thu 13 November 2014</time></p>
-</header>
-
-  <div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
-list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;*.swp&#39;</span> &gt;&gt; ~/.config/git/ignore
 </pre></div>
-<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
-will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
-<code>commit_n</code>, and ...</p></div>
-  <footer>
-    <a rel="full-article" href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Read On &crarr;</a>
-  </footer>
-  		</article>
-<div class="pagination">
+<p>After these commands, <a class="reference external" href="http://git-scm.org">Git</a> should start ignoring the swap files.</p>
+<div class="section" id="change-the-global-ignore-file-path">
+<h2>Change the Global Ignore File Path</h2>
+<p>Under some circumstances, we may wish to change the file path to the ignore
+file.  We do so by setting <code>core.excludesfile</code>.</p>
+<p>For example, to change the ignore file path to <code>~/.gitignore</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>git config --global core.excludesfile ~/.gitignore
+</pre></div>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://git-scm.com/docs/gitignore">Git - gitignore Documentation</a></li>
+</ul>
+</div>
+</div>
+    <footer>
+<p class="meta">
+  <span class="byline author vcard">
+    Posted by <span class="fn">Logan</span>
+  </span>
+<time datetime="2015-06-27T21:19:00+08:00" pubdate>Sat 27 June 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/git/">git</a>
+    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
+  </span>
+</p><div class="sharing">
+</div>    </footer>
+  </article>
 
-  <br />
-</div></div>
+</div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
@@ -117,10 +111,16 @@ will create a hypothetical commit <code>M</code>, which merges <code>commit_2</c
           <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2015/02/28/git-ignore-file/">Git Ignore File</a>
+          <a href="http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/">Comparison and Sorting in Python3</a>
       </li>
       <li class="post">
-          <a href="http://logan.tw/posts/2014/11/13/git-merge-base-and-checkout/">Git Merge Base and Checkout</a>
+          <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/">Troubleshooting adb No Permissions Problem</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/">Grub Install and Btrfs Root File System</a>
+      </li>
+      <li class="post">
+          <a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">Check Code Coverage with Clang and LCOV</a>
       </li>
     </ul>
   </section>
