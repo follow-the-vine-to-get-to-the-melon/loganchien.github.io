@@ -1,5 +1,335 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-06-27T21:19:00+08:00</updated><entry><title>Global Git Ignore File</title><link href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/" rel="alternate"></link><updated>2015-06-27T21:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-06-27:posts/2015/06/27/global-git-ignore-file/</id><summary type="html">&lt;p&gt;There are some files that shouldn't be tracked by &lt;a class="reference external" href="http://git-scm.org"&gt;Git&lt;/a&gt; at all.  For example,
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-09-13T22:28:00+08:00</updated><entry><title>Discourse Installation Notes</title><link href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/" rel="alternate"></link><updated>2015-09-13T22:28:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-09-13:posts/2015/09/13/discourse-installation-notes/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; is a new generation discussion forum.  I found that &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
+is very suitable for personal note taking.  One notable feature of &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
+is that the users can focus on conversations.  Besides, it supports Markdown as
+the message markup language.  This is the reason why I like it very
+much.&lt;/p&gt;
+&lt;p&gt;In the rest of the post, I would like to write down how did I install
+&lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; on a &lt;a class="reference external" href="https://digitalocean.com"&gt;Digital Ocean&lt;/a&gt; droplet.&lt;/p&gt;
+&lt;div class="section" id="overview"&gt;
+&lt;h2&gt;Overview&lt;/h2&gt;
+&lt;p&gt;To install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;, there are five essential steps:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#setup-the-mail-server"&gt;Setup the Mail Server&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#create-a-droplet"&gt;Create a Droplet&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#setup-the-swap-file"&gt;Setup the Swap File&lt;/a&gt;: If the VPS plan does not have sufficient RAM (less
+than 1G), it is required to setup a swap file.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#installation"&gt;Installation&lt;/a&gt;: Install &lt;a class="reference external" href="https://www.docker.com"&gt;Docker&lt;/a&gt;, install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; and launch the
+containers.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#configure-discourse"&gt;Configure Discourse&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup-the-mail-server"&gt;
+&lt;h2&gt;Setup the Mail Server&lt;/h2&gt;
+&lt;p&gt;It is required to have a mail server for &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;.  If you already have
+one, then just use it.  If you don't have a mail server, then you can register
+one for free at &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt;, which allows you to send 10k e-mails per month.&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Visit &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt; and click the &lt;strong&gt;TRY FOR FREE&lt;/strong&gt; button on the top right
+corner.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Sign up&lt;/strong&gt; for &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt;.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Fill in the &lt;em&gt;e-mail&lt;/em&gt; and the &lt;em&gt;password&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Solve the CAPTCHA.&lt;/li&gt;
+&lt;li&gt;Agree to the &lt;em&gt;terms of use&lt;/em&gt;.&lt;/li&gt;
+&lt;li&gt;Click the &lt;strong&gt;Sign Up&lt;/strong&gt; button.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Verify your account&lt;/strong&gt; by clicking the links in the confirmation e-mail.&lt;/p&gt;
+&lt;p&gt;Note: If you didn't receive the confirmation e-mail, you can request a new
+e-mail by clicking &amp;quot;&lt;strong&gt;ACCOUNT&lt;/strong&gt; -&amp;gt; &lt;strong&gt;SENDING DOMAINS&lt;/strong&gt;&amp;quot; and click the link
+in the top bar.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Before we can send e-mails with &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt;, we have to claim that we
+are the owner of a domain name.  This will require us to configure the DNS
+records.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Click &amp;quot;&lt;strong&gt;ACCOUNT&lt;/strong&gt; -&amp;gt; &lt;strong&gt;SENDING DOMAINS&lt;/strong&gt;&amp;quot;.&lt;/li&gt;
+&lt;li&gt;Click the &lt;strong&gt;NEW DOMAIN&lt;/strong&gt; button.&lt;/li&gt;
+&lt;li&gt;Fill in the domain name and click &lt;strong&gt;ADD DOMAIN&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Update DNS records for &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Sender_Policy_Framework"&gt;SPF&lt;/a&gt; and &lt;a class="reference external" href="https://en.wikipedia.org/wiki/DomainKeys_Identified_Mail"&gt;DKIM&lt;/a&gt;.  Click the &lt;strong&gt;Configure&lt;/strong&gt; link
+for more details.  In summary, you have to add two different TXT
+records.&lt;/li&gt;
+&lt;li&gt;After updating the DNS TXT records, click the &lt;strong&gt;Test&lt;/strong&gt; links for
+verification.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Create a new API key.&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Click &amp;quot;&lt;strong&gt;ACCOUNT&lt;/strong&gt; -&amp;gt; &lt;strong&gt;API &amp;amp; SMTP&lt;/strong&gt;&amp;quot;.&lt;/li&gt;
+&lt;li&gt;Click the &amp;quot;&lt;strong&gt;NEW API KEY&lt;/strong&gt;&amp;quot; button.&lt;/li&gt;
+&lt;li&gt;Fill in the &lt;em&gt;API Key Name&lt;/em&gt;, e.g. &amp;quot;discourse&amp;quot;.&lt;/li&gt;
+&lt;li&gt;Select the &lt;strong&gt;Send via SMTP&lt;/strong&gt; in the &lt;em&gt;API Permissions&lt;/em&gt; section.&lt;/li&gt;
+&lt;li&gt;Fill in the SparkPost password again.&lt;/li&gt;
+&lt;li&gt;Copy the API key.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-a-droplet"&gt;
+&lt;h2&gt;Create a Droplet&lt;/h2&gt;
+&lt;p&gt;After logging into &lt;a class="reference external" href="https://digitalocean.com"&gt;Digital Ocean&lt;/a&gt;, click on the &lt;strong&gt;Create Droplet&lt;/strong&gt; button on
+the top right corner.  In the new page, you have to fill in the following
+fields:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;strong&gt;Droplet Hostname&lt;/strong&gt; -- Choose a good name for your installation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select Size&lt;/strong&gt; -- All plans are fine.  I tried the cheapest $5/mo plan, and
+it works perfectly.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select Region&lt;/strong&gt; -- Choose a region for the data center.  I chose
+&lt;em&gt;New York&lt;/em&gt; data center.  Pick one which is close to your visitors.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Select Image&lt;/strong&gt; -- The default image, &lt;em&gt;Ubuntu 14.04 x64&lt;/em&gt;, is suggested.
+It is recommended by the &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; development team.&lt;/li&gt;
+&lt;li&gt;Add your SSH public key to the &lt;strong&gt;Add SSH Keys&lt;/strong&gt; section.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now, we can click on the &lt;strong&gt;Create Droplet&lt;/strong&gt; button and wait for a while.
+After the droplet is created, then try to log in with &lt;code&gt;ssh&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;Note: You can check the SSH server fingerprint by clicking the
+&lt;strong&gt;Console Access&lt;/strong&gt; button in the &lt;a class="reference external" href="https://digitalocean.com"&gt;Digital Ocean&lt;/a&gt; admin console.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup-the-swap-file"&gt;
+&lt;h2&gt;Setup the Swap File&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; requires 1GB RAM to run without problems.  If you are running with
+500MB RAM, then you must enable the swap file.  Otherwise, you will not be able
+to build the &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; container.&lt;/p&gt;
+&lt;p&gt;Here are the instructions to setup the &lt;strong&gt;swap file&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create a new swap file.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo fallocate -l 4G /swapfile
+
+&lt;span class="c"&gt;# Change the file permission.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chmod &lt;span class="m"&gt;600&lt;/span&gt; /swapfile
+
+&lt;span class="c"&gt;# Format the swap file.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mkswap /swapfile
+
+&lt;span class="c"&gt;# Enable the swap file.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo swapon /swapfile
+
+&lt;span class="c"&gt;# Check that the swap file has been enabled.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo swapon -s
+Filenam    Type  Size     Used  Priority
+/swapfile  file  &lt;span class="m"&gt;4194300&lt;/span&gt;  &lt;span class="m"&gt;0&lt;/span&gt;     -1
+
+&lt;span class="c"&gt;# Add the swap file to fstab&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo bash -c &lt;span class="s2"&gt;&amp;quot;echo &amp;#39;/swapfile none swap sw 0 0&amp;#39; &amp;gt;&amp;gt; /etc/fstab&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Reboot the machine now.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo reboot
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You can further tweak the configuration by reading:
+&lt;a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04"&gt;How to Add Swap on Ubuntu 14.04&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;In this section, we would like to install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;.  There are three
+steps:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#harden-droplet"&gt;Harden Droplet&lt;/a&gt; - Make your Droplet much more secure.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#install-docker"&gt;Install Docker&lt;/a&gt; - Install &lt;a class="reference external" href="https://www.docker.com"&gt;Docker&lt;/a&gt; for &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#install-discourse"&gt;Install Discourse&lt;/a&gt; - Install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; and modify the settings.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class="section" id="harden-droplet"&gt;
+&lt;h3&gt;Harden Droplet&lt;/h3&gt;
+&lt;p&gt;Before installing &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;, it will be better to harden the Droplet.  We
+should:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Enable automatic upgrade&lt;/li&gt;
+&lt;li&gt;Disable the root account&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;First, we can enable automatic upgrade with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo dpkg-reconfigure -plow unattended-upgrades
+&lt;span class="c"&gt;# Choose &amp;lt;yes&amp;gt; to enable automatic upgrade.&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, we would like to disable the root accoount.  However, before doing so,
+we have to create a new user account:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Create a new user.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo adduser &lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;
+Enter new UNIX password:
+Retype new UNIX password:
+
+&lt;span class="c"&gt;# Grant sudo access to that user.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo visudo
+&lt;span class="c"&gt;# ... Add &amp;quot;[username] ALL=(ALL:ALL) ALL&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Copy SSH keys.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mkdir -p /home/&lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;/.ssh
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo cp /root/.ssh/authorized_keys /home/&lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;/.ssh
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chown -R &lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;:&lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt; /home/&lt;span class="o"&gt;[&lt;/span&gt;username&lt;span class="o"&gt;]&lt;/span&gt;/.ssh
+
+&lt;span class="c"&gt;# Logout.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Log in with the &lt;em&gt;new account&lt;/em&gt; and disable the root account with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Lock the root password.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo passwd -l root
+
+&lt;span class="c"&gt;# Disable the ssh root login.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vi /etc/ssh/sshd_config
+&lt;span class="c"&gt;# ... Change &amp;quot;PermitRootLogin&amp;quot; to &amp;quot;no&amp;quot;&lt;/span&gt;
+
+&lt;span class="c"&gt;# Restart ssh server.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo service ssh restart
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-docker"&gt;
+&lt;h3&gt;Install Docker&lt;/h3&gt;
+&lt;p&gt;It is preferred to install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; through the prebuilt &lt;a class="reference external" href="https://www.docker.com"&gt;Docker&lt;/a&gt; image.
+Thus, we have to install &lt;a class="reference external" href="https://www.docker.com"&gt;Docker&lt;/a&gt; beforehand.&lt;/p&gt;
+&lt;p&gt;To install &lt;a class="reference external" href="https://www.docker.com"&gt;Docker&lt;/a&gt;, run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;wget -qO- https://get.docker.com/ &lt;span class="p"&gt;|&lt;/span&gt; sudo sh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-discourse"&gt;
+&lt;h3&gt;Install Discourse&lt;/h3&gt;
+&lt;p&gt;Now, we can install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Switch to root user.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo -s
+
+&lt;span class="c"&gt;# Create a directory for Discourse.&lt;/span&gt;
+&amp;gt; mkdir /var/discourse
+
+&lt;span class="c"&gt;# Clone the Discourse docker image.&lt;/span&gt;
+&amp;gt; git clone https://github.com/discourse/discourse_docker.git &lt;span class="se"&gt;\&lt;/span&gt;
+            /var/discourse
+
+&lt;span class="c"&gt;# Change the directory to /var/discourse.&lt;/span&gt;
+&amp;gt; &lt;span class="nb"&gt;cd&lt;/span&gt; /var/discourse
+
+&lt;span class="c"&gt;# Copy the sample configuration.&lt;/span&gt;
+&amp;gt; cp samples/standalone.yml containers/app.yml
+
+&lt;span class="c"&gt;# Edit the configuration.&lt;/span&gt;
+&amp;gt; vi containers/app.yml
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is &lt;em&gt;mandatory&lt;/em&gt; to change the following fields:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_DEVELOPER_EMAILS&lt;/strong&gt; - This is the e-mail that will be treat as the
+administrator of the &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; installation.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_HOSTNAME&lt;/strong&gt; - This is the domain name for your &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
+installation.&lt;/li&gt;
+&lt;li&gt;Mail Server Configurations - These are the settings for the mail server.
+Here we are using the &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt; as the example.&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_SMTP_ADDRESSES&lt;/strong&gt;, e.g. &lt;code&gt;smtp.sparkpostmail.com&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_SMTP_PORT&lt;/strong&gt;, e.g. &lt;code&gt;587&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_SMTP_USER_NAME&lt;/strong&gt;, e.g. &lt;code&gt;SMTP_Injection&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;DISCOURSE_SMTP_PASSWORD&lt;/strong&gt; - The API key that you have created (40-digit
+hexadecimals.)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And then, we can bootstrap the installation with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./launcher bootstrap app
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This will take some time.  Get a cup of coffee and wait for a while.  :-)&lt;/p&gt;
+&lt;p&gt;After the bootstrap succeed, we can launch the &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; installation with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;./launcher start app
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;Congratulations!&lt;/strong&gt;  You should be able to checkout the installation through
+your favorite browser!&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Note: If you have SSL certificates, then don't register or input anything
+now.&lt;/em&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-ssl-certificate"&gt;
+&lt;h3&gt;Install SSL Certificate&lt;/h3&gt;
+&lt;p&gt;If you have an SSL certificate, then it's time to install the SSL certificate
+now!&lt;/p&gt;
+&lt;p&gt;To install SSL certificate:&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Create directory:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+mkdir -p /var/discourse/shared/standalone/ssl
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Copy the private key to &lt;code&gt;/var/discourse/shared/standalone/ssl/ssl.key&lt;/code&gt;
+and the certificate to &lt;code&gt;/var/discourse/shared/standalone/ssl/ssl.crt&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Edit the configuration:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Append &lt;code&gt;&amp;quot;templates/web.ssl.template.yml&amp;quot;&lt;/code&gt; to &lt;strong&gt;templates&lt;/strong&gt; section.&lt;/li&gt;
+&lt;li&gt;Add &lt;code&gt;&amp;quot;443:443&amp;quot;&lt;/code&gt; to the &lt;strong&gt;expose&lt;/strong&gt; section.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Now, we should rebuild the container with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Rebuild the container.&lt;/span&gt;
+./launcher rebuild app
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="configure-discourse"&gt;
+&lt;h2&gt;Configure Discourse&lt;/h2&gt;
+&lt;p&gt;As the last step of installation, we have to create an administrator account
+so that we can fill in several important settings and moderate the forum.&lt;/p&gt;
+&lt;div class="section" id="create-an-admin-account"&gt;
+&lt;h3&gt;Create an Admin Account&lt;/h3&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Open the browser and visit your &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; installation.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Click the &lt;strong&gt;Sign Up&lt;/strong&gt; button on the top right corner.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Fill in the E-mail, Username, Name, and Password.&lt;/p&gt;
+&lt;p&gt;Note: To be an adminstrator, the e-mail must be identical to
+&lt;em&gt;DISCOURSE_DEVELOPER_EMAILS&lt;/em&gt; specified in &lt;code&gt;app.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Click the link in the verification e-mail.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="update-settings"&gt;
+&lt;h3&gt;Update Settings&lt;/h3&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Visit &lt;code&gt;http[s]://[domain-name]/admin&lt;/code&gt; and click &lt;strong&gt;Settings&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Fill in the fields.&lt;/li&gt;
+&lt;li&gt;If you have installed SSL certificate, check the
+&amp;quot;&lt;strong&gt;Security&lt;/strong&gt; -&amp;gt; &lt;strong&gt;use https&lt;/strong&gt;&amp;quot; field.&lt;/li&gt;
+&lt;li&gt;If you want this &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; installation work as a private installation,
+then you can check the following check boxes:&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;strong&gt;Login&lt;/strong&gt; -&amp;gt; &lt;strong&gt;invite only&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Login&lt;/strong&gt; -&amp;gt; &lt;strong&gt;login required&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Login&lt;/strong&gt; -&amp;gt; &lt;strong&gt;must approve users&lt;/strong&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-discourse-tagging-plug-in"&gt;
+&lt;h3&gt;Install Discourse Tagging Plug-in&lt;/h3&gt;
+&lt;p&gt;If you wish to install &lt;a class="reference external" href="https://github.com/discourse/discourse-tagging"&gt;Discourse Tagging Plug-in&lt;/a&gt;, here are the instructions:&lt;/p&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Open &lt;code&gt;app.yml&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Append following line to &lt;strong&gt;hooks&lt;/strong&gt; -&amp;gt; &lt;strong&gt;after_code&lt;/strong&gt; -&amp;gt; &lt;strong&gt;exec&lt;/strong&gt; -&amp;gt; &lt;strong&gt;cmd&lt;/strong&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+git clone https://github.com/discourse/discourse-tagging.git
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Rebuild the container with &lt;code&gt;./launcher rebuild app&lt;/code&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Open the admin console in the browser, and enable the plug-in at
+&lt;strong&gt;Plugins&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Plugins&lt;/strong&gt; -&amp;gt; &lt;strong&gt;Settings&lt;/strong&gt; -&amp;gt; &lt;strong&gt;tagging enabled&lt;/strong&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="summary"&gt;
+&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;p&gt;These are my notes to get a &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; installation.  We have covered:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Register a &lt;a class="reference external" href="https://www.sparkpost.com/"&gt;SparkPost&lt;/a&gt; account and create an API key.&lt;/li&gt;
+&lt;li&gt;Create a droplet and enable the swap file.&lt;/li&gt;
+&lt;li&gt;Install &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; and fill in the necessary settings.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Hope you enjoy this.  You can find more information in the
+&lt;a class="reference external" href="https://github.com/discourse/discourse"&gt;Discourse GitHub repository&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Discourse, &lt;a class="reference external" href="https://github.com/discourse/discourse/blob/master/docs/INSTALL-cloud.md"&gt;Set up Discourse in the cloud in under 30 minutes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Sam Saffron, &lt;a class="reference external" href="https://meta.discourse.org/t/allowing-ssl-for-your-discourse-docker-setup/13847"&gt;Allowing SSL for your Discourse Docker setup&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Justin Ellingwood, &lt;a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04"&gt;How to Add Swap on Ubuntu 14.04&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="discourse"></category></entry><entry><title>Global Git Ignore File</title><link href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/" rel="alternate"></link><updated>2015-06-27T21:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-06-27:posts/2015/06/27/global-git-ignore-file/</id><summary type="html">&lt;p&gt;There are some files that shouldn't be tracked by &lt;a class="reference external" href="http://git-scm.org"&gt;Git&lt;/a&gt; at all.  For example,
 the temporary files created by the text editors, the Python bytecode, and etc.&lt;/p&gt;
 &lt;p&gt;How could we ignore those files?  In the &lt;a class="reference external" href="http://logan.tw/posts/2015/02/28/git-ignore-file/"&gt;previous post&lt;/a&gt;, I have mentioned
 that we can create a &lt;code&gt;.gitignore&lt;/code&gt; file and list the name patterns to be

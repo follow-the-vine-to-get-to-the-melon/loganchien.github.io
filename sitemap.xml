@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2015-06-27</lastmod>
+<lastmod>2015-09-13</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/09/13/discourse-installation-notes/</loc>
+<lastmod>2015-09-13</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2015/06/27/global-git-ignore-file/</loc>
 <lastmod>2015-06-27</lastmod>
@@ -217,7 +222,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/web/</loc>
-<lastmod>2015-01-02</lastmod>
+<lastmod>2015-09-13</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -273,6 +278,11 @@
 </url><url>
 <loc>http://logan.tw/tag/diary/</loc>
 <lastmod>2014-12-31</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/discourse/</loc>
+<lastmod>2015-09-13</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -412,7 +422,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan.html</loc>
-<lastmod>2015-06-27</lastmod>
+<lastmod>2015-09-13</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>

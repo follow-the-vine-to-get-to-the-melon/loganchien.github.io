@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Python Package Manager: PIP</title>
+  <title>Logan's Note - discourse</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,111 +49,34 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Python Package Manager: PIP</h1>
-      <p class="meta"><time datetime="2015-01-01T00:14:00+08:00" pubdate>Thu 01 January 2015</time></p>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/">Discourse Installation Notes</a>
+      </h1>
+      <p class="meta"><time datetime="2015-09-13T22:28:00+08:00" pubdate>Sun 13 September 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>The Python package manager <a class="reference external" href="https://pip.pypa.io">pip</a> is a tool to manage the installed site
-packages.  With <a class="reference external" href="https://pip.pypa.io">pip</a>, we don't have to be worried about the package
-dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">pip</a> will download the required packages from
-<a class="reference external" href="https://pypi.python.org">Python Package Index</a> automatically.</p>
-<div class="section" id="install-packages">
-<h2>Install Packages</h2>
-<p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index</a>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install package1 package2 package3
-</pre></div>
-<p>For example, we can install <a class="reference external" href="https://www.djangoproject.com/">Django</a> and its dependencies with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install django
-</pre></div>
-<p>In some scenario, we have to install the package with specific version.  We can
-achieve this with the version qualifier:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s1">&#39;django==1.5&#39;</span>
-<span class="nv">$ </span>pip install <span class="s1">&#39;django&gt;=1.7&#39;</span>
-</pre></div>
-<p>We can also write a <code>requirements.txt</code> with various packages, for example:</p>
-<pre class="code literal-block">
-django-sendfile
-django&gt;=1.7
-</pre>
-<p>And then install packages with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install -r requirements.txt
-</pre></div>
-<p>Some projects have extra requirements.  To install those requirements, we
-have to specify the name in the brackets, for example:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install waliki<span class="o">[</span>all<span class="o">]</span>
-</pre></div>
-</div>
-<div class="section" id="install-packages-for-development">
-<h2>Install Packages for Development</h2>
-<p>To install the lastest still-in-development packages, which has not been released
-to <a class="reference external" href="https://pypi.python.org">Python Package Index</a>, we can install them by specifying the tarball URLs.</p>
-<p>For example, we can install the latest <a class="reference external" href="https://www.djangoproject.com/">Django</a> packages from their master
-branch with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install https://github.com/django/django/tarball/master
-</pre></div>
-<p>We can also install the package from the local file system with the
-<code>file://</code> protocol:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s2">&quot;file:///path/to/the/package#egg=name&quot;</span>
-</pre></div>
-<p>For example, to install latest <a class="reference external" href="https://github.com/mgaitan/waliki">Waliki</a> from Git repository:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
-<span class="nv">$ </span><span class="nb">cd </span>waliki
-<span class="nv">$ </span>pip install <span class="s2">&quot;file://</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">#egg=waliki[all]&quot;</span>
-</pre></div>
-<p>Sometimes, it is more convenient use the Python files in-place, so that we
-don't have to reinstall the package after changing any files.  We can achieve
-this with <code>-e</code> option:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install -e path/to/the/package
-</pre></div>
-<p>For example:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
-<span class="nv">$ </span><span class="nb">cd </span>waliki
-<span class="nv">$ </span>pip install -e .<span class="o">[</span>all<span class="o">]</span>
-</pre></div>
-<p>With <code>pip install -e</code>, we can save a lot of development time!</p>
-</div>
-<div class="section" id="uninstall-packages">
-<h2>Uninstall Packages</h2>
-<p>Finally, we can remove the package with the <code>pip uninstall</code> command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip uninstall package-name
-</pre></div>
-</div>
-</div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Logan</span>
-  </span>
-<time datetime="2015-01-01T00:14:00+08:00" pubdate>Thu 01 January 2015</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/python/">python</a>
-    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
+  <div class="entry-content"><p><a class="reference external" href="https://www.discourse.org/">Discourse</a> is a new generation discussion forum.  I found that <a class="reference external" href="https://www.discourse.org/">Discourse</a>
+is very suitable for personal note taking.  One notable feature of <a class="reference external" href="https://www.discourse.org/">Discourse</a>
+is that the users can focus on conversations.  Besides, it supports Markdown as
+the message markup language.  This is the reason why I like it very
+much ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/">Discourse Installation Notes</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/">Comparison and Sorting in Python3</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/">Troubleshooting adb No Permissions Problem</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/">Grub Install and Btrfs Root File System</a>
       </li>
     </ul>
   </section>
@@ -195,7 +118,7 @@ this with <code>-e</code> option:</p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014-2015  - Logan -
+    Copyright &copy;  2015  - Logan -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
     <script type="text/javascript">
