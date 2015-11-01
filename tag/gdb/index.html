@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Let's Encrypt</title>
+  <title>Logan's Note - gdb</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,53 +49,35 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-<div>
-  <article class="hentry" role="article">
+<div class="blog-index">
+  		<article>
 <header>
-      <h1 class="entry-title">Let's Encrypt</h1>
-      <p class="meta"><time datetime="2014-11-24T23:32:00+08:00" pubdate>Mon 24 November 2014</time></p>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/">Debug Multithreaded Program with GDB</a>
+      </h1>
+      <p class="meta"><time datetime="2015-11-01T20:37:00+08:00" pubdate>Sun 01 November 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>According to the <a class="reference external" href="http://andreasgal.com/2014/11/18/lets-encrypt-one-more-step-on-the-road-to-tls-everywhere/">post</a> by <a class="reference external" href="http://andreasgal.com">Andreas Gal</a>, <a class="reference external" href="https://www.eff.org/">EFF</a>, <a class="reference external" href="https://mozilla.com/">Mozilla</a>, Cisco, Akamai,
-and IdenTrust are going to form Internet Security Research Group which will
-start the <a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> ceritificate authority service in 2015 Q2.</p>
-<p><a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> is expected to become a free, automated, and open SSL
-sertificate authority which aims to increase the adoption of HTTPS protocol
-and provide a more secure Internet.  I am looking forward to this project.</p>
-<p>For the impatient, you may check <a class="reference external" href="https://github.com/letsencrypt">their GitHub</a> for the preview release.</p>
-</div>
-    <footer>
-<p class="meta">
-  <span class="byline author vcard">
-    Posted by <span class="fn">Logan</span>
-  </span>
-<time datetime="2014-11-24T23:32:00+08:00" pubdate>Mon 24 November 2014</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/http/">http</a>
-    <a class="category" href="http://logan.tw/tag/ssl/">ssl</a>
-  </span>
-</p><div class="sharing">
-</div>    </footer>
-  </article>
+  <div class="entry-content"><p><a class="reference external" href="http://www.gnu.org/software/gdb">GDB</a> is a powerful debugger.  Without a doubt, we can debug multi-threaded
+programs with <a class="reference external" href="http://www.gnu.org/software/gdb">gdb</a>.  In particular, we can switch between threads, inspect
+the stack, and dump the registers.  In this post, I would like to start with
+the <a class="reference external" href="https://en.wikipedia.org/wiki/Dining_philosophers_problem">Dining Philosophers Problem</a>, which was first coined by
+<a class="reference external" href="https://en.wikipedia.org/wiki/Edsger_W._Dijkstra">Edsger Dijkstra</a>.</p>
+<p>Here ...</p></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
 
-</div>
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/">Debug Multithreaded Program with GDB</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/">Discourse Installation Notes</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/06/14/comparison-and-sorting-in-python3/">Comparison and Sorting in Python3</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/">Troubleshooting adb No Permissions Problem</a>
       </li>
     </ul>
   </section>
@@ -137,7 +119,7 @@ and provide a more secure Internet.  I am looking forward to this project.</p>
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014-2015  - Logan -
+    Copyright &copy;  2015  - Logan -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
     <script type="text/javascript">

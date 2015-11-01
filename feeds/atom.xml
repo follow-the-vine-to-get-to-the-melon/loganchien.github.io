@@ -1,5 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-09-13T22:28:00+08:00</updated><entry><title>Discourse Installation Notes</title><link href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/" rel="alternate"></link><updated>2015-09-13T22:28:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-09-13:posts/2015/09/13/discourse-installation-notes/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; is a new generation discussion forum.  I found that &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-01T20:37:00+08:00</updated><entry><title>Debug Multithreaded Program with GDB</title><link href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/" rel="alternate"></link><updated>2015-11-01T20:37:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-01:posts/2015/11/01/debug-multithreaded-program-with-gdb/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;GDB&lt;/a&gt; is a powerful debugger.  Without a doubt, we can debug multi-threaded
+programs with &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt;.  In particular, we can switch between threads, inspect
+the stack, and dump the registers.  In this post, I would like to start with
+the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Dining_philosophers_problem"&gt;Dining Philosophers Problem&lt;/a&gt;, which was first coined by
+&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Edsger_W._Dijkstra"&gt;Edsger Dijkstra&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is the problem statement for &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Dining_philosophers_problem"&gt;Dining Philosophers Problem&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+Several philosophers are sitting in a round table.  There is exactly one
+fork between each pair of neighboring philosophers.  Only if a philosopher
+grabs both forks at his left and right, can he start eating.  Can we
+guarantee that all of the philosophers can finish their dishes eventually?&lt;/blockquote&gt;
+&lt;p&gt;This is the first attempt to solve the problem:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;#include &amp;lt;chrono&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;mutex&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;thread&amp;gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include &amp;lt;vector&amp;gt;&lt;/span&gt;
+
+&lt;span class="k"&gt;constexpr&lt;/span&gt; &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;mutex&lt;/span&gt; &lt;span class="n"&gt;forks&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;];&lt;/span&gt;
+
+&lt;span class="kt"&gt;void&lt;/span&gt; &lt;span class="nf"&gt;eat&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;idx&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+  &lt;span class="c1"&gt;// Grab the forks.&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;lock_guard&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;mutex&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;first_fork&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forks&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;this_thread&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;sleep_for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;lock_guard&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;mutex&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;second_fork&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;forks&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+
+  &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;Philosopher %u is eating.&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;this_thread&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;sleep_for&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;chrono&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;seconds&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="n"&gt;vector&lt;/span&gt;&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="kr"&gt;thread&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;philosophers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;philosophers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;std&lt;/span&gt;&lt;span class="o"&gt;::&lt;/span&gt;&lt;span class="kr"&gt;thread&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;eat&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+
+  &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="o"&gt;&amp;lt;&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="o"&gt;++&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;philosophers&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;].&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As we can see, there are two &lt;code&gt;std::lock_guard&lt;/code&gt; in &lt;code&gt;eat()&lt;/code&gt;, which
+guarantees that the dining philosopher has grabbed two forks.  Besides, the
+forks will be returned to the table after the philosopher finishes his dish.&lt;/p&gt;
+&lt;p&gt;Let's compile this code snippet:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;g++ -std&lt;span class="o"&gt;=&lt;/span&gt;c++11 -pthread philosopher.cpp
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, with high probability, the program will hang forever:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./a.out
+^C
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let's debug it with &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt;.  First, we have to re-compile the program with
+&lt;code&gt;-g&lt;/code&gt; option.  Second, we have to load the program with &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Recompile the program with debug option.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;g++ -std&lt;span class="o"&gt;=&lt;/span&gt;c++11 -pthread -g philosopher.cpp
+
+&lt;span class="c"&gt;# Launch the debugger.&lt;/span&gt;
+&lt;span class="nv"&gt;$ &lt;/span&gt;gdb --args ./a.out
+GNU gdb &lt;span class="o"&gt;(&lt;/span&gt;Ubuntu 7.7.1-0ubuntu5~14.04.2&lt;span class="o"&gt;)&lt;/span&gt; 7.7.1
+... skipped ...
+Reading symbols from ./a.out...done.
+&lt;span class="o"&gt;(&lt;/span&gt;gdb&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let's start our program with &lt;code&gt;run&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) run
+Starting program: /home/logan/a.out
+... skipped ...
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library &amp;quot;/lib/x86_64-linux-gnu/libthread_db.so.1&amp;quot;.
+[New Thread 0x7ffff6fd6700 (LWP 17406)]
+[New Thread 0x7ffff67d5700 (LWP 17407)]
+[New Thread 0x7ffff5fd4700 (LWP 17408)]
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Apparently, the program get stuck again.  Let's interrupt the program with
+&lt;code&gt;Ctrl-C&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;^C
+Program received signal SIGINT, Interrupt.
+0x00007ffff76ab66b in pthread_join (threadid=140737337190144,
+    thread_return=0x0) at pthread_join.c:92
+92  pthread_join.c: No such file or directory.
+(gdb)
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We get back to the &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt; command line again.  Let's see the backtrace of
+current thread:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) bt
+#0  0x00007ffff76ab66b in pthread_join (threadid=140737337190144,
+    thread_return=0x0) at pthread_join.c:92
+#1  0x00007ffff7b87837 in std::thread::join() ()
+   from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+#2  0x00000000004010c4 in main () at philosopher.cpp:31
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) up 2
+#2  0x00000000004010c4 in main () at philosopher.cpp:31
+31      philosophers[i].join();
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) l
+26    for (unsigned i = 0; i &amp;lt; NUM_PHILOSOPHERS; ++i) {
+27      philosophers[i] = std::thread(eat, i);
+28    }
+(gdb) p i
+$1 = 0
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It seems that the main thread is waiting for the philosophers to finish their
+dishes, which is the expected behavior.  Let's have a look on the other
+threads:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) info threads
+  Id   Target Id         Frame
+  4    Thread 0x7ffff5fd4700 (LWP 17408) &amp;quot;a.out&amp;quot; __lll_lock_wait ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
+  3    Thread 0x7ffff67d5700 (LWP 17407) &amp;quot;a.out&amp;quot; __lll_lock_wait ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
+  2    Thread 0x7ffff6fd6700 (LWP 17406) &amp;quot;a.out&amp;quot; __lll_lock_wait ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
+* 1    Thread 0x7ffff7fcf780 (LWP 17402) &amp;quot;a.out&amp;quot; 0x00007ffff76ab66b in
+       pthread_join (threadid=140737337190144, thread_return=0x0) at
+       pthread_join.c:92
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can list all threads with &lt;code&gt;info threads&lt;/code&gt;.  Each thread will be
+associated with an &lt;strong&gt;Id&lt;/strong&gt;.  The thread marked with the asterisk is the thread
+we are inspecting currently.  From the output of &lt;code&gt;info threads&lt;/code&gt;, it is
+obvious that all of the philosophers are waiting to grab another lock, i.e.
+they are trying to grab a fork which was grabbed by the other.  It seems to be
+a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Deadlock"&gt;deadlock&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Let's have a look on the &lt;em&gt;philosopher&lt;/em&gt; threads.  We can switch to those threads
+with &lt;code&gt;thread [Id]&lt;/code&gt; command.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) thread 2
+[Switching to thread 2 (Thread 0x7ffff6fd6700 (LWP 17406))]
+#0  __lll_lock_wait ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After switching the threads, we can check their backtrace with &lt;code&gt;bt&lt;/code&gt; and
+dump their registers with &lt;code&gt;info registers&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) bt
+#0  __lll_lock_wait ()
+    at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
+... skipped ...
+#5  0x00000000004015b2 in std::lock_guard&amp;lt;std::mutex&amp;gt;::lock_guard (
+    this=0x7ffff6fd5e00, __m=...) at /usr/include/c++/4.8/mutex:414
+#6  0x0000000000400f87 in eat (idx=0) at philosopher.cpp:17
+... skipped ...
+---Type &amp;lt;return&amp;gt; to continue, or q &amp;lt;return&amp;gt; to quit---q
+ at pthread_create.c:Quit
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It seems that there are deadlocks in our &lt;code&gt;eat()&lt;/code&gt; function.
+Let's have a closer look:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) up 6
+#6  0x0000000000400f87 in eat (idx=0) at philosopher.cpp:17
+17    std::lock_guard&amp;lt;std::mutex&amp;gt; second_fork(forks[second]);
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;(gdb) l
+12    unsigned second = (idx + 1) % NUM_PHILOSOPHERS;
+13
+14    // Grab the forks.
+15    std::lock_guard&amp;lt;std::mutex&amp;gt; first_fork(forks[first]);
+16    std::this_thread::sleep_for(std::chrono::seconds(1));
+17    std::lock_guard&amp;lt;std::mutex&amp;gt; second_fork(forks[second]);
+18
+19    printf(&amp;quot;Philosopher %u is eating.\n&amp;quot;, idx);
+20    std::this_thread::sleep_for(std::chrono::seconds(1));
+21  }
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;OK.  Now we know that &lt;strong&gt;thread 2&lt;/strong&gt; is waiting on line 17, which is trying to
+grab the second fork.&lt;/p&gt;
+&lt;p&gt;After inspecting the other threads, it will be clear that every philosophers
+grabbed their &lt;em&gt;first&lt;/em&gt; fork but they couldn't grab their &lt;em&gt;second&lt;/em&gt; fork.  It is a
+classical &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Deadlock"&gt;deadlock&lt;/a&gt; caused by &lt;strong&gt;circular waiting&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;We can break the tie by changing following lines:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;idx&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;%&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kt"&gt;unsigned&lt;/span&gt; &lt;span class="n"&gt;first&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;second&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;idx&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;NUM_PHILOSOPHERS&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;second&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="n"&gt;first&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="n"&gt;second&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;idx&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the other words, the last philosopher will grab the fork in a different
+order.  There will be no circular waiting after implementing this strategy.
+The program can run without problems now!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./a.out
+Philosopher &lt;span class="m"&gt;1&lt;/span&gt; is eating.
+Philosopher &lt;span class="m"&gt;0&lt;/span&gt; is eating.
+Philosopher &lt;span class="m"&gt;2&lt;/span&gt; is eating.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;To sum up, there are two important &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt; commands that can be used to debug
+multithreaded programs:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;code&gt;info threads&lt;/code&gt; -- This command will list all threads and print the
+thread Ids.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;thread [id]&lt;/code&gt; -- This command will switch the context to another
+thread, so that thread-specific commands such as &lt;code&gt;bt&lt;/code&gt; and
+&lt;code&gt;info registers&lt;/code&gt; can work without problems.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;That's all.  Hope you enjoy this post.  See you.&lt;/p&gt;
+&lt;/div&gt;
+</summary><category term="gdb"></category><category term="linux"></category></entry><entry><title>Discourse Installation Notes</title><link href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/" rel="alternate"></link><updated>2015-09-13T22:28:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-09-13:posts/2015/09/13/discourse-installation-notes/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt; is a new generation discussion forum.  I found that &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
 is very suitable for personal note taking.  One notable feature of &lt;a class="reference external" href="https://www.discourse.org/"&gt;Discourse&lt;/a&gt;
 is that the users can focus on conversations.  Besides, it supports Markdown as
 the message markup language.  This is the reason why I like it very
