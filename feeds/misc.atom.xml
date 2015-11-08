@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-05-25T21:59:00+08:00</updated><entry><title>Troubleshooting adb No Permissions Problem</title><link href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/" rel="alternate"></link><updated>2015-05-25T21:59:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-25:posts/2015/05/25/troubleshooting-adb-no-permissions-problem/</id><summary type="html">&lt;p&gt;I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-08T15:19:00+08:00</updated><entry><title>Fix Nautilus Video Thumbnails</title><link href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/" rel="alternate"></link><updated>2015-11-08T15:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-08:posts/2015/11/08/fix-nautilus-video-thumbnails/</id><summary type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
+that video thumbnails (or previews) do not show up in Gnome &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt;:&lt;/p&gt;
+&lt;img alt="Nautilus without video preview thumbnails" src="http://logan.tw/static/images/nautilus-no-video-thumbnail.png" /&gt;
+&lt;p&gt;I prefer thumbnails to icons.  Besides, I remember that &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; will generate
+a thumbnail for each video in &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 14.04.  Thus, I took some time to
+look for the reason.&lt;/p&gt;
+&lt;p&gt;After trials and errors, I found &lt;code&gt;gstreamer1.0-libav&lt;/code&gt; is the package in
+question.  It is not installed by default.  We can install it with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-libav
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In addition, we should clean the thumbnail cache; otherwise &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; won't
+regenerate thumbnails for videos.  To clean the thumbnail cache:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;rm -r ~/.cache/thumbnails/fail
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally, refresh &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; with &lt;code&gt;Ctrl-R&lt;/code&gt;.  We should be able to see the
+thumbnails now:&lt;/p&gt;
+&lt;img alt="Nautilus with video preview thumbnails" src="http://logan.tw/static/images/nautilus-video-thumbnail.png" /&gt;
+&lt;p&gt;If you still can't see thumbnails, it is possible that your videos are encoded
+by less popular codecs.  Installing &lt;code&gt;gstreamer1.0-plugins-ugly&lt;/code&gt; or
+&lt;code&gt;gstreamer1.0-plugins-bad&lt;/code&gt; might help:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-plugins-ugly
+&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-plugins-bad
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, please notice that &lt;code&gt;gstreamer1.0-plugins-ugly&lt;/code&gt; might be covered
+by more restrict licenses or patents.  And &lt;code&gt;gstreamer1.0-plugins-bad&lt;/code&gt;
+might have worse quality, e.g. lack of code review, documentations, tests, and
+etc.  Read &lt;a class="reference external" href="http://gstreamer.freedesktop.org/documentation/splitup.html"&gt;GStreamer plug-ins splitup&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://gstreamer.freedesktop.org/"&gt;GStreamer&lt;/a&gt; - open source media framework&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://gstreamer.freedesktop.org/documentation/splitup.html"&gt;GStreamer plug-ins splitup&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="ubuntu"></category><category term="gnome"></category></entry><entry><title>Troubleshooting adb No Permissions Problem</title><link href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/" rel="alternate"></link><updated>2015-05-25T21:59:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-25:posts/2015/05/25/troubleshooting-adb-no-permissions-problem/</id><summary type="html">&lt;p&gt;I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
 the device to my computer and tried to list the devices with &lt;code&gt;adb
 devices&lt;/code&gt; command.  But, unfortunately, I got the following error message:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;adb devices
