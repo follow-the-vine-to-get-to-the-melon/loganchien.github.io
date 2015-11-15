@@ -1,5 +1,179 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-08T15:19:00+08:00</updated><entry><title>Fix Nautilus Video Thumbnails</title><link href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/" rel="alternate"></link><updated>2015-11-08T15:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-08:posts/2015/11/08/fix-nautilus-video-thumbnails/</id><summary type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-15T22:35:00+08:00</updated><entry><title>Autossh and Systemd Service</title><link href="http://logan.tw/posts/2015/11/15/autossh-and-systemd-service/" rel="alternate"></link><updated>2015-11-15T22:35:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-15:posts/2015/11/15/autossh-and-systemd-service/</id><summary type="html">&lt;p&gt;Several months ago, I wrote a &lt;a class="reference external" href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/"&gt;post&lt;/a&gt; to describe how to setup an &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;autossh&lt;/a&gt; daemon
+with &lt;a class="reference external" href="http://upstart.ubuntu.com/"&gt;upstart&lt;/a&gt;.  Since Ubuntu 15.04 has switched to &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt;, I would like to do
+the same with &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt;.  I will give a brief introduction to &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; in this
+post.&lt;/p&gt;
+&lt;div class="section" id="systemd-unit-file"&gt;
+&lt;h2&gt;Systemd Unit File&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;Systemd&lt;/a&gt; services are configured by &lt;a class="reference external" href="http://www.freedesktop.org/software/systemd/man/systemd.unit.html"&gt;unit files&lt;/a&gt;.  By convention, these files
+use &lt;code&gt;.service&lt;/code&gt; as their file name extension.&lt;/p&gt;
+&lt;p&gt;On Ubuntu, there are two directories for &lt;a class="reference external" href="http://www.freedesktop.org/software/systemd/man/systemd.unit.html"&gt;unit files&lt;/a&gt;:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;/lib/systemd&lt;/code&gt; -- This is the directory for unit files provided by the
+installed packages.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;/etc/systemd&lt;/code&gt; -- This is the directory for the administrators to
+create, override, modify or mask the unit files in &lt;code&gt;/lib/systemd&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Although the autossh package does not come with any unit file, we can create
+one in &lt;code&gt;/lib/systemd&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /lib/systemd/system/autossh.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here's the content of the unit file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="k"&gt;[Unit]&lt;/span&gt;
+&lt;span class="na"&gt;Description&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;autossh&lt;/span&gt;
+&lt;span class="na"&gt;Wants&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+&lt;span class="na"&gt;After&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;network-online.target&lt;/span&gt;
+
+&lt;span class="k"&gt;[Service]&lt;/span&gt;
+&lt;span class="na"&gt;Type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;simple&lt;/span&gt;
+&lt;span class="na"&gt;User&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;autossh&lt;/span&gt;
+&lt;span class="na"&gt;EnvironmentFile&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/etc/default/autossh&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;span class="na"&gt;ExecStart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;/usr/bin/autossh $SSH_OPTIONS&lt;/span&gt;
+&lt;span class="na"&gt;Restart&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;always&lt;/span&gt;
+&lt;span class="na"&gt;RestartSec&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;60&lt;/span&gt;
+
+&lt;span class="k"&gt;[Install]&lt;/span&gt;
+&lt;span class="na"&gt;WantedBy&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s"&gt;multi-user.target&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Some explanations to the options:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Description=&lt;/strong&gt; contains some words that can describe the service.  This
+will show up in the logs.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Wants=&lt;/strong&gt; specifies the dependencies of the services.  If this service is
+activated, &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; will also activate the listed services.&lt;/p&gt;
+&lt;p&gt;In our case, we would like to make sure that the network interface is ready,
+thus we specified &lt;code&gt;network-online.target&lt;/code&gt; &lt;a class="footnote-reference" href="#id9" id="id1"&gt;[1]&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;After=&lt;/strong&gt; specifies the order to launch the service.  With the &lt;code&gt;After&lt;/code&gt;
+option, &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; will only launch the service after the activation of listed
+services.  Notice that this option is orthogonal to &lt;code&gt;Wants&lt;/code&gt; (or
+&lt;code&gt;Requires&lt;/code&gt;.)  If &lt;code&gt;After&lt;/code&gt; is not specified, &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; may launch
+the dependencies simultaneously.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;Type=&lt;/strong&gt; specifies the type of the service.  There are several options:
+simple, fork, oneshot, and etc.&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;A &lt;strong&gt;simple&lt;/strong&gt; service will contain one long running process.  The process
+will not stop unless we kill the service.&lt;/li&gt;
+&lt;li&gt;A &lt;strong&gt;fork&lt;/strong&gt; service means that the &lt;code&gt;ExecStart&lt;/code&gt; command will fork a
+subprocess and return immediately.  In the other words, the command will
+manage the process by themselves.&lt;/li&gt;
+&lt;li&gt;An &lt;strong&gt;oneshot&lt;/strong&gt; service will launch a new process whenever an event triggers
+this service.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;User=&lt;/strong&gt; specifies the user as whom the service process is run.  By default,
+the process is run as &lt;code&gt;root&lt;/code&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;EnvironmentFile=&lt;/strong&gt; specifies the path to an environment file, which
+contains the environment variables for the service process.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;ExecStart=&lt;/strong&gt; specifies the command to launch the service.  We have to
+specify the full path to the executable to be executed.&lt;/p&gt;
+&lt;p&gt;Notice that there are two &lt;code&gt;ExecStart&lt;/code&gt; in our unit file.  They are not
+typos.  In order to allow this unit file to be included by another unit
+file, we have to clear &lt;code&gt;ExecStart&lt;/code&gt; before specifying a new command.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;strong&gt;WantedBy=&lt;/strong&gt; specifies the &lt;em&gt;init stage&lt;/em&gt; to launch the service (if the service
+is enabled.)&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now, we can create a soft link in &lt;code&gt;/etc/systemd/system&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo ln -s /lib/systemd/system/autossh.service &lt;span class="se"&gt;\&lt;/span&gt;
+      /etc/systemd/system/autossh.service
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="environment-file"&gt;
+&lt;h2&gt;Environment File&lt;/h2&gt;
+&lt;p&gt;Did you notice that there is a variable &lt;code&gt;$SSH_OPTIONS&lt;/code&gt; in the
+&lt;code&gt;ExecStart&lt;/code&gt; option above?  It will be substituted by the &lt;strong&gt;environment
+variable&lt;/strong&gt; from the file specified by &lt;code&gt;EnvironmentFile&lt;/code&gt;.  Environment
+files are the files which contain the configurations which should be passed to
+the service.&lt;/p&gt;
+&lt;p&gt;Let's create an environment file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/default/autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The environment file resembles to a Bash script.  Here's the example for our
+&lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;autossh&lt;/a&gt; service:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;AUTOSSH_POLL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;60
+&lt;span class="nv"&gt;AUTOSSH_FIRST_POLL&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;30
+&lt;span class="nv"&gt;AUTOSSH_GATETIME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;0
+&lt;span class="nv"&gt;AUTOSSH_PORT&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;22000
+&lt;span class="nv"&gt;SSH_OPTIONS&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;-N -R 2222:localhost:22 example.com -i /home/autossh/.ssh/id_rsa&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can find more options by reading &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;autossh&lt;/a&gt; man pages.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="start-the-service"&gt;
+&lt;h2&gt;Start the Service&lt;/h2&gt;
+&lt;p&gt;Before we can start our service, we have to ask &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; to reload all unit
+files:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo systemctl daemon-reload
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we can start &lt;a class="reference external" href="http://www.harding.motd.ca/autossh/"&gt;autossh&lt;/a&gt; service with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo systemctl start autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, we can check the status with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo systemctl status autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this command, you should be able to see the following output (if the unit
+file is correct):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;* autossh.service - autossh
+   Loaded: loaded (/lib/systemd/system/autossh.service; enabled;
+vendor preset: enabled)
+   Active: active (running) since Sun 2015-11-15 22:51:25 CST; 1min 1s ago
+ Main PID: 14382 (autossh)
+   CGroup: /system.slice/autossh.service
+           |-14382 /usr/lib/autossh/autossh -N -R 8022:localhost:22 ....
+           `-14385 /usr/bin/ssh -L ...
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If there are some problems, check &lt;code&gt;/var/log/syslog&lt;/code&gt; for more details.&lt;/p&gt;
+&lt;p&gt;BTW, to stop the service, we can use the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo systemctl stop autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="launch-service-at-boot-time"&gt;
+&lt;h2&gt;Launch Service at Boot Time&lt;/h2&gt;
+&lt;p&gt;OK.  If everything goes well, then we may ask &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; to launch our service
+during the boot time.  To do so, we have to &lt;strong&gt;enable&lt;/strong&gt; the service with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo systemctl &lt;span class="nb"&gt;enable &lt;/span&gt;autossh
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, I have covered some basic concept of &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt; unit files and
+basic commands to control &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt;:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Reload unit files with &lt;code&gt;sudo systemctl daemon-reload&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Start/stop service with: &lt;code&gt;sudo systemctl [start/stop] [name]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Check service status with: &lt;code&gt;sudo systemctl status [name]&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;Register/unregister the service for the boot time with:
+&lt;code&gt;sudo systemctl [enable/disable] [name]&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Hope you enjoy this article.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://en.wikipedia.org/wiki/Systemd"&gt;Wikipedia: systemd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://wiki.archlinux.org/index.php/Systemd"&gt;Arch Linux wiki: systemd&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://wiki.ubuntu.com/SystemdForUpstartUsers"&gt;Ubuntu wiki: systemd for upstart users&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/System_Administrators_Guide/chap-Managing_Services_with_systemd.html"&gt;RedHat RHEL7: System Administrator's Guide: Chapter 8&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.freedesktop.org/software/systemd/man/"&gt;Systemd Manuals&lt;/a&gt;: &lt;a class="reference external" href="http://www.freedesktop.org/software/systemd/man/systemd.unit.html"&gt;systemd.unit&lt;/a&gt; and &lt;a class="reference external" href="http://www.freedesktop.org/software/systemd/man/systemd.service.html"&gt;systemd.service&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/NetworkTarget/"&gt;Running Services After the Network is up&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;hr class="docutils" /&gt;
+&lt;table class="docutils footnote" frame="void" id="id9" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;It is non-trivial to write an unit file for the service that requires
+network connections, read &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/NetworkTarget/"&gt;Running Services After the Network is up&lt;/a&gt; for
+more details.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="systemd"></category><category term="autossh"></category><category term="ssh"></category></entry><entry><title>Fix Nautilus Video Thumbnails</title><link href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/" rel="alternate"></link><updated>2015-11-08T15:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-08:posts/2015/11/08/fix-nautilus-video-thumbnails/</id><summary type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
 that video thumbnails (or previews) do not show up in Gnome &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt;:&lt;/p&gt;
 &lt;img alt="Nautilus without video preview thumbnails" src="http://logan.tw/static/images/nautilus-no-video-thumbnail.png" /&gt;
 &lt;p&gt;I prefer thumbnails to icons.  Besides, I remember that &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; will generate
@@ -3007,6 +3181,8 @@ host with:&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="setup-upstart-configuration-file"&gt;
 &lt;h2&gt;Setup Upstart Configuration File&lt;/h2&gt;
+&lt;p&gt;(&lt;strong&gt;Update 2015/11/15&lt;/strong&gt;: To setup a daemon for &lt;a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/"&gt;systemd&lt;/a&gt;, read &lt;a class="reference external" href="http://logan.tw/posts/2015/11/15/autossh-and-systemd-service/"&gt;this post&lt;/a&gt;
+instead.)&lt;/p&gt;
 &lt;p&gt;Let's add the Ubuntu Upstart configuration file.&lt;/p&gt;
 &lt;p&gt;First, create new upstart configuration with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/init/autossh.conf

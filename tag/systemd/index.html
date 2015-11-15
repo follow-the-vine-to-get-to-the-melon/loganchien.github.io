@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Logan's Note - Tags</title>
+  <title>Logan's Note - systemd</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -49,66 +49,36 @@
 </ul></nav>
   <div id="main">
     <div id="content">
-    <h1>Tags for Logan's Note</h1>        <li><a href="http://logan.tw/tag/android/">android</a> (1)</li>
-        <li><a href="http://logan.tw/tag/apache2/">apache2</a> (1)</li>
-        <li><a href="http://logan.tw/tag/aria2/">aria2</a> (1)</li>
-        <li><a href="http://logan.tw/tag/autossh/">autossh</a> (2)</li>
-        <li><a href="http://logan.tw/tag/c/">c</a> (1)</li>
-        <li><a href="http://logan.tw/tag/clang/">clang</a> (2)</li>
-        <li><a href="http://logan.tw/tag/compiler/">compiler</a> (2)</li>
-        <li><a href="http://logan.tw/tag/ctags/">ctags</a> (1)</li>
-        <li><a href="http://logan.tw/tag/cxx/">cxx</a> (7)</li>
-        <li><a href="http://logan.tw/tag/debian/">debian</a> (1)</li>
-        <li><a href="http://logan.tw/tag/diary/">diary</a> (1)</li>
-        <li><a href="http://logan.tw/tag/discourse/">discourse</a> (1)</li>
-        <li><a href="http://logan.tw/tag/gcin/">gcin</a> (1)</li>
-        <li><a href="http://logan.tw/tag/gdb/">gdb</a> (1)</li>
-        <li><a href="http://logan.tw/tag/git/">git</a> (3)</li>
-        <li><a href="http://logan.tw/tag/github/">github</a> (2)</li>
-        <li><a href="http://logan.tw/tag/gnome/">gnome</a> (1)</li>
-        <li><a href="http://logan.tw/tag/grub/">grub</a> (2)</li>
-        <li><a href="http://logan.tw/tag/http/">http</a> (1)</li>
-        <li><a href="http://logan.tw/tag/https/">https</a> (2)</li>
-        <li><a href="http://logan.tw/tag/init/">init</a> (1)</li>
-        <li><a href="http://logan.tw/tag/lcov/">lcov</a> (1)</li>
-        <li><a href="http://logan.tw/tag/linux/">linux</a> (12)</li>
-        <li><a href="http://logan.tw/tag/llvm/">llvm</a> (3)</li>
-        <li><a href="http://logan.tw/tag/logic/">logic</a> (1)</li>
-        <li><a href="http://logan.tw/tag/opencl/">opencl</a> (4)</li>
-        <li><a href="http://logan.tw/tag/pelican/">pelican</a> (1)</li>
-        <li><a href="http://logan.tw/tag/plt/">plt</a> (1)</li>
-        <li><a href="http://logan.tw/tag/processor/">processor</a> (1)</li>
-        <li><a href="http://logan.tw/tag/python/">python</a> (3)</li>
-        <li><a href="http://logan.tw/tag/ssh/">ssh</a> (2)</li>
-        <li><a href="http://logan.tw/tag/ssl/">ssl</a> (2)</li>
-        <li><a href="http://logan.tw/tag/stl/">stl</a> (2)</li>
-        <li><a href="http://logan.tw/tag/systemd/">systemd</a> (1)</li>
-        <li><a href="http://logan.tw/tag/test/">test</a> (2)</li>
-        <li><a href="http://logan.tw/tag/tips/">tips</a> (1)</li>
-        <li><a href="http://logan.tw/tag/ubuntu/">ubuntu</a> (4)</li>
-        <li><a href="http://logan.tw/tag/udev/">udev</a> (1)</li>
-        <li><a href="http://logan.tw/tag/upstart/">upstart</a> (1)</li>
-        <li><a href="http://logan.tw/tag/vim/">vim</a> (2)</li>
-        <li><a href="http://logan.tw/tag/waliki/">waliki</a> (1)</li>
-        <li><a href="http://logan.tw/tag/wsgi/">wsgi</a> (1)</li>
+<div class="blog-index">
+  		<article>
+<header>
+      <h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/11/15/autossh-and-systemd-service/">Autossh and Systemd Service</a>
+      </h1>
+      <p class="meta"><time datetime="2015-11-15T22:35:00+08:00" pubdate>Sun 15 November 2015</time></p>
+</header>
+
+  <div class="entry-content"><p>Several months ago, I wrote a <a class="reference external" href="http://logan.tw/posts/2014/12/15/autossh-and-ubuntu-upstart-daemon/">post</a> to describe how to setup an <a class="reference external" href="http://www.harding.motd.ca/autossh/">autossh</a> daemon
+with <a class="reference external" href="http://upstart.ubuntu.com/">upstart</a>.  Since Ubuntu 15.04 has switched to <a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/">systemd</a>, I would like to do
+the same with <a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/">systemd</a>.  I will give a brief introduction to <a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/">systemd</a> in this
+post.</p>
+<div class="section" id="systemd-unit-file">
+<h2>Systemd Unit File</h2>
+<p><a class="reference external" href="http://www.freedesktop.org/wiki/Software/systemd/">Systemd</a> services ...</p></div></div>
+  <footer>
+    <a rel="full-article" href="http://logan.tw/posts/2015/11/15/autossh-and-systemd-service/">Read On &crarr;</a>
+  </footer>
+  		</article>
+<div class="pagination">
+
+  <br />
+</div></div>
 <aside class="sidebar">
   <section>
     <h1>Recent Posts</h1>
     <ul id="recent_posts">
       <li class="post">
           <a href="http://logan.tw/posts/2015/11/15/autossh-and-systemd-service/">Autossh and Systemd Service</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/">Fix Nautilus Video Thumbnails</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/">Debug Multithreaded Program with GDB</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/09/13/discourse-installation-notes/">Discourse Installation Notes</a>
-      </li>
-      <li class="post">
-          <a href="http://logan.tw/posts/2015/06/27/global-git-ignore-file/">Global Git Ignore File</a>
       </li>
     </ul>
   </section>
@@ -150,7 +120,7 @@
 </aside>    </div>
   </div>
   <footer role="contentinfo"><p>
-    Copyright &copy;  2014-2015  - Logan -
+    Copyright &copy;  2015  - Logan -
   <span class="credit">Powered by <a href="http://getpelican.com">Pelican</a></span>
 </p></footer>
     <script type="text/javascript">
