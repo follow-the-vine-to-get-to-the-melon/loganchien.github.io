@@ -1,5 +1,125 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-01T20:37:00+08:00</updated><entry><title>Debug Multithreaded Program with GDB</title><link href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/" rel="alternate"></link><updated>2015-11-01T20:37:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-01:posts/2015/11/01/debug-multithreaded-program-with-gdb/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;GDB&lt;/a&gt; is a powerful debugger.  Without a doubt, we can debug multi-threaded
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-16T01:25:00+08:00</updated><entry><title>Bash Signal Handler and Traps</title><link href="http://logan.tw/posts/2015/11/16/bash-signal-handler-and-traps/" rel="alternate"></link><updated>2015-11-16T01:25:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-16:posts/2015/11/16/bash-signal-handler-and-traps/</id><summary type="html">&lt;p&gt;I would like to launch &lt;strong&gt;ssh-agent&lt;/strong&gt; and add my private key at the beginning of
+my shell script and stop it before leaving the shell script.  How do I
+guarantee that &lt;strong&gt;ssh-agent&lt;/strong&gt; will be shutted down properly?  What will happen
+if the user press &lt;code&gt;Ctrl-C&lt;/code&gt; or even kill the shell script?&lt;/p&gt;
+&lt;p&gt;The answer to this question is the &lt;code&gt;trap&lt;/code&gt; built-in utility from the
+&lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html"&gt;shell command language&lt;/a&gt;.  It allows the programmer to specify:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Signal handlers&lt;/li&gt;
+&lt;li&gt;Deferred tasks -- Defer the tasks that should be executed before leaving
+the shell script (no matter it is interrupted or exitted normally.)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In this post, I would like to give a brief introduction to &lt;code&gt;trap&lt;/code&gt;
+built-in.&lt;/p&gt;
+&lt;div class="section" id="motivating-example"&gt;
+&lt;h2&gt;Motivating Example&lt;/h2&gt;
+&lt;p&gt;The syntax for &lt;code&gt;trap&lt;/code&gt; built-in is:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nb"&gt;trap&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;action&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;condition&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;strong&gt;action&lt;/strong&gt; will be executed (via &lt;code&gt;eval&lt;/code&gt;) when the specified
+&lt;em&gt;condition&lt;/em&gt; occurred.&lt;/p&gt;
+&lt;p&gt;The &lt;strong&gt;condition&lt;/strong&gt; can be:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;EXIT&lt;/code&gt; -- The &lt;em&gt;action&lt;/em&gt; will be executed whenever the shell script stops
+(no matter it is interrupted or leaving normally.)&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;INT&lt;/code&gt; -- The &lt;em&gt;action&lt;/em&gt; will be executed whenever the user pressed
+&lt;code&gt;Ctrl-C&lt;/code&gt; or the process received &lt;code&gt;SIGINT&lt;/code&gt; signal.&lt;/li&gt;
+&lt;li&gt;Other signal names defined in &lt;code&gt;&amp;lt;signal.h&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For example, &lt;code&gt;int.sh&lt;/code&gt; contains following code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class="nb"&gt;trap&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;echo \&amp;quot;User abort\&amp;quot;; exit 1&amp;quot;&lt;/span&gt; INT
+sleep 10
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run the script and press &lt;code&gt;Ctrl-C&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;chmod +x int.sh
+&lt;span class="nv"&gt;$ &lt;/span&gt;./int.sh
+&lt;span class="c"&gt;# ... press ctrl-c ...&lt;/span&gt;
+^CUser abort
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Compare with another case: run the script and wait for 10 seconds:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./int.sh
+&lt;span class="c"&gt;# ... wait for 10 seconds (no output) ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let's look at another example.  The following is the code listing of
+&lt;code&gt;defer.sh&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class="nb"&gt;trap&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;echo \&amp;quot;EXIT\&amp;quot;&amp;quot;&lt;/span&gt; EXIT    &lt;span class="c"&gt;# &amp;lt;-- Changed to EXIT&lt;/span&gt;
+sleep 10
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can notice that &lt;code&gt;echo &amp;quot;EXIT&amp;quot;&lt;/code&gt; will always be executed:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./defer.sh
+&lt;span class="c"&gt;# ... press ctrl-c ...&lt;/span&gt;
+^CEXIT
+
+&lt;span class="nv"&gt;$ &lt;/span&gt;./defer.sh
+&lt;span class="c"&gt;# ... wait for 10 seconds ...&lt;/span&gt;
+EXIT
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To wrap up:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;To perform a task when an interrupt occurs, register a trap with
+&lt;code&gt;INT&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;To perform a cleanup task, register a trap with &lt;code&gt;EXIT&lt;/code&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="ssh-agent"&gt;
+&lt;h2&gt;SSH Agent&lt;/h2&gt;
+&lt;p&gt;OK.  Now, let's work on a real world example: start and stop a SSH agent.
+To start a SSH agent and export the environment variables, we have to run:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;ssh-agent -s&lt;span class="k"&gt;)&lt;/span&gt;
+Agent pid 10176
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;On the other hand, to stop a SSH agent:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;ssh-agent -k&lt;span class="k"&gt;)&lt;/span&gt;
+Agent pid &lt;span class="m"&gt;10176&lt;/span&gt; killed
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can combine them together in the shell script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;#!/bin/bash&lt;/span&gt;
+
+kill_ssh_agent &lt;span class="o"&gt;()&lt;/span&gt; &lt;span class="o"&gt;{&lt;/span&gt;
+  &lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;ssh-agent -k&lt;span class="k"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;}&lt;/span&gt;
+
+&lt;span class="c"&gt;# Register a trap to stop the ssh agent.&lt;/span&gt;
+&lt;span class="nb"&gt;trap &lt;/span&gt;kill_ssh_agent EXIT
+
+&lt;span class="c"&gt;# Start the ssh agent.&lt;/span&gt;
+&lt;span class="nb"&gt;eval&lt;/span&gt; &lt;span class="k"&gt;$(&lt;/span&gt;ssh-agent -s&lt;span class="k"&gt;)&lt;/span&gt;
+
+&lt;span class="c"&gt;# Load private key to ssh agent.&lt;/span&gt;
+ssh-add ~/.ssh/id_rsa
+
+&lt;span class="c"&gt;# ... other commands to run ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Try to run the script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;./run.sh
+Agent pid 10248
+Enter passphrase &lt;span class="k"&gt;for&lt;/span&gt; /home/username/.ssh/id_rsa:
+Identity added: /home/username/.ssh/id_rsa &lt;span class="o"&gt;(&lt;/span&gt;/home/username/.ssh/id_rsa&lt;span class="o"&gt;)&lt;/span&gt;
+Agent pid &lt;span class="m"&gt;10248&lt;/span&gt; killed
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Great!  Everything works as expected.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;To sum up, we introduced the basic usage of &lt;code&gt;trap&lt;/code&gt; built-in in this post.
+We mentioned two different trap conditions: &lt;code&gt;INT&lt;/code&gt; and &lt;code&gt;EXIT&lt;/code&gt;.  The
+former will trigger the action when the shell script is interrupted, and the
+later will trigger the action before leaving the shell script.  At last, we
+gave a real world example on &lt;code&gt;ssh-agent&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Hope you enjoy this post.  See you then.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/"&gt;The Open Group Base Specifications Issue 7&lt;/a&gt; (IEEE Std 1003.1, 2013 Edition),
+Volume 3 Shell &amp;amp; Utilities, &lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html"&gt;Shell Command Language&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Shell Command Language, &lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#trap"&gt;Special Built-in Utilities: trap&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</summary><category term="linux"></category><category term="bash"></category><category term="shell"></category></entry><entry><title>Debug Multithreaded Program with GDB</title><link href="http://logan.tw/posts/2015/11/01/debug-multithreaded-program-with-gdb/" rel="alternate"></link><updated>2015-11-01T20:37:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-01:posts/2015/11/01/debug-multithreaded-program-with-gdb/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;GDB&lt;/a&gt; is a powerful debugger.  Without a doubt, we can debug multi-threaded
 programs with &lt;a class="reference external" href="http://www.gnu.org/software/gdb"&gt;gdb&lt;/a&gt;.  In particular, we can switch between threads, inspect
 the stack, and dump the registers.  In this post, I would like to start with
 the &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Dining_philosophers_problem"&gt;Dining Philosophers Problem&lt;/a&gt;, which was first coined by

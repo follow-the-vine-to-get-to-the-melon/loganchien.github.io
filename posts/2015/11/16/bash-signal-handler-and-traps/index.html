@@ -4,7 +4,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>OpenCL 1.2 Manual Pages</title>
+  <title>Bash Signal Handler and Traps</title>
   <meta name="author" content="Logan">
 
   <link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate"
@@ -52,25 +52,140 @@
 <div>
   <article class="hentry" role="article">
 <header>
-      <h1 class="entry-title">OpenCL 1.2 Manual Pages</h1>
-      <p class="meta"><time datetime="2014-11-19T22:37:00+08:00" pubdate>Wed 19 November 2014</time></p>
+      <h1 class="entry-title">Bash Signal Handler and Traps</h1>
+      <p class="meta"><time datetime="2015-11-16T01:25:00+08:00" pubdate>Mon 16 November 2015</time></p>
 </header>
 
-  <div class="entry-content"><p>There is a package for <a class="reference external" href="https://www.khronos.org/registry/cl/sdk/1.2/docs/man/xhtml/">OpenCL 1.2 manual pages</a> in the Ubuntu repository.  To
-install the <code>opencl-1.2-man-doc</code> package, please run this command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install opencl-1.2-man-doc
+  <div class="entry-content"><p>I would like to launch <strong>ssh-agent</strong> and add my private key at the beginning of
+my shell script and stop it before leaving the shell script.  How do I
+guarantee that <strong>ssh-agent</strong> will be shutted down properly?  What will happen
+if the user press <code>Ctrl-C</code> or even kill the shell script?</p>
+<p>The answer to this question is the <code>trap</code> built-in utility from the
+<a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">shell command language</a>.  It allows the programmer to specify:</p>
+<ol class="arabic simple">
+<li>Signal handlers</li>
+<li>Deferred tasks -- Defer the tasks that should be executed before leaving
+the shell script (no matter it is interrupted or exitted normally.)</li>
+</ol>
+<p>In this post, I would like to give a brief introduction to <code>trap</code>
+built-in.</p>
+<div class="section" id="motivating-example">
+<h2>Motivating Example</h2>
+<p>The syntax for <code>trap</code> built-in is:</p>
+<div class="highlight"><pre><span class="nb">trap</span> <span class="o">[</span>action<span class="o">]</span> <span class="o">[</span>condition<span class="o">]</span>
 </pre></div>
-<p>After installing this package, we can check the OpenCL API with <code>man</code>
-command.  For example, run <code>man 3 clGetPlatformIDs</code> to read the document
-for <code>clGetPlatformIDs()</code>.</p>
+<p>The <strong>action</strong> will be executed (via <code>eval</code>) when the specified
+<em>condition</em> occurred.</p>
+<p>The <strong>condition</strong> can be:</p>
+<ul class="simple">
+<li><code>EXIT</code> -- The <em>action</em> will be executed whenever the shell script stops
+(no matter it is interrupted or leaving normally.)</li>
+<li><code>INT</code> -- The <em>action</em> will be executed whenever the user pressed
+<code>Ctrl-C</code> or the process received <code>SIGINT</code> signal.</li>
+<li>Other signal names defined in <code>&lt;signal.h&gt;</code>.</li>
+</ul>
+<p>For example, <code>int.sh</code> contains following code:</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<span class="nb">trap</span> <span class="s2">&quot;echo \&quot;User abort\&quot;; exit 1&quot;</span> INT
+sleep 10
+</pre></div>
+<p>Run the script and press <code>Ctrl-C</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>chmod +x int.sh
+<span class="nv">$ </span>./int.sh
+<span class="c"># ... press ctrl-c ...</span>
+^CUser abort
+</pre></div>
+<p>Compare with another case: run the script and wait for 10 seconds:</p>
+<div class="highlight"><pre><span class="nv">$ </span>./int.sh
+<span class="c"># ... wait for 10 seconds (no output) ...</span>
+</pre></div>
+<p>Let's look at another example.  The following is the code listing of
+<code>defer.sh</code>:</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<span class="nb">trap</span> <span class="s2">&quot;echo \&quot;EXIT\&quot;&quot;</span> EXIT    <span class="c"># &lt;-- Changed to EXIT</span>
+sleep 10
+</pre></div>
+<p>We can notice that <code>echo &quot;EXIT&quot;</code> will always be executed:</p>
+<div class="highlight"><pre><span class="nv">$ </span>./defer.sh
+<span class="c"># ... press ctrl-c ...</span>
+^CEXIT
+
+<span class="nv">$ </span>./defer.sh
+<span class="c"># ... wait for 10 seconds ...</span>
+EXIT
+</pre></div>
+<p>To wrap up:</p>
+<ol class="arabic simple">
+<li>To perform a task when an interrupt occurs, register a trap with
+<code>INT</code>.</li>
+<li>To perform a cleanup task, register a trap with <code>EXIT</code>.</li>
+</ol>
+</div>
+<div class="section" id="ssh-agent">
+<h2>SSH Agent</h2>
+<p>OK.  Now, let's work on a real world example: start and stop a SSH agent.
+To start a SSH agent and export the environment variables, we have to run:</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
+Agent pid 10176
+</pre></div>
+<p>On the other hand, to stop a SSH agent:</p>
+<div class="highlight"><pre><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
+Agent pid <span class="m">10176</span> killed
+</pre></div>
+<p>We can combine them together in the shell script:</p>
+<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+
+kill_ssh_agent <span class="o">()</span> <span class="o">{</span>
+  <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
+<span class="o">}</span>
+
+<span class="c"># Register a trap to stop the ssh agent.</span>
+<span class="nb">trap </span>kill_ssh_agent EXIT
+
+<span class="c"># Start the ssh agent.</span>
+<span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
+
+<span class="c"># Load private key to ssh agent.</span>
+ssh-add ~/.ssh/id_rsa
+
+<span class="c"># ... other commands to run ...</span>
+</pre></div>
+<p>Try to run the script:</p>
+<div class="highlight"><pre><span class="nv">$ </span>./run.sh
+Agent pid 10248
+Enter passphrase <span class="k">for</span> /home/username/.ssh/id_rsa:
+Identity added: /home/username/.ssh/id_rsa <span class="o">(</span>/home/username/.ssh/id_rsa<span class="o">)</span>
+Agent pid <span class="m">10248</span> killed
+</pre></div>
+<p>Great!  Everything works as expected.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>To sum up, we introduced the basic usage of <code>trap</code> built-in in this post.
+We mentioned two different trap conditions: <code>INT</code> and <code>EXIT</code>.  The
+former will trigger the action when the shell script is interrupted, and the
+later will trigger the action before leaving the shell script.  At last, we
+gave a real world example on <code>ssh-agent</code>.</p>
+<p>Hope you enjoy this post.  See you then.</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/">The Open Group Base Specifications Issue 7</a> (IEEE Std 1003.1, 2013 Edition),
+Volume 3 Shell &amp; Utilities, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">Shell Command Language</a>.</li>
+<li>Shell Command Language, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#trap">Special Built-in Utilities: trap</a>.</li>
+</ul>
+</div>
 </div>
     <footer>
 <p class="meta">
   <span class="byline author vcard">
     Posted by <span class="fn">Logan</span>
   </span>
-<time datetime="2014-11-19T22:37:00+08:00" pubdate>Wed 19 November 2014</time>  <span class="categories">
-    <a class="category" href="http://logan.tw/tag/opencl/">opencl</a>
+<time datetime="2015-11-16T01:25:00+08:00" pubdate>Mon 16 November 2015</time>  <span class="categories">
+    <a class="category" href="http://logan.tw/tag/linux/">linux</a>
+    <a class="category" href="http://logan.tw/tag/bash/">bash</a>
+    <a class="category" href="http://logan.tw/tag/shell/">shell</a>
   </span>
 </p><div class="sharing">
 </div>    </footer>
