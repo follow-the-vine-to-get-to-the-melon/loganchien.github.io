@@ -433,3 +433,7 @@ table tr:nth-child(2n+1) {
 .paginator {
 	text-align: right;
 }
+
+#content img {
+	max-width: 100%;
+}
