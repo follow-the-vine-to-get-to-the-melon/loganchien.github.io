@@ -401,3 +401,35 @@ table tr:nth-child(2n+1) {
 .footnote tr:nth-child(2n+1) {
 	background-color: transparent;
 }
+.normal-btn:link {
+	color: #ff6600;
+	padding: 5px 7px;
+	border-radius: 5px;
+	border: 1px solid #ff6600;
+	text-decoration: none;
+}
+.normal-btn:visited {
+	color: #ff6600;
+}
+.normal-btn:hover {
+	color: #ffffff;
+	background-color: #ff6600;
+}
+
+.sub-btn:link {
+	color: #336655;
+	padding: 5px 7px;
+	border-radius: 5px;
+	border: 1px solid #339955;
+	text-decoration: none;
+}
+.sub-btn:visited {
+	color: #339955;
+}
+.sub-btn:hover {
+	color: #ffffff;
+	background-color: #339955;
+}
+.paginator {
+	text-align: right;
+}
