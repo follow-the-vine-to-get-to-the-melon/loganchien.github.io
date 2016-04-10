@@ -293,7 +293,7 @@ hr {
 	color: #008c5b;
 }
 
-.post-date {
+.published {
 	color: #888888;
 }
 
@@ -321,7 +321,7 @@ hr {
    	text-decoration: none;
 }
 
-.post-compact-list .post-date {
+.post-compact-list .published {
 	font-size: 75%;
 	float: right;
 }
