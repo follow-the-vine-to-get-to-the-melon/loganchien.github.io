@@ -165,13 +165,13 @@ hr {
 	padding: 0px 0px;
 }
 
-#post-list li {
+#post-list > li {
 	margin: 0px 0px;
 	padding: 20pt 0px;
 	border-top: 1px dashed #aaaaaa;
 }
 
-#post-list li:first-child {
+#post-list > li:first-child {
 	border: 0px;
 	padding-top: 0px;
 }
