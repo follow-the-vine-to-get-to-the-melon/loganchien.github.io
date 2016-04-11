@@ -382,7 +382,9 @@ table tr:nth-child(2n+1) {
 		padding: 10px;
 	}
 
-	#content h1 { font-size: 20pt; }
+	#content h1 {
+		font-size: 20pt;
+	}
 
 	.visible-lg {
 		display: none;
@@ -475,7 +477,9 @@ table tr:nth-child(2n+1) {
 		padding: 30px;
 	}
 
-	#content h1 { font-size: 24pt !important; }
+	#content h1 {
+		font-size: 24pt !important;
+	}
 
 	.visible-lg {
 		display: inherit !important;
