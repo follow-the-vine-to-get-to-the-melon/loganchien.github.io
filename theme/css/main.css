@@ -239,6 +239,10 @@ hr {
 	font-style: italic;
 }
 
+#logo {
+	border: 0px;
+}
+
 table {
 	border-collapse: collapse;
 	border-width: 2px 0px 2px 0px;
