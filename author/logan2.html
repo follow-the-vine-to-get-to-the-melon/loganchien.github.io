@@ -34,6 +34,21 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/" rel="bookmark" title="Permalink to Check Code Coverage with Clang and LCOV">Check Code Coverage with Clang and LCOV</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-04-28T01:28:00+08:00">Tue 28 April 2015</time>
+			</footer>
+			<div class="entry-content"><p>Code coverage is a metric to show the code being untested.  It can be considered
+as a hint to add more test cases.  When we are writing C/C++, the most notable
+code coverage testing tool is <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>, which is a GCC built-in coverage testing
+tool.  Besides, we can collect ...</p></div>
+                        <p><a class="normal-btn" href="http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/" rel="bookmark" title="Permalink to Trace Source Code with Vim and Ctags">Trace Source Code with Vim and Ctags</a></h1>
 			</header>
 			<footer class="post-info">
@@ -184,25 +199,6 @@ packages are very old and well-tested.  However, this become a problem to me.</p
 when we are running <code>git push</code>.</p>
 <div class="highlight"><pre><span class="nv">$ </span>git config --global ...</pre></div></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/12/20/debian-backports/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/" rel="bookmark" title="Permalink to Count Trailing Zeros">Count Trailing Zeros</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-12-17T23:34:00+08:00">Wed 17 December 2014</time>
-			</footer>
-			<div class="entry-content"><p>How to count the number of trailing zeros of an integer?  The simplest way is
-to use the built-in function <code>__builtin_ctz()</code>:</p>
-<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
-  <span class="k">return</span> <span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
-<span class="p">}</span>
-</pre></div>
-<p>What will happen if we don't have <code>__builtin_ctz()</code>?  If we have another
-built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight ...</a></p></div>
-                        <p><a class="normal-btn" href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">More</a></p>
 		</article>
 	</li>
 </ol>

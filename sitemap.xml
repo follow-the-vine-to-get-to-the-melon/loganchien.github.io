@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2015-11-16</lastmod>
+<lastmod>2015-11-29</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/11/29/run-es2015-with-babel-6/</loc>
+<lastmod>2015-11-29</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2015/11/16/bash-signal-handler-and-traps/</loc>
 <lastmod>2015-11-16</lastmod>
@@ -237,7 +242,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/programming/</loc>
-<lastmod>2015-11-16</lastmod>
+<lastmod>2015-11-29</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -263,6 +268,11 @@
 </url><url>
 <loc>http://logan.tw/tag/autossh/</loc>
 <lastmod>2015-11-15</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/babel/</loc>
+<lastmod>2015-11-29</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -311,6 +321,16 @@
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
+<loc>http://logan.tw/tag/es2015/</loc>
+<lastmod>2015-11-29</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/es6/</loc>
+<lastmod>2015-11-29</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
 <loc>http://logan.tw/tag/gcin/</loc>
 <lastmod>2014-11-23</lastmod>
 <changefreq>weekly</changefreq>
@@ -353,6 +373,11 @@
 </url><url>
 <loc>http://logan.tw/tag/init/</loc>
 <lastmod>2014-12-15</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
+<loc>http://logan.tw/tag/javascript/</loc>
+<lastmod>2015-11-29</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -467,7 +492,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan.html</loc>
-<lastmod>2015-11-16</lastmod>
+<lastmod>2015-11-29</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>

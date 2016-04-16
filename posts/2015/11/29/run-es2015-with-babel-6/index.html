@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Run ES2015 with Babel 6 | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="http://logan.tw/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="http://logan.tw/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="http://logan.tw/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="http://logan.tw/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="http://logan.tw/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="http://logan.tw/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="http://logan.tw/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="http://logan.tw/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="babel" />
+	<meta name="tags" content="es2015" />
+	<meta name="tags" content="es6" />
+	<meta name="tags" content="javascript" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/11/29/run-es2015-with-babel-6/" rel="bookmark" title="Permalink to Run ES2015 with Babel 6">Run ES2015 with Babel 6</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2015-11-29T18:45:00+08:00">
+		Sun 29 November 2015
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="http://logan.tw/tag/babel/">babel</a>
+		<a class="tags" href="http://logan.tw/tag/es2015/">es2015</a>
+		<a class="tags" href="http://logan.tw/tag/es6/">es6</a>
+		<a class="tags" href="http://logan.tw/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="http://logan.tw/author/logan.html">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><a class="reference external" href="http://www.ecma-international.org/ecma-262/6.0/">ECMAScript 2015</a> (also known as ES2015 or informally ES6) is the latest
+standard for JavaScript.  It has been released for a while.  However, <a class="reference external" href="https://developers.google.com/v8/">V8</a>, the
+JavaScript engine for <a class="reference external" href="https://nodejs.org">Node.js</a>, has only limited <a class="reference external" href="http://www.ecma-international.org/ecma-262/6.0/">ES2015</a> support.  As of
+writing, according to <a class="reference external" href="https://kangax.github.io/compat-table/es6/">ECMAScript 6 compatibility table</a>, the feature coverage
+of each Javascript engines are:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="74%" />
+<col width="26%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Browser</th>
+<th class="head">Coverage</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>Edge 13 (ChakraCore)</td>
+<td>84%</td>
+</tr>
+<tr><td>WebKit (JavaScriptCore)</td>
+<td>79%</td>
+</tr>
+<tr><td>Firefox 44 <a class="footnote-reference" href="#id2" id="id1">[1]</a></td>
+<td>74%</td>
+</tr>
+<tr><td>Chrome 49 (V8 Engine)</td>
+<td>69%</td>
+</tr>
+<tr><td>Node 4.0</td>
+<td>53%</td>
+</tr>
+<tr><td>Node 5.0</td>
+<td>59%</td>
+</tr>
+<tr><td><strong>Babel</strong></td>
+<td>71%</td>
+</tr>
+</tbody>
+</table>
+<p>Fortunately, we can translate ES2015 to ES5 (previous version) with <a class="reference external" href="https://babeljs.io/">Babel</a>.
+There are lots of tutorials on the web.  However, after the release of
+Babel 6, most of them are outdated.  In this post, I am going to write down
+3 methods to run ES2015 with Babel.</p>
+<div class="section" id="do-you-need-babel">
+<h2>Do You Need Babel?</h2>
+<p>Some ES2015 features have been implemented in Node.js already:</p>
+<ul class="simple">
+<li>Arrow functions</li>
+<li>Block scoping (<code>let</code> and <code>const</code>)</li>
+<li>Classes</li>
+<li>Collections (<code>Map</code>, <code>WeakMap</code>, <code>Set</code>, and <code>WeakSet</code>)</li>
+<li>Typed arrays</li>
+<li>Generators (<code>function*</code> and <code>yield</code>)</li>
+<li>Binary and octal literals (e.g. <code>0b0100</code> and <code>033</code>)</li>
+<li>Object literal extensions</li>
+<li>Promise</li>
+<li>Template strings</li>
+<li>... etc.</li>
+</ul>
+<p>You can find the full list in <a class="reference external" href="https://nodejs.org/en/docs/es6/">ECMAScript 2015 (ES6) in Node.js</a>.  They are
+working out-of-box and having native support from V8 developers.  If you only
+need these features, you can simply upgrade to latest Node.js.</p>
+<p>If you wish to use other ES2015 features (e.g. <strong>module</strong> system) or you
+can't upgrade to latest Node.js, then you can convert your ES2015 source
+code with <a class="reference external" href="https://babeljs.io/">Babel</a>.</p>
+</div>
+<div class="section" id="supported-features">
+<h2>Supported Features</h2>
+<p>Babel 6 covers following ES2015 features:</p>
+<ul class="simple">
+<li>Arrow functions</li>
+<li>Block scoping (<code>const</code> and <code>let</code>)</li>
+<li>Classes</li>
+<li>Destructuring</li>
+<li><code>for-of</code> statement</li>
+<li>Binary and octal literals</li>
+<li>Modules (compile to CommonJS)</li>
+<li>Template strings</li>
+<li>... etc</li>
+</ul>
+<p>You can check <a class="reference external" href="https://babeljs.io/docs/learn-es2015/">Learn ES2015</a> or <a class="reference external" href="https://babeljs.io/docs/plugins/preset-es2015/">ES2015 Preset</a> for more details.  However,
+you should aware that some features are still missing from Babel 6.</p>
+</div>
+<div class="section" id="how-to-use-babel">
+<h2>How to Use Babel?</h2>
+<p>There are 3 methods to run ES2015 with <a class="reference external" href="https://babeljs.io/">Babel</a>:</p>
+<ol class="arabic simple">
+<li>Convert ES2015 source code to ES5 with <code>babel</code> command, and run the
+output files with <code>node</code> command.</li>
+<li>Run ES2015 source code with <code>babel-node</code>.</li>
+<li>Use <code>babel-register</code> as a <strong>require hook</strong> to invoke Babel transpiler.</li>
+</ol>
+<p>In the next section, we will discuss the first and the second method, which
+utilize the <code>babel-cli</code> package.  After that, we will cover the third
+method at the end of this article.</p>
+</div>
+<div class="section" id="using-babel-command-line-tools">
+<h2>Using Babel Command Line Tools</h2>
+<p>Before we can start, we have to install <code>babel-cli</code> and
+<code>babel-preset-es2015</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>npm install babel-cli babel-preset-es2015
+</pre></div>
+<p><code>babel-cli</code> package contains two important commands:</p>
+<ul class="simple">
+<li><code>babel</code> -- A transpiler which transforms the input source code.  If
+<code>es2015</code> preset is specified, then Babel transpiler will convert
+ES2015 source code into ES5.</li>
+<li><code>babel-node</code> -- An interpreter which will run the transpilation
+on-the-fly.</li>
+</ul>
+<p>And <code>babel-preset-es2015</code> package consists of several Babel
+transformation plug-ins for ES2015.</p>
+<p>For example, given an ES2015 source file <code>main.js</code>:</p>
+<div class="highlight"><pre><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Hello</span><span class="p">,</span> <span class="nx">$</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="err">`</span><span class="p">);</span> <span class="c1">// template literal</span>
+<span class="p">}</span>
+<span class="nx">hello</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">);</span>
+</pre></div>
+<p>We can convert it with <code>babel</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>babel --presets es2015 -o output.js main.js
+</pre></div>
+<p>This is the generated output:</p>
+<div class="highlight"><pre><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">);</span> <span class="c1">// template literal</span>
+<span class="p">}</span>
+<span class="nx">hello</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">);</span>
+</pre></div>
+<p>Great!  The template literal is translated.</p>
+<p>Finally, we can run the output script with <code>node</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>node output.js
+Hello, world!
+</pre></div>
+<p>We can deploy the output files to the production environment which does not have
+Babel.  The output files can be interpreted by oridinary <code>node</code> command
+without problems.</p>
+<div class="section" id="run-es2015-with-babel-node">
+<h3>Run ES2015 with babel-node</h3>
+<p>If you prefer not to create intermediate files, i.e. <code>output.js</code> in our
+example, you can run ES2015 source code with <code>babel-node</code> directly:</p>
+<div class="highlight"><pre><span class="nv">$ </span>babel-node --presets es2015 main.js
+Hello, world!
+</pre></div>
+</div>
+<div class="section" id="babel-configuration-file">
+<h3>Babel Configuration File</h3>
+<p>It seems to be bothersome to pass the <code>--presets</code> argument around.  We
+can create a file named <code>.babelrc</code> with following contents:</p>
+<div class="highlight"><pre><span class="p">{</span>
+  <span class="s1">&#39;presets&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;es2015&#39;</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+<p>Now, we can omit the <code>--presets</code> option and simply use:</p>
+<div class="highlight"><pre><span class="nv">$ </span>babel -o output.js main.js
+</pre></div>
+<div class="highlight"><pre><span class="nv">$ </span>babel-node main.js
+Hello, world!
+</pre></div>
+</div>
+</div>
+<div class="section" id="babel-require-hook">
+<h2>Babel Require Hook</h2>
+<p>The third method is to hook Babel transpiler with the require hook from
+<code>babel-register</code> package.  We don't need <code>babel-cli</code> package when
+we are using <code>babel-register</code>.  The <strong>require hook</strong> will utilize Babel
+API directly.  Here are the instructions to setup the require hook.</p>
+<p>First, install <code>babel-register</code> and <code>babel-preset-es2015</code>:</p>
+<div class="highlight"><pre><span class="nv">$ </span>npm install babel-register babel-preset-es2015
+</pre></div>
+<p>Second, create an invoke stub to setup <code>babel-register</code> and import our
+module.  Let's call it <code>run.js</code> in our example:</p>
+<div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;babel-register&#39;</span><span class="p">)({</span>
+  <span class="nx">presets</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;es2015&#39;</span><span class="p">]</span>
+<span class="p">});</span>
+<span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./main&#39;</span><span class="p">);</span>
+</pre></div>
+<p>Now, we can run our program with:</p>
+<div class="highlight"><pre><span class="nv">$ </span>node run.js
+Hello, world!
+</pre></div>
+<p>Yeah!  It works.  However, please be aware that the invoke stub itself is not
+transpiled, thus we have to write the invoke stub in ES5.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>ES2015 is the latest Javascript standard and Babel is a transpiler which can
+convert ES2015 to the widely supported ES5.  In this post, we have covered
+three different methods to run ES2015.  Hope you enjoy this article and happy
+hacking with ES2015.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/New_in_JavaScript/ECMAScript_6_support_in_Mozilla">ECMAScript 6 support in Mozilla</a></td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="http://logan.tw/"><img src="http://logan.tw/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="http://logan.tw/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="http://logan.tw/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="http://logan.tw/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="http://logan.tw/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="http://logan.tw/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="http://logan.tw/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="http://logan.tw/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
