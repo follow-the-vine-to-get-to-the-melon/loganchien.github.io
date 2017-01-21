@@ -5,7 +5,7 @@ body {
 }
 
 p, td, th, thead, tfoot, caption, li, h1, h2, h3, h4, h5, h6, caption {
-	line-height: 160%;
+	line-height: 1.6;
 }
 
 h1, h2, h3, h4, h5 {
@@ -42,7 +42,7 @@ pre {
 	padding: 5px 10px;
 	font-size: 12pt;
 	overflow: auto;
-	line-height: 140%;
+	line-height: 1.4;
 }
 
 a:link {
@@ -243,6 +243,86 @@ hr {
 	border: 0px;
 }
 
+p.admonition-title {
+	font-weight: bold;
+}
+
+div.attention,
+div.caution,
+div.danger,
+div.error,
+div.hint,
+div.important,
+div.note,
+div.warning,
+div.admonition {
+	border-radius: 3px;
+	border: 1px solid #cccccc;
+	margin: 10px 0px;
+	padding: 10px;
+}
+
+div.attention,
+div.caution,
+div.danger,
+div.error {
+	border-left: 3px solid #dd3322;
+	background-color: #fff1ef;
+}
+
+div.hint,
+div.important,
+div.note {
+	border-left: 3px solid #336699;
+	background-color: #e6f4fb;
+}
+
+div.warning {
+	border-left: 3px solid #ff9933;
+	background-color: #fefad6;
+}
+
+div.admonition {
+	border-left: 3px solid #888888;
+	background-color: #eeeeee;
+}
+
+div.attention p,
+div.caution p,
+div.danger p,
+div.error p,
+div.hint p,
+div.important p,
+div.note p,
+div.warning p,
+div.admonition p {
+	margin: 5px 0px 0px 0px;
+}
+
+div.attention p:first-child,
+div.caution p:first-child,
+div.danger p:first-child,
+div.error p:first-child {
+	color: #cc0000;
+	margin: 0px 0px 10px 0px;
+}
+
+div.hint p:first-child,
+div.important p:first-child,
+div.note p:first-child {
+	color: #204a87;
+	margin: 0px 0px 10px 0px;
+}
+
+div.warning p:first-child {
+	color: #ff6600;
+	margin: 0px 0px 10px 0px;
+}
+
+div.admonition p:first-child {
+	margin: 0px 0px 10px 0px;
+}
+
 table {
 	border-collapse: collapse;
 	border-width: 2px 0px 2px 0px;
@@ -311,9 +391,72 @@ table tr:nth-child(2n+1) {
 	max-width: 100%;
 }
 
+#container {
+	margin-top: 100px;
+}
+
+#nav {
+	position: absolute;
+	top: 5px;
+	left: 100px;
+}
+
+#nav h1 {
+	padding: 30px 0px 10px 0px;
+}
+
+#logo {
+	position: absolute;
+	top: 10px;
+	left: -90px;
+	width: 80px;
+	height: 80px;
+}
+
+#social-icon {
+	display: none;
+}
+
+#menu li {
+	display: inline;
+	line-height: 100%;
+	margin-left: 6px;
+}
+
+#menu li:first-child {
+	margin-left: 0px;
+}
+
+#menu a:link {
+	color: #000000;
+	text-decoration: none;
+}
+
+#menu a:visited {
+	color: #000000;
+	text-decoration: none;
+}
+
+#menu a:hover {
+	color: #ef2929;
+	text-decoration: underline;
+}
+
+#content {
+	padding: 10px;
+}
+
+#content h1 {
+	font-size: 20pt;
+}
+
+.visible-lg {
+	display: none;
+}
+
 @media only screen and (max-width: 300px) {
 	#nav {
-		left: 15px !important;
+		left: 15px;
 	}
 
 	#logo {
@@ -326,107 +469,42 @@ table tr:nth-child(2n+1) {
 	}
 }
 
-@media only screen and (max-width: 800px) {
-	#container {
-		margin-top: 100px;
-	}
-
-	#nav {
-		position: absolute;
-		top: 5px;
-		left: 100px;
-	}
-
-	#nav h1 {
-		padding: 30px 0px 10px 0px;
-	}
-
-	#logo {
-		position: absolute;
-		top: 10px;
-		left: -90px;
-		width: 80px;
-		height: 80px;
-	}
-
-	#social-icon {
-		display: none;
-	}
-
-	#menu li {
-		display: inline;
-		line-height: 100%;
-		margin-left: 6px;
-	}
-
-	#menu li:first-child {
-		margin-left: 0px;
-	}
-
-	#menu a:link {
-		color: #000000;
-		text-decoration: none;
-	}
-
-	#menu a:visited {
-		color: #000000;
-		text-decoration: none;
-	}
-
-	#menu a:hover {
-		color: #ef2929;
-		text-decoration: underline;
-	}
-
-	#content {
-		padding: 10px;
-	}
-
-	#content h1 {
-		font-size: 20pt;
-	}
-
-	.visible-lg {
-		display: none;
-	}
-}
-
 @media only screen and (min-width: 800px) {
 	#container {
-		margin: 0px 0px 0px 200px !important;
+		margin: 0px 0px 0px 200px;
 		max-width: 800px;
 	}
 
 	#nav {
-		position: fixed !important;
-		top: 50px !important;
-		left: 0px !important;
-		width: 200px !important;
-		height: auto !important;
+		position: fixed;
+		top: 50px;
+		left: 0px;
+		width: 200px;
+		height: auto;
 		text-align: center;
 	}
 
 	#nav h1 {
-		padding: 10px 0px !important;
+		padding: 10px 0px;
 	}
 
 	#logo {
-		position: relative !important;
-		top: 0px !important;
-		left: 0px !important;
-		width: 120px !important;
-		height: 120px !important;
+		position: relative;
+		top: 0px;
+		left: 0px;
+		width: 120px;
+		height: 120px;
 	}
 
 	#social-icon {
-		display: block !important;
-		margin-bottom: 2em !important;
+		display: block;
+		margin-bottom: 2em;
 	}
 
 	#menu li {
-		display: block !important;
-		line-height: 160%;
-		margin: 0px auto !important;
+		display: block;
+		line-height: 1.6;
+		margin: 0px auto;
 	}
 
 	#menu a:link {
@@ -460,7 +538,7 @@ table tr:nth-child(2n+1) {
 		margin: 0px;
 		padding: 0px 0px 0px 3px;
 		display: inline;
-		line-height: 100%;
+		line-height: 1.0;
 		vertical-align: middle;
 		font-size: 14pt;
 	}
@@ -478,11 +556,11 @@ table tr:nth-child(2n+1) {
 	}
 
 	#content h1 {
-		font-size: 24pt !important;
+		font-size: 24pt;
 	}
 
 	.visible-lg {
-		display: inherit !important;
+		display: inherit;
 	}
 }
 
