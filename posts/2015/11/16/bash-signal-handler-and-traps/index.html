@@ -72,7 +72,7 @@ built-in.</p>
 <div class="section" id="motivating-example">
 <h2>Motivating Example</h2>
 <p>The syntax for <code>trap</code> built-in is:</p>
-<div class="highlight"><pre><span class="nb">trap</span> <span class="o">[</span>action<span class="o">]</span> <span class="o">[</span>condition<span class="o">]</span>
+<div class="highlight"><pre><span></span><span class="nb">trap</span> <span class="o">[</span>action<span class="o">]</span> <span class="o">[</span>condition<span class="o">]</span>
 </pre></div>
 <p>The <strong>action</strong> will be executed (via <code>eval</code>) when the specified
 <em>condition</em> occurred.</p>
@@ -85,33 +85,33 @@ built-in.</p>
 <li>Other signal names defined in <code>&lt;signal.h&gt;</code>.</li>
 </ul>
 <p>For example, <code>int.sh</code> contains following code:</p>
-<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="nb">trap</span> <span class="s2">&quot;echo \&quot;User abort\&quot;; exit 1&quot;</span> INT
 sleep 10
 </pre></div>
 <p>Run the script and press <code>Ctrl-C</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>chmod +x int.sh
-<span class="nv">$ </span>./int.sh
-<span class="c"># ... press ctrl-c ...</span>
+<div class="highlight"><pre><span></span>$ chmod +x int.sh
+$ ./int.sh
+<span class="c1"># ... press ctrl-c ...</span>
 ^CUser abort
 </pre></div>
 <p>Compare with another case: run the script and wait for 10 seconds:</p>
-<div class="highlight"><pre><span class="nv">$ </span>./int.sh
-<span class="c"># ... wait for 10 seconds (no output) ...</span>
+<div class="highlight"><pre><span></span>$ ./int.sh
+<span class="c1"># ... wait for 10 seconds (no output) ...</span>
 </pre></div>
 <p>Let's look at another example.  The following is the code listing of
 <code>defer.sh</code>:</p>
-<div class="highlight"><pre><span class="c">#!/bin/bash</span>
-<span class="nb">trap</span> <span class="s2">&quot;echo \&quot;EXIT\&quot;&quot;</span> EXIT    <span class="c"># &lt;-- Changed to EXIT</span>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">trap</span> <span class="s2">&quot;echo \&quot;EXIT\&quot;&quot;</span> EXIT    <span class="c1"># &lt;-- Changed to EXIT</span>
 sleep 10
 </pre></div>
 <p>We can notice that <code>echo &quot;EXIT&quot;</code> will always be executed:</p>
-<div class="highlight"><pre><span class="nv">$ </span>./defer.sh
-<span class="c"># ... press ctrl-c ...</span>
+<div class="highlight"><pre><span></span>$ ./defer.sh
+<span class="c1"># ... press ctrl-c ...</span>
 ^CEXIT
 
-<span class="nv">$ </span>./defer.sh
-<span class="c"># ... wait for 10 seconds ...</span>
+$ ./defer.sh
+<span class="c1"># ... wait for 10 seconds ...</span>
 EXIT
 </pre></div>
 <p>To wrap up:</p>
@@ -125,33 +125,33 @@ EXIT
 <h2>SSH Agent</h2>
 <p>OK.  Now, let's work on a real world example: start and stop a SSH agent.
 To start a SSH agent and export the environment variables, we have to run:</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
 Agent pid 10176
 </pre></div>
 <p>On the other hand, to stop a SSH agent:</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
+<div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
 Agent pid <span class="m">10176</span> killed
 </pre></div>
 <p>We can combine them together in the shell script:</p>
-<div class="highlight"><pre><span class="c">#!/bin/bash</span>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 
 kill_ssh_agent <span class="o">()</span> <span class="o">{</span>
   <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
 <span class="o">}</span>
 
-<span class="c"># Register a trap to stop the ssh agent.</span>
-<span class="nb">trap </span>kill_ssh_agent EXIT
+<span class="c1"># Register a trap to stop the ssh agent.</span>
+<span class="nb">trap</span> kill_ssh_agent EXIT
 
-<span class="c"># Start the ssh agent.</span>
+<span class="c1"># Start the ssh agent.</span>
 <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
 
-<span class="c"># Load private key to ssh agent.</span>
+<span class="c1"># Load private key to ssh agent.</span>
 ssh-add ~/.ssh/id_rsa
 
-<span class="c"># ... other commands to run ...</span>
+<span class="c1"># ... other commands to run ...</span>
 </pre></div>
 <p>Try to run the script:</p>
-<div class="highlight"><pre><span class="nv">$ </span>./run.sh
+<div class="highlight"><pre><span></span>$ ./run.sh
 Agent pid 10248
 Enter passphrase <span class="k">for</span> /home/username/.ssh/id_rsa:
 Identity added: /home/username/.ssh/id_rsa <span class="o">(</span>/home/username/.ssh/id_rsa<span class="o">)</span>

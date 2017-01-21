@@ -55,29 +55,29 @@
 <p>In the past, I didn't like to install the <a class="reference external" href="http://www.vim.org/">Vim</a> plug-ins or new syntax
 highlight because all of the files were messed up in the <code>.vim</code> directory
 which makes it difficult to uninstall a plug-in.</p>
-<p>Recently, I have come across with <a class="reference external" href="https://github.com/gmarik/Vundle.vim">Vim Vundle</a>.  It is a vim plug-in manager
+<p>Recently, I have come across with <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vim Vundle</a>.  It is a vim plug-in manager
 which allows you to install or uninstall a plug-in by editing lines in
 <code>.vimrc</code>.  In the next section, I would like to explain how to install
-<a class="reference external" href="https://github.com/gmarik/Vundle.vim">Vim Vundle</a>.</p>
+<a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vim Vundle</a>.</p>
 <div class="section" id="installation">
 <h2>Installation</h2>
 <p>First, to reduce the possible problems, it is suggested to remove or backup
 your existing <code>.vim</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>mv ~/.vim ~/vim-backup
+<div class="highlight"><pre><span></span>$ mv ~/.vim ~/vim-backup
 </pre></div>
-<p>Second, clone the <a class="reference external" href="https://github.com/gmarik/Vundle.vim">Vim Vundle</a>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/gmarik/Vundle.vim.git <span class="se">\</span>
+<p>Second, clone the <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vim Vundle</a>:</p>
+<div class="highlight"><pre><span></span>$ git clone https://github.com/VundleVim/Vundle.vim.git <span class="se">\</span>
             ~/.vim/bundle/Vundle.vim
 </pre></div>
 <p>Third, add following lines to your <code>.vimrc</code></p>
-<div class="highlight"><pre><span class="k">if</span> version <span class="p">&gt;=</span> <span class="m">600</span>
+<div class="highlight"><pre><span></span><span class="k">if</span> version <span class="p">&gt;=</span> <span class="m">600</span>
   <span class="k">set</span> <span class="nb">nocompatible</span>
   <span class="k">filetype</span> off
 
   <span class="k">set</span> <span class="nb">rtp</span><span class="p">+=~</span><span class="sr">/.vim/</span>bundle/Vundle.<span class="k">vim</span>
   <span class="k">call</span> vundle#begin<span class="p">()</span>
 
-  Plugin <span class="s1">&#39;gmarik/Vundle.vim&#39;</span>
+  Plugin <span class="s1">&#39;VundleVim/Vundle.vim&#39;</span>
 
 <span class="c">  &quot; ... Add More Plug-ins Here ...</span>
 
@@ -87,7 +87,7 @@ your existing <code>.vim</code>:</p>
 </pre></div>
 <p>Fourth, after editing <code>.vimrc</code>, run following command to download
 plug-ins:</p>
-<div class="highlight"><pre><span class="nv">$ </span>vim +PluginInstall +qall
+<div class="highlight"><pre><span></span>$ vim +PluginInstall +qall
 </pre></div>
 <p>The Vim will pop up and show the progress.  You have to run this command again
 whenever you are adding (or removing) the <code>Plugin</code> directives to your
@@ -100,10 +100,10 @@ will fold our <a class="reference external" href="http://docutils.sourceforge.ne
 like these behavior at all.  After some try and error, I realized that the
 problem is related to the <code>filetype</code> command in the <code>.vimrc</code>.</p>
 <p>You can fix the problem by changing the <code>filetype</code> command to:</p>
-<div class="highlight"><pre><span class="k">filetype</span> <span class="k">on</span>
+<div class="highlight"><pre><span></span><span class="k">filetype</span> <span class="k">on</span>
 </pre></div>
 <p>Or alternatively, add following lines to your <code>.vimrc</code>:</p>
-<div class="highlight"><pre><span class="c">&quot; Disable auto folding</span>
+<div class="highlight"><pre><span></span><span class="c">&quot; Disable auto folding</span>
 <span class="k">au</span> <span class="nb">FileType</span> mkd <span class="k">setlocal</span> <span class="nb">nofoldenable</span> <span class="nb">foldmethod</span><span class="p">=</span>manual
 <span class="k">au</span> <span class="nb">FileType</span> rst <span class="k">setlocal</span> <span class="nb">nofoldenable</span> <span class="nb">foldmethod</span><span class="p">=</span>manual
 </pre></div>
@@ -114,7 +114,7 @@ problem is related to the <code>filetype</code> command in the <code>.vimrc</cod
 the plug-in names from <a class="reference external" href="http://vim-scripts.org/vim/scripts.html">Vim Scripts</a>, GitHub repository names, or complete
 Git repository urls.</p>
 <p>Here's the list of plug-ins which I have installed at the moment:</p>
-<div class="highlight"><pre><span class="c">&quot; LLVM assembly and tablegen syntax highlight</span>
+<div class="highlight"><pre><span></span><span class="c">&quot; LLVM assembly and tablegen syntax highlight</span>
 Plugin <span class="s1">&#39;andrewmacp/llvm.vim&#39;</span>
 
 <span class="c">&quot; Rust programming language syntax highlight</span>
@@ -131,8 +131,14 @@ Plugin <span class="s1">&#39;Rykka/riv.vim&#39;</span>
 Plugin <span class="s1">&#39;godlygeek/tabular&#39;</span>
 Plugin <span class="s1">&#39;plasticboy/vim-markdown&#39;</span>
 </pre></div>
-<p>Hope you enjoy this article, check out the <a class="reference external" href="https://github.com/gmarik/Vundle.vim">Vim Vundle</a> official website
-for more details: <a class="reference external" href="https://github.com/gmarik/Vundle.vim">https://github.com/gmarik/Vundle.vim</a>.</p>
+<p>Hope you enjoy this article, check out the <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vim Vundle</a> official website
+for more details: <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">https://github.com/VundleVim/Vundle.vim</a>.</p>
+</div>
+<div class="section" id="change-logs">
+<h2>Change Logs</h2>
+<ul class="simple">
+<li>2016-03-27: Update Vundle URL to <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">https://github.com/VundleVim/Vundle.vim</a></li>
+</ul>
 </div>
 
 </div>

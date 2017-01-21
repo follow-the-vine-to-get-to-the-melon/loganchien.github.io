@@ -66,10 +66,10 @@ fork between each pair of neighboring philosophers.  Only if a philosopher
 grabs both forks at his left and right, can he start eating.  Can we
 guarantee that all of the philosophers can finish their dishes eventually?</blockquote>
 <p>This is the first attempt to solve the problem:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;chrono&gt;</span>
-<span class="cp">#include &lt;mutex&gt;</span>
-<span class="cp">#include &lt;thread&gt;</span>
-<span class="cp">#include &lt;vector&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;thread&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
 <span class="k">constexpr</span> <span class="kt">unsigned</span> <span class="n">NUM_PHILOSOPHERS</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
 
@@ -104,26 +104,26 @@ guarantee that all of the philosophers can finish their dishes eventually?</bloc
 guarantees that the dining philosopher has grabbed two forks.  Besides, the
 forks will be returned to the table after the philosopher finishes his dish.</p>
 <p>Let's compile this code snippet:</p>
-<div class="highlight"><pre><span class="nv">$ </span>g++ -std<span class="o">=</span>c++11 -pthread philosopher.cpp
+<div class="highlight"><pre><span></span>$ g++ -std<span class="o">=</span>c++11 -pthread philosopher.cpp
 </pre></div>
 <p>And then, with high probability, the program will hang forever:</p>
-<div class="highlight"><pre><span class="nv">$ </span>./a.out
+<div class="highlight"><pre><span></span>$ ./a.out
 ^C
 </pre></div>
 <p>Let's debug it with <a class="reference external" href="http://www.gnu.org/software/gdb">gdb</a>.  First, we have to re-compile the program with
 <code>-g</code> option.  Second, we have to load the program with <a class="reference external" href="http://www.gnu.org/software/gdb">gdb</a>:</p>
-<div class="highlight"><pre><span class="c"># Recompile the program with debug option.</span>
-<span class="nv">$ </span>g++ -std<span class="o">=</span>c++11 -pthread -g philosopher.cpp
+<div class="highlight"><pre><span></span><span class="c1"># Recompile the program with debug option.</span>
+$ g++ -std<span class="o">=</span>c++11 -pthread -g philosopher.cpp
 
-<span class="c"># Launch the debugger.</span>
-<span class="nv">$ </span>gdb --args ./a.out
+<span class="c1"># Launch the debugger.</span>
+$ gdb --args ./a.out
 GNU gdb <span class="o">(</span>Ubuntu 7.7.1-0ubuntu5~14.04.2<span class="o">)</span> 7.7.1
 ... skipped ...
 Reading symbols from ./a.out...done.
 <span class="o">(</span>gdb<span class="o">)</span>
 </pre></div>
 <p>Let's start our program with <code>run</code>:</p>
-<div class="highlight"><pre>(gdb) run
+<div class="highlight"><pre><span></span>(gdb) run
 Starting program: /home/logan/a.out
 ... skipped ...
 [Thread debugging using libthread_db enabled]
@@ -134,7 +134,7 @@ Using host libthread_db library &quot;/lib/x86_64-linux-gnu/libthread_db.so.1&qu
 </pre></div>
 <p>Apparently, the program get stuck again.  Let's interrupt the program with
 <code>Ctrl-C</code>:</p>
-<div class="highlight"><pre>^C
+<div class="highlight"><pre><span></span>^C
 Program received signal SIGINT, Interrupt.
 0x00007ffff76ab66b in pthread_join (threadid=140737337190144,
     thread_return=0x0) at pthread_join.c:92
@@ -143,18 +143,18 @@ Program received signal SIGINT, Interrupt.
 </pre></div>
 <p>We get back to the <a class="reference external" href="http://www.gnu.org/software/gdb">gdb</a> command line again.  Let's see the backtrace of
 current thread:</p>
-<div class="highlight"><pre>(gdb) bt
+<div class="highlight"><pre><span></span>(gdb) bt
 #0  0x00007ffff76ab66b in pthread_join (threadid=140737337190144,
     thread_return=0x0) at pthread_join.c:92
 #1  0x00007ffff7b87837 in std::thread::join() ()
    from /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 #2  0x00000000004010c4 in main () at philosopher.cpp:31
 </pre></div>
-<div class="highlight"><pre>(gdb) up 2
+<div class="highlight"><pre><span></span>(gdb) up 2
 #2  0x00000000004010c4 in main () at philosopher.cpp:31
 31      philosophers[i].join();
 </pre></div>
-<div class="highlight"><pre>(gdb) l
+<div class="highlight"><pre><span></span>(gdb) l
 26    for (unsigned i = 0; i &lt; NUM_PHILOSOPHERS; ++i) {
 27      philosophers[i] = std::thread(eat, i);
 28    }
@@ -164,7 +164,7 @@ $1 = 0
 <p>It seems that the main thread is waiting for the philosophers to finish their
 dishes, which is the expected behavior.  Let's have a look on the other
 threads:</p>
-<div class="highlight"><pre>(gdb) info threads
+<div class="highlight"><pre><span></span>(gdb) info threads
   Id   Target Id         Frame
   4    Thread 0x7ffff5fd4700 (LWP 17408) &quot;a.out&quot; __lll_lock_wait ()
     at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
@@ -184,14 +184,14 @@ they are trying to grab a fork which was grabbed by the other.  It seems to be
 a <a class="reference external" href="https://en.wikipedia.org/wiki/Deadlock">deadlock</a>.</p>
 <p>Let's have a look on the <em>philosopher</em> threads.  We can switch to those threads
 with <code>thread [Id]</code> command.</p>
-<div class="highlight"><pre>(gdb) thread 2
+<div class="highlight"><pre><span></span>(gdb) thread 2
 [Switching to thread 2 (Thread 0x7ffff6fd6700 (LWP 17406))]
 #0  __lll_lock_wait ()
     at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
 </pre></div>
 <p>After switching the threads, we can check their backtrace with <code>bt</code> and
 dump their registers with <code>info registers</code>.</p>
-<div class="highlight"><pre>(gdb) bt
+<div class="highlight"><pre><span></span>(gdb) bt
 #0  __lll_lock_wait ()
     at ../nptl/sysdeps/unix/sysv/linux/x86_64/lowlevellock.S:135
 ... skipped ...
@@ -204,11 +204,11 @@ dump their registers with <code>info registers</code>.</p>
 </pre></div>
 <p>It seems that there are deadlocks in our <code>eat()</code> function.
 Let's have a closer look:</p>
-<div class="highlight"><pre>(gdb) up 6
+<div class="highlight"><pre><span></span>(gdb) up 6
 #6  0x0000000000400f87 in eat (idx=0) at philosopher.cpp:17
 17    std::lock_guard&lt;std::mutex&gt; second_fork(forks[second]);
 </pre></div>
-<div class="highlight"><pre>(gdb) l
+<div class="highlight"><pre><span></span>(gdb) l
 12    unsigned second = (idx + 1) % NUM_PHILOSOPHERS;
 13
 14    // Grab the forks.
@@ -226,11 +226,11 @@ grab the second fork.</p>
 grabbed their <em>first</em> fork but they couldn't grab their <em>second</em> fork.  It is a
 classical <a class="reference external" href="https://en.wikipedia.org/wiki/Deadlock">deadlock</a> caused by <strong>circular waiting</strong>.</p>
 <p>We can break the tie by changing following lines:</p>
-<div class="highlight"><pre><span class="kt">unsigned</span> <span class="n">first</span> <span class="o">=</span> <span class="n">idx</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="n">first</span> <span class="o">=</span> <span class="n">idx</span><span class="p">;</span>
 <span class="kt">unsigned</span> <span class="n">second</span> <span class="o">=</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">NUM_PHILOSOPHERS</span><span class="p">;</span>
 </pre></div>
 <p>to:</p>
-<div class="highlight"><pre><span class="kt">unsigned</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="kt">unsigned</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">;</span>
 <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">==</span> <span class="n">NUM_PHILOSOPHERS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">first</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
   <span class="n">second</span> <span class="o">=</span> <span class="n">idx</span><span class="p">;</span>
@@ -242,7 +242,7 @@ classical <a class="reference external" href="https://en.wikipedia.org/wiki/Dead
 <p>In the other words, the last philosopher will grab the fork in a different
 order.  There will be no circular waiting after implementing this strategy.
 The program can run without problems now!</p>
-<div class="highlight"><pre><span class="nv">$ </span>./a.out
+<div class="highlight"><pre><span></span>$ ./a.out
 Philosopher <span class="m">1</span> is eating.
 Philosopher <span class="m">0</span> is eating.
 Philosopher <span class="m">2</span> is eating.

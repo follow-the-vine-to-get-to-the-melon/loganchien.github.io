@@ -72,25 +72,25 @@ the reason why I am writing this post.</p>
 <h2>Build and Install Clang</h2>
 <p>To support code coverage instrumentation, we have to build LLVM and clang with
 <a class="reference external" href="http://compiler-rt.llvm.org/">compiler-rt</a> <a class="reference internal" href="#clang-rt-profile">[1]</a>.  Here are the instructions to build a nightly build:</p>
-<div class="highlight"><pre><span class="c"># Checkout llvm</span>
-<span class="nv">$ </span>git clone http://llvm.org/git/llvm.git
+<div class="highlight"><pre><span></span><span class="c1"># Checkout llvm</span>
+$ git clone http://llvm.org/git/llvm.git
 
-<span class="c"># Checkout compiler-rt</span>
-<span class="nv">$ </span><span class="nb">cd </span>llvm/projects
-<span class="nv">$ </span>git clone http://llvm.org/git/compiler-rt.git
+<span class="c1"># Checkout compiler-rt</span>
+$ <span class="nb">cd</span> llvm/projects
+$ git clone http://llvm.org/git/compiler-rt.git
 
-<span class="c"># Checkout clang</span>
-<span class="nv">$ </span><span class="nb">cd</span> ../tools
-<span class="nv">$ </span>git clone http://llvm.org/git/clang.git
+<span class="c1"># Checkout clang</span>
+$ <span class="nb">cd</span> ../tools
+$ git clone http://llvm.org/git/clang.git
 
-<span class="c"># Build and install llvm and clang</span>
-<span class="nv">$ </span><span class="nb">cd</span> ../..
-<span class="nv">$ </span>mkdir llvm-build
-<span class="nv">$ </span><span class="nb">cd </span>llvm-build
-<span class="nv">$ </span>../llvm/configure --prefix<span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span> ..<span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span><span class="s2">/llvm-install&quot;</span> <span class="se">\</span>
+<span class="c1"># Build and install llvm and clang</span>
+$ <span class="nb">cd</span> ../..
+$ mkdir llvm-build
+$ <span class="nb">cd</span> llvm-build
+$ ../llvm/configure --prefix<span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">cd</span> ..<span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span><span class="s2">/llvm-install&quot;</span> <span class="se">\</span>
                     --enable-optimized
-<span class="nv">$ </span>make -j8
-<span class="nv">$ </span>make install
+$ make -j8
+$ make install
 </pre></div>
 </div>
 <div class="section" id="create-a-wrapper-script-for-lcov">
@@ -98,20 +98,20 @@ the reason why I am writing this post.</p>
 <p>LLVM has a fast development speed, thus the <code>llvm-cov</code> command line
 options have been changed, and <a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php">lcov</a> can no longer recognize it.  Thus, we
 have to create a script <code>llvm-gcov.sh</code> to workaround the problem:</p>
-<div class="highlight"><pre><span class="c">#!/bin/bash</span>
-<span class="nb">exec </span>llvm-cov gcov <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
+<div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+<span class="nb">exec</span> llvm-cov gcov <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span>
 </pre></div>
-<div class="highlight"><pre><span class="nv">$ </span>chmod +x llvm-gcov.sh
+<div class="highlight"><pre><span></span>$ chmod +x llvm-gcov.sh
 </pre></div>
 </div>
 <div class="section" id="build-your-application">
 <h2>Build Your Application</h2>
 <p>To track the code coverage, clang has to instrument your application.  You have
 to compile your application with two extra options:</p>
-<div class="highlight"><pre>-fprofile-arcs -ftest-coverage
+<div class="highlight"><pre><span></span>-fprofile-arcs -ftest-coverage
 </pre></div>
 <p>For example, given the <code>test.c</code>:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;stdio.h&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
 <span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">printf</span><span class="p">(</span><span class="s">&quot;GOT: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
@@ -120,7 +120,7 @@ to compile your application with two extra options:</p>
 <span class="p">}</span>
 </pre></div>
 <p>We should compile the file with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>clang -fprofile-arcs -ftest-coverage test.c
+<div class="highlight"><pre><span></span>$ clang -fprofile-arcs -ftest-coverage test.c
 </pre></div>
 <p>You will notice that there is an extra file <code>test.gcno</code> being generated.
 It is some data structure for run-time supporting library.</p>
@@ -128,26 +128,26 @@ It is some data structure for run-time supporting library.</p>
 the source code with <code>-c</code> option, then you have to add <code>--coverage</code>
 to the LDFLAGS so that the program can linked with the run-time library
 properly <a class="reference internal" href="#llvm-gcov-writeout">[2]</a>.  For example,</p>
-<div class="highlight"><pre><span class="c"># Compile the object file test.c</span>
-<span class="nv">$ </span>clang -fprofile-arcs -ftest-coverage -c test.c
+<div class="highlight"><pre><span></span><span class="c1"># Compile the object file test.c</span>
+$ clang -fprofile-arcs -ftest-coverage -c test.c
 
-<span class="c"># Link the program</span>
-<span class="nv">$ </span>clang --coverage test.o -o a.out
+<span class="c1"># Link the program</span>
+$ clang --coverage test.o -o a.out
 </pre></div>
 </div>
 <div class="section" id="run-your-application">
 <h2>Run Your Application</h2>
 <p>Now, we can run the application (or the test cases.)  If everything goes well,
 then several <code>*.gcda</code> will be generated.</p>
-<div class="highlight"><pre><span class="c"># Run the program or the test cases.</span>
-<span class="nv">$ </span>./a.out
+<div class="highlight"><pre><span></span><span class="c1"># Run the program or the test cases.</span>
+$ ./a.out
 
-<span class="c"># List the *.gcda files</span>
-<span class="nv">$ </span>ls *.gcda
+<span class="c1"># List the *.gcda files</span>
+$ ls *.gcda
 test.gcda
 
-<span class="c"># Read the *.gcda with llvm-cov</span>
-<span class="nv">$ </span>llvm-cov gcov -f -b test.gcda
+<span class="c1"># Read the *.gcda with llvm-cov</span>
+$ llvm-cov gcov -f -b test.gcda
 Function <span class="s1">&#39;main&#39;</span>
 Lines executed:50.00% of 4
 Branches executed:100.00% of 2
@@ -168,14 +168,14 @@ test.c:creating <span class="s1">&#39;test.c.gcov&#39;</span>
 notice that LLVM is generating GCOV files with old version (approximately equal
 to gcc 4.2), thus it is likely to be incompatible with the <code>gcov</code> command.
 As a result, we have to specify <code>--gcov-tool</code> while running <a class="reference external" href="http://ltp.sourceforge.net/coverage/lcov.php">lcov</a>:</p>
-<div class="highlight"><pre><span class="c"># Collect the code coverage results</span>
-<span class="nv">$ </span>lcov --directory . <span class="se">\</span>
+<div class="highlight"><pre><span></span><span class="c1"># Collect the code coverage results</span>
+$ lcov --directory . <span class="se">\</span>
        --base-directory . <span class="se">\</span>
        --gcov-tool llvm-gcov.sh <span class="se">\</span>
        --capture -o cov.info
 
-<span class="c"># Generate HTML files.</span>
-<span class="nv">$ </span>genhtml cov.info -o output
+<span class="c1"># Generate HTML files.</span>
+$ genhtml cov.info -o output
 </pre></div>
 <p>p.s. Notice that we should specify our wrapper script <code>llvm-gcov.sh</code>
 <a class="reference internal" href="#create-a-wrapper-script-for-lcov">created earlier</a> instead of <code>llvm-cov</code>.</p>
@@ -193,14 +193,14 @@ Feel free to let me know if you have any questions.</p>
 <span id="clang-rt-profile"></span><h3>Can't Find libclang_rt.profile-x86_64.a</h3>
 <p>If you see following link error message, it means that you haven't built clang
 with compiler-rt:</p>
-<div class="highlight"><pre>/usr/bin/ld: cannot find libclang_rt.profile-x86_64.a: No such file or directory
+<div class="highlight"><pre><span></span>/usr/bin/ld: cannot find libclang_rt.profile-x86_64.a: No such file or directory
 clang-3.7: error: linker command failed with exit code 1
 </pre></div>
 </div>
 <div class="section" id="link-error-while-building-application">
 <span id="llvm-gcov-writeout"></span><h3>Link Error While Building Application</h3>
 <p>Without the <code>--coverage</code> option, you might see:</p>
-<div class="highlight"><pre>test.o: In function `__llvm_gcov_writeout&#39;:
+<div class="highlight"><pre><span></span>test.o: In function `__llvm_gcov_writeout&#39;:
 test.c:(.text+0xf2): undefined reference to `llvm_gcda_start_file&#39;
 test.c:(.text+0x118): undefined reference to `llvm_gcda_emit_function&#39;
 test.c:(.text+0x12c): undefined reference to `llvm_gcda_emit_arcs&#39;

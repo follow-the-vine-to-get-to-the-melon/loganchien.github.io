@@ -158,7 +158,7 @@ method at the end of this article.</p>
 <h2>Using Babel Command Line Tools</h2>
 <p>Before we can start, we have to install <code>babel-cli</code> and
 <code>babel-preset-es2015</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>npm install babel-cli babel-preset-es2015
+<div class="highlight"><pre><span></span>$ npm install babel-cli babel-preset-es2015
 </pre></div>
 <p><code>babel-cli</code> package contains two important commands:</p>
 <ul class="simple">
@@ -171,16 +171,16 @@ on-the-fly.</li>
 <p>And <code>babel-preset-es2015</code> package consists of several Babel
 transformation plug-ins for ES2015.</p>
 <p>For example, given an ES2015 source file <code>main.js</code>:</p>
-<div class="highlight"><pre><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="err">`</span><span class="nx">Hello</span><span class="p">,</span> <span class="nx">$</span><span class="p">{</span><span class="nx">name</span><span class="p">}</span><span class="err">`</span><span class="p">);</span> <span class="c1">// template literal</span>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Hello, </span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span> <span class="c1">// template literal</span>
 <span class="p">}</span>
 <span class="nx">hello</span><span class="p">(</span><span class="s1">&#39;world&#39;</span><span class="p">);</span>
 </pre></div>
 <p>We can convert it with <code>babel</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>babel --presets es2015 -o output.js main.js
+<div class="highlight"><pre><span></span>$ babel --presets es2015 -o output.js main.js
 </pre></div>
 <p>This is the generated output:</p>
-<div class="highlight"><pre><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
 
 <span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Hello, &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">);</span> <span class="c1">// template literal</span>
@@ -189,7 +189,7 @@ transformation plug-ins for ES2015.</p>
 </pre></div>
 <p>Great!  The template literal is translated.</p>
 <p>Finally, we can run the output script with <code>node</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>node output.js
+<div class="highlight"><pre><span></span>$ node output.js
 Hello, world!
 </pre></div>
 <p>We can deploy the output files to the production environment which does not have
@@ -199,7 +199,7 @@ without problems.</p>
 <h3>Run ES2015 with babel-node</h3>
 <p>If you prefer not to create intermediate files, i.e. <code>output.js</code> in our
 example, you can run ES2015 source code with <code>babel-node</code> directly:</p>
-<div class="highlight"><pre><span class="nv">$ </span>babel-node --presets es2015 main.js
+<div class="highlight"><pre><span></span>$ babel-node --presets es2015 main.js
 Hello, world!
 </pre></div>
 </div>
@@ -207,14 +207,14 @@ Hello, world!
 <h3>Babel Configuration File</h3>
 <p>It seems to be bothersome to pass the <code>--presets</code> argument around.  We
 can create a file named <code>.babelrc</code> with following contents:</p>
-<div class="highlight"><pre><span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s1">&#39;presets&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;es2015&#39;</span><span class="p">]</span>
 <span class="p">}</span>
 </pre></div>
 <p>Now, we can omit the <code>--presets</code> option and simply use:</p>
-<div class="highlight"><pre><span class="nv">$ </span>babel -o output.js main.js
+<div class="highlight"><pre><span></span>$ babel -o output.js main.js
 </pre></div>
-<div class="highlight"><pre><span class="nv">$ </span>babel-node main.js
+<div class="highlight"><pre><span></span>$ babel-node main.js
 Hello, world!
 </pre></div>
 </div>
@@ -226,17 +226,17 @@ Hello, world!
 we are using <code>babel-register</code>.  The <strong>require hook</strong> will utilize Babel
 API directly.  Here are the instructions to setup the require hook.</p>
 <p>First, install <code>babel-register</code> and <code>babel-preset-es2015</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>npm install babel-register babel-preset-es2015
+<div class="highlight"><pre><span></span>$ npm install babel-register babel-preset-es2015
 </pre></div>
 <p>Second, create an invoke stub to setup <code>babel-register</code> and import our
 module.  Let's call it <code>run.js</code> in our example:</p>
-<div class="highlight"><pre><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;babel-register&#39;</span><span class="p">)({</span>
+<div class="highlight"><pre><span></span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;babel-register&#39;</span><span class="p">)({</span>
   <span class="nx">presets</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;es2015&#39;</span><span class="p">]</span>
 <span class="p">});</span>
 <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./main&#39;</span><span class="p">);</span>
 </pre></div>
 <p>Now, we can run our program with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>node run.js
+<div class="highlight"><pre><span></span>$ node run.js
 Hello, world!
 </pre></div>
 <p>Yeah!  It works.  However, please be aware that the invoke stub itself is not

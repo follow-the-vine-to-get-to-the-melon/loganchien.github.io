@@ -60,7 +60,7 @@ Applications</a>.  The code should work with other OpenCL implementation as well
 <div class="section" id="kernel-functions">
 <h2>Kernel Functions</h2>
 <p>First, we have to write a <strong>kernel function</strong> which will be run on the devices:</p>
-<div class="highlight"><pre><span class="n">__kernel</span> <span class="kt">void</span> <span class="nf">vec_add</span><span class="p">(</span><span class="n">__global</span> <span class="kt">int</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><span class="n">__kernel</span> <span class="kt">void</span> <span class="nf">vec_add</span><span class="p">(</span><span class="n">__global</span> <span class="kt">int</span> <span class="o">*</span><span class="n">out</span><span class="p">,</span>
                       <span class="n">__global</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">in1</span><span class="p">,</span>
                       <span class="n">__global</span> <span class="k">const</span> <span class="kt">int</span> <span class="o">*</span><span class="n">in2</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">get_global_id</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
@@ -109,10 +109,10 @@ have to:</p>
 <li>Release the resources.</li>
 </ul>
 <p>Here is the complete host program for the vector addition example <a class="footnote-reference" href="#id4" id="id2">[2]</a>:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;CL/cl.h&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;CL/cl.h&gt;</span><span class="cp"></span>
 
-<span class="cp">#include &lt;stdio.h&gt;</span>
-<span class="cp">#include &lt;stdlib.h&gt;</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">read_file</span><span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">**</span><span class="n">output</span><span class="p">,</span> <span class="kt">size_t</span> <span class="o">*</span><span class="n">size</span><span class="p">,</span> <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">FILE</span><span class="o">*</span> <span class="n">fp</span> <span class="o">=</span> <span class="n">fopen</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s">&quot;rb&quot;</span><span class="p">);</span>
@@ -237,7 +237,7 @@ have to:</p>
 <span class="p">}</span>
 </pre></div>
 <p>Save the code as <code>vec_add.c</code> and compile with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>gcc vec_add.c -lOpenCL
+<div class="highlight"><pre><span></span>$ gcc vec_add.c -lOpenCL
 </pre></div>
 <p>Enjoy the result!</p>
 <table class="docutils footnote" frame="void" id="id3" rules="none">

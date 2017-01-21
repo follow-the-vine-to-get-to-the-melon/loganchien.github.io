@@ -67,9 +67,9 @@ repositories?  Yes, of course we can.  We can create a <code>ignore</code> file 
 globally.</p>
 <p>For example, if we wish to ignore the <code>*.swp</code> files created by <a class="reference external" href="http://vim.org">Vim</a>,
 we can use the following commands:</p>
-<div class="highlight"><pre><span class="nv">$ </span>mkdir -p ~/.config/git
+<div class="highlight"><pre><span></span>$ mkdir -p ~/.config/git
 
-<span class="nv">$ </span><span class="nb">echo</span> <span class="s1">&#39;*.swp&#39;</span> &gt;&gt; ~/.config/git/ignore
+$ <span class="nb">echo</span> <span class="s1">&#39;*.swp&#39;</span> &gt;&gt; ~/.config/git/ignore
 </pre></div>
 <p>After these commands, <a class="reference external" href="http://git-scm.org">Git</a> should start ignoring the swap files.</p>
 <div class="section" id="change-the-global-ignore-file-path">
@@ -77,7 +77,7 @@ we can use the following commands:</p>
 <p>Under some circumstances, we may wish to change the file path to the ignore
 file.  We do so by setting <code>core.excludesfile</code>.</p>
 <p>For example, to change the ignore file path to <code>~/.gitignore</code>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git config --global core.excludesfile ~/.gitignore
+<div class="highlight"><pre><span></span>$ git config --global core.excludesfile ~/.gitignore
 </pre></div>
 </div>
 <div class="section" id="reference">

@@ -61,15 +61,15 @@ dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">
 <div class="section" id="install-packages">
 <h2>Install Packages</h2>
 <p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index</a>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install package1 package2 package3
+<div class="highlight"><pre><span></span>$ pip install package1 package2 package3
 </pre></div>
 <p>For example, we can install <a class="reference external" href="https://www.djangoproject.com/">Django</a> and its dependencies with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install django
+<div class="highlight"><pre><span></span>$ pip install django
 </pre></div>
 <p>In some scenario, we have to install the package with specific version.  We can
 achieve this with the version qualifier:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s1">&#39;django==1.5&#39;</span>
-<span class="nv">$ </span>pip install <span class="s1">&#39;django&gt;=1.7&#39;</span>
+<div class="highlight"><pre><span></span>$ pip install <span class="s1">&#39;django==1.5&#39;</span>
+$ pip install <span class="s1">&#39;django&gt;=1.7&#39;</span>
 </pre></div>
 <p>We can also write a <code>requirements.txt</code> with various packages, for example:</p>
 <pre class="code literal-block">
@@ -77,11 +77,11 @@ django-sendfile
 django&gt;=1.7
 </pre>
 <p>And then install packages with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install -r requirements.txt
+<div class="highlight"><pre><span></span>$ pip install -r requirements.txt
 </pre></div>
 <p>Some projects have extra requirements.  To install those requirements, we
 have to specify the name in the brackets, for example:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install waliki<span class="o">[</span>all<span class="o">]</span>
+<div class="highlight"><pre><span></span>$ pip install waliki<span class="o">[</span>all<span class="o">]</span>
 </pre></div>
 </div>
 <div class="section" id="install-packages-for-development">
@@ -90,33 +90,33 @@ have to specify the name in the brackets, for example:</p>
 to <a class="reference external" href="https://pypi.python.org">Python Package Index</a>, we can install them by specifying the tarball URLs.</p>
 <p>For example, we can install the latest <a class="reference external" href="https://www.djangoproject.com/">Django</a> packages from their master
 branch with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install https://github.com/django/django/tarball/master
+<div class="highlight"><pre><span></span>$ pip install https://github.com/django/django/tarball/master
 </pre></div>
 <p>We can also install the package from the local file system with the
 <code>file://</code> protocol:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install <span class="s2">&quot;file:///path/to/the/package#egg=name&quot;</span>
+<div class="highlight"><pre><span></span>$ pip install <span class="s2">&quot;file:///path/to/the/package#egg=name&quot;</span>
 </pre></div>
 <p>For example, to install latest <a class="reference external" href="https://github.com/mgaitan/waliki">Waliki</a> from Git repository:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
-<span class="nv">$ </span><span class="nb">cd </span>waliki
-<span class="nv">$ </span>pip install <span class="s2">&quot;file://</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">#egg=waliki[all]&quot;</span>
+<div class="highlight"><pre><span></span>$ git clone https://github.com/mgaitan/waliki
+$ <span class="nb">cd</span> waliki
+$ pip install <span class="s2">&quot;file://</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">#egg=waliki[all]&quot;</span>
 </pre></div>
 <p>Sometimes, it is more convenient use the Python files in-place, so that we
 don't have to reinstall the package after changing any files.  We can achieve
 this with <code>-e</code> option:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip install -e path/to/the/package
+<div class="highlight"><pre><span></span>$ pip install -e path/to/the/package
 </pre></div>
 <p>For example:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git clone https://github.com/mgaitan/waliki
-<span class="nv">$ </span><span class="nb">cd </span>waliki
-<span class="nv">$ </span>pip install -e .<span class="o">[</span>all<span class="o">]</span>
+<div class="highlight"><pre><span></span>$ git clone https://github.com/mgaitan/waliki
+$ <span class="nb">cd</span> waliki
+$ pip install -e .<span class="o">[</span>all<span class="o">]</span>
 </pre></div>
 <p>With <code>pip install -e</code>, we can save a lot of development time!</p>
 </div>
 <div class="section" id="uninstall-packages">
 <h2>Uninstall Packages</h2>
 <p>Finally, we can remove the package with the <code>pip uninstall</code> command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>pip uninstall package-name
+<div class="highlight"><pre><span></span>$ pip uninstall package-name
 </pre></div>
 </div>
 

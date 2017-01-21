@@ -62,87 +62,87 @@ In this post, I would like to introduce the instructions to install <a class="re
 <div class="section" id="getting-started">
 <h2>Getting Started</h2>
 <p>First, install the related Ubuntu packages:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install git python3 python-virtualenv <span class="se">\</span>
+<div class="highlight"><pre><span></span>$ sudo apt-get install git python3 python-virtualenv <span class="se">\</span>
       libpython3-dev libxml2-dev libxslt1-dev
 </pre></div>
 <p>Second, create a new Python virtual environment:</p>
-<div class="highlight"><pre><span class="nv">$ </span>mkdir waliki
-<span class="nv">$ </span><span class="nb">cd </span>waliki
-<span class="nv">$ </span>virtualenv ENV --no-site-packages --python<span class="o">=</span>/usr/bin/python3
-<span class="nv">$ </span><span class="nb">source </span>ENV/bin/activate
+<div class="highlight"><pre><span></span>$ mkdir waliki
+$ <span class="nb">cd</span> waliki
+$ virtualenv ENV --no-site-packages --python<span class="o">=</span>/usr/bin/python3
+$ <span class="nb">source</span> ENV/bin/activate
 </pre></div>
 <p>Third, install the Python packages:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>pip install waliki rst2pdf hovercraft <span class="se">\</span>
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ pip install waliki rst2pdf hovercraft <span class="se">\</span>
                    django-sendfile django-allauth
 </pre></div>
 <p>Fourth, create a new Django project:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>django-admin startproject waliki_site
-<span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span><span class="nb">cd </span>waliki_site
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ django-admin startproject waliki_site
+<span class="o">(</span>ENV<span class="o">)</span>$ <span class="nb">cd</span> waliki_site
 </pre></div>
 <p>Fifth, edit the site settings:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>vim waliki_site/settings.py
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ vim waliki_site/settings.py
 </pre></div>
 <p>Add following lines to <code>waliki_site/settings.py</code>:</p>
-<div class="highlight"><pre><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;allauth.account.context_processors.account&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.core.context_processors.request&#39;</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><span class="n">TEMPLATE_CONTEXT_PROCESSORS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;allauth.account.context_processors.account&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.context_processors.auth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.core.context_processors.request&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;allauth.account.auth_backends.AuthenticationBackend&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;allauth.account.auth_backends.AuthenticationBackend&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth.backends.ModelBackend&#39;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">SITE_ID</span> <span class="o">=</span> <span class="mi">1</span>
 </pre></div>
 <p>Add following Django apps to <code>INSTALLED_APPS</code>:</p>
-<div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
-    <span class="s">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.auth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.contenttypes&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.sessions&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.messages&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
 
-    <span class="c"># BEGIN OF CHANGE - Extra Django Apps for Waliki</span>
-    <span class="s">&#39;django.contrib.sites&#39;</span><span class="p">,</span>
-    <span class="s">&#39;waliki&#39;</span><span class="p">,</span>
-    <span class="s">&#39;waliki.git&#39;</span><span class="p">,</span>
-    <span class="s">&#39;waliki.attachments&#39;</span><span class="p">,</span>
-    <span class="s">&#39;waliki.pdf&#39;</span><span class="p">,</span>
-    <span class="s">&#39;waliki.slides&#39;</span><span class="p">,</span>
-    <span class="s">&#39;allauth&#39;</span><span class="p">,</span>
-    <span class="s">&#39;allauth.account&#39;</span><span class="p">,</span>
-    <span class="c"># END OF CHANGE</span>
+    <span class="c1"># BEGIN OF CHANGE - Extra Django Apps for Waliki</span>
+    <span class="s1">&#39;django.contrib.sites&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;waliki&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;waliki.git&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;waliki.attachments&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;waliki.pdf&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;waliki.slides&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;allauth&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;allauth.account&#39;</span><span class="p">,</span>
+    <span class="c1"># END OF CHANGE</span>
 <span class="p">)</span>
 </pre></div>
 <p>Add following lines to <code>waliki_site/urls.py</code>:</p>
-<div class="highlight"><pre><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span>
-    <span class="c"># Examples:</span>
-    <span class="c"># url(r&#39;^$&#39;, &#39;waliki_site.views.home&#39;, name=&#39;home&#39;),</span>
-    <span class="c"># url(r&#39;^blog/&#39;, include(&#39;blog.urls&#39;)),</span>
+<div class="highlight"><pre><span></span><span class="n">urlpatterns</span> <span class="o">=</span> <span class="n">patterns</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">,</span>
+    <span class="c1"># Examples:</span>
+    <span class="c1"># url(r&#39;^$&#39;, &#39;waliki_site.views.home&#39;, name=&#39;home&#39;),</span>
+    <span class="c1"># url(r&#39;^blog/&#39;, include(&#39;blog.urls&#39;)),</span>
 
-    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
 
-    <span class="c"># BEGIN OF CHANGE</span>
-    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;allauth.urls&#39;</span><span class="p">)),</span>
-    <span class="n">url</span><span class="p">(</span><span class="s">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s">&#39;waliki.urls&#39;</span><span class="p">)),</span>
-    <span class="c"># END OF CHANGE</span>
+    <span class="c1"># BEGIN OF CHANGE</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;allauth.urls&#39;</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;waliki.urls&#39;</span><span class="p">)),</span>
+    <span class="c1"># END OF CHANGE</span>
 <span class="p">)</span>
 </pre></div>
 <p>Sixth, migrate the database:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>python manage.py migrate
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ python manage.py migrate
 </pre></div>
 <p>Seventh, create a super user:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>python manage.py createsuperuser
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ python manage.py createsuperuser
 Username <span class="o">(</span>leave blank to use <span class="s1">&#39;username&#39;</span><span class="o">)</span>:
 Email address: username@example.com
 Password:
 Password <span class="o">(</span>again<span class="o">)</span>:
 </pre></div>
 <p>Finally, start the development server with:</p>
-<div class="highlight"><pre><span class="o">(</span>ENV<span class="o">)</span><span class="nv">$ </span>python manage.py runserver
+<div class="highlight"><pre><span></span><span class="o">(</span>ENV<span class="o">)</span>$ python manage.py runserver
 </pre></div>
 <p>We should be able to see Waliki at <a class="reference external" href="http://127.0.0.1:8000">http://127.0.0.1:8000</a> now.</p>
 </div>
@@ -152,10 +152,10 @@ Password <span class="o">(</span>again<span class="o">)</span>:
 be edited by the others.  To disable the sign up feature, we have to customize
 the account adapter.</p>
 <p>First, add following lines to <code>settings.py</code>:</p>
-<div class="highlight"><pre><span class="n">ACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s">&#39;waliki_site.auth.AccountAdapter&#39;</span>
+<div class="highlight"><pre><span></span><span class="n">ACCOUNT_ADAPTER</span> <span class="o">=</span> <span class="s1">&#39;waliki_site.auth.AccountAdapter&#39;</span>
 </pre></div>
 <p>Second, create <code>waliki_site/auth.py</code> with following contents:</p>
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">allauth.account.adapter</span> <span class="kn">import</span> <span class="n">DefaultAccountAdapter</span>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">allauth.account.adapter</span> <span class="kn">import</span> <span class="n">DefaultAccountAdapter</span>
 
 <span class="k">class</span> <span class="nc">AccountAdapter</span><span class="p">(</span><span class="n">DefaultAccountAdapter</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">is_open_for_signup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
@@ -169,7 +169,7 @@ with account created with <code>python manage.py createsuperuser</code>.</p>
 <p>We would like to deploy our Waliki site with Apache and WSGI so that all users
 can have access to our Waliki.</p>
 <p>First, we have to install Apache and its WSGI module with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install apache2 libapache2-mod-wsgi-py3
+<div class="highlight"><pre><span></span>$ sudo apt-get install apache2 libapache2-mod-wsgi-py3
 </pre></div>
 <p>NOTE: AFAIK, due to the design of WSGI module, we can't install WSGI module for
 both Python 2.x and 3.0.  It is possible to have some problem if you have
@@ -178,28 +178,28 @@ installed <code>libapache2-mod-wsgi</code> at the same time.  Remove
 encountered any problems.</p>
 <p>Second, we have to change <code>waliki_site/wsgi.py</code> to workaround the
 <a class="reference external" href="https://code.google.com/p/modwsgi/wiki/VirtualEnvironments#Application_Environments">problem related to virtualenv</a>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>vim waliki_site/wsgi.py
+<div class="highlight"><pre><span></span>$ vim waliki_site/wsgi.py
 </pre></div>
 <p>Add following lines to the beginning of <code>wsgi.py</code> and change
 <code>/PATH/TO/DIR/ENV</code> to the virtual environment:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">site</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="n">ENV_DIR</span> <span class="o">=</span> <span class="s">&#39;/PATH/TO/DIR/ENV&#39;</span>
+<span class="n">ENV_DIR</span> <span class="o">=</span> <span class="s1">&#39;/PATH/TO/DIR/ENV&#39;</span>
 
 <span class="k">def</span> <span class="nf">activate_virtualenv</span><span class="p">(</span><span class="n">env_dir</span><span class="p">):</span>
     <span class="n">ver</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span>
-    <span class="n">ver</span> <span class="o">=</span> <span class="s">&#39;python&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ver</span> <span class="o">=</span> <span class="s1">&#39;python&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ver</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
-    <span class="c"># Path to executables and site-packages.</span>
-    <span class="n">bin_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s">&#39;bin&#39;</span><span class="p">)</span>
-    <span class="n">site_packages_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s">&#39;lib&#39;</span><span class="p">,</span> <span class="n">ver</span><span class="p">,</span> <span class="s">&#39;site-packages&#39;</span><span class="p">)</span>
+    <span class="c1"># Path to executables and site-packages.</span>
+    <span class="n">bin_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s1">&#39;bin&#39;</span><span class="p">)</span>
+    <span class="n">site_packages_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">env_dir</span><span class="p">,</span> <span class="s1">&#39;lib&#39;</span><span class="p">,</span> <span class="n">ver</span><span class="p">,</span> <span class="s1">&#39;site-packages&#39;</span><span class="p">)</span>
 
-    <span class="c"># Add bin_dir to executable search path.</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bin_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&#39;PATH&#39;</span><span class="p">]</span>
+    <span class="c1"># Add bin_dir to executable search path.</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bin_dir</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span>
 
-    <span class="c"># Add site_packages_dir to the front of sys.path.</span>
+    <span class="c1"># Add site_packages_dir to the front of sys.path.</span>
     <span class="n">prev_sys_path</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
     <span class="n">site</span><span class="o">.</span><span class="n">addsitedir</span><span class="p">(</span><span class="n">site_packages_dir</span><span class="p">)</span>
 
@@ -214,7 +214,7 @@ encountered any problems.</p>
 <span class="n">activate_virtualenv</span><span class="p">(</span><span class="n">ENV_DIR</span><span class="p">)</span>
 </pre></div>
 <p>Third, create a new virtual host configuration file:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo vim /etc/apache2/sites-available/waliki.conf
+<div class="highlight"><pre><span></span>$ sudo vim /etc/apache2/sites-available/waliki.conf
 </pre></div>
 <p>And add following lines and change <code>/PATH/TO/DIR</code> and <code>USERNAME</code>
 accordingly:</p>
@@ -251,8 +251,8 @@ accordingly:</p>
 &lt;/VirtualHost&gt;
 </pre>
 <p>Fourth, enable the site with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo a2ensite waliki
-<span class="nv">$ </span>sudo service apache2 reload
+<div class="highlight"><pre><span></span>$ sudo a2ensite waliki
+$ sudo service apache2 reload
 </pre></div>
 <p>Finally, you should be able to see your Waliki installation!</p>
 </div>

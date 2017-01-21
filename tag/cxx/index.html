@@ -42,7 +42,7 @@
 			<div class="entry-content"><p><a class="reference external" href="http://ctags.sourceforge.net/">Ctags</a> is a source code indexing tool.  With <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>, we can easily find the
 definitions of the classes, functions, and variables.  According to my
 experiences, <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> can significantly reduce the time to browse the source
-code.  In this post, I would like to give a brief introduction to <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> and ...</p></div>
+code.  In this post, I would like to give a brief introduction to <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> and …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/">More</a></p>
 		</article>
 	</li>
@@ -58,7 +58,7 @@ code.  In this post, I would like to give a brief introduction to <a class="refe
 <code>std::unique_ptr</code>, <code>std::shared_ptr</code>, and <code>std::weak_ptr</code>.
 These smart pointer class templates are designed to replace the old
 <a class="reference external" href="http://en.cppreference.com/w/cpp/memory/auto_ptr">std::auto_ptr</a> smart pointer, which is known to have some defect and
-deprecated now.  In this post, I would like to give a ...</p></div>
+deprecated now.  In this post, I would like to give a …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2015/01/31/c11-unique-pointer/">More</a></p>
 		</article>
 	</li>
@@ -73,13 +73,13 @@ deprecated now.  In this post, I would like to give a ...</p></div>
 			<div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
 keys in an instance of <code>std::multimap</code>, how could we list all of the
 corresponding values?  For example:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;map&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
   <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
-  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std ...</span></pre></div></div>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std …</span></pre></div></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2015/01/20/c-stdmultimap-and-equal-range/">More</a></p>
 		</article>
 	</li>
@@ -94,7 +94,7 @@ corresponding values?  For example:</p>
 			<div class="entry-content"><p>It is a well-known idiom to define a virtual destructor for the classes with
 virtual functions.  If we don't define a virtual destructor, then the base
 class destructor will be invoked when you are deleting the object through the
-base class pointer even if the object is an instance ...</p></div>
+base class pointer even if the object is an instance of …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/12/09/c-virtual-destructor-and-inheritence/">More</a></p>
 		</article>
 	</li>
@@ -110,7 +110,7 @@ base class pointer even if the object is an instance ...</p></div>
 implement the has-a semantics with private inheritence, it provides little
 benefits compared with object composition.  Besides, in order to expose the
 privately inherited members to public, C++ introduced an awkward syntax, i.e.
-the <code>using</code> directives.  These ...</p></div>
+the <code>using</code> directives.  These …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/11/20/c-private-inheritence-and-using-directive/">More</a></p>
 		</article>
 	</li>
@@ -124,8 +124,8 @@ the <code>using</code> directives.  These ...</p></div>
 			</footer>
 			<div class="entry-content"><p>To sort the doubly linked list <code>std::list</code>, we can simply call the
 <code>sort()</code> member function.  For example,</p>
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;list&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp"></span>
 
 <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
@@ -137,7 +137,7 @@ the <code>using</code> directives.  These ...</p></div>
   <span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
-<p>We can ...</p></div>
+<p>We can't …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/11/14/c-stdlist-operations/">More</a></p>
 		</article>
 	</li>
@@ -157,7 +157,7 @@ would adopt a conservative approach:</p>
 <li>Copy the elements which I would like to keep to the temporary container.</li>
 <li>Swap the container.</li>
 </ol>
-<p>For example, to remove ...</p></div>
+<p>For example, to remove …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/11/13/c-associative-container-and-iterator-validness/">More</a></p>
 		</article>
 	</li>

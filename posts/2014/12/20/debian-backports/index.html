@@ -58,7 +58,7 @@
 packages are very old and well-tested.  However, this become a problem to me.</p>
 <p>Since <a class="reference external" href="http://www.git-scm.org/">Git</a> 1.9, we have to run the following command to silence a warning
 when we are running <code>git push</code>.</p>
-<div class="highlight"><pre><span class="nv">$ </span>git config --global push.default simple
+<div class="highlight"><pre><span></span>$ git config --global push.default simple
 </pre></div>
 <p>But this command will add settings to <code>.gitconfig</code> in the home directory,
 which is unknown to the <code>git</code> command from the Wheezy repository.  And,
@@ -69,19 +69,19 @@ repositories that contains the newer software for Debian stable releases (with
 necessary modification.)</p>
 <p>To install the packages from the backports, add the following line to
 <code>/etc/apt/sources.list</code>:</p>
-<div class="highlight"><pre>deb http://ftp.us.debian.org/debian wheezy-backports main
+<div class="highlight"><pre><span></span>deb http://ftp.us.debian.org/debian wheezy-backports main
 </pre></div>
 <p>Note: The URL can be any <a class="reference external" href="https://www.debian.org/mirror/official">official Debian mirrors</a>.  Usually, there will be
 one line similar to <code>deb [URL] wheezy main</code> in your <code>sources.list</code>.
 You can copy the line and replace <code>wheezy</code> with <code>wheezy-backport</code>.</p>
 <p>Update the local APT information with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get update
+<div class="highlight"><pre><span></span>$ sudo apt-get update
 </pre></div>
 <p>To install the packages from the backports:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install -t wheezy-backports <span class="o">[</span>package-name<span class="o">]</span>
+<div class="highlight"><pre><span></span>$ sudo apt-get install -t wheezy-backports <span class="o">[</span>package-name<span class="o">]</span>
 </pre></div>
 <p>For example, to install <code>git</code> from the backports:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install -t wheezy-backports git
+<div class="highlight"><pre><span></span>$ sudo apt-get install -t wheezy-backports git
 </pre></div>
 
 </div>

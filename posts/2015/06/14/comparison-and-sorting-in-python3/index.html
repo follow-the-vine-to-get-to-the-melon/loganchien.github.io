@@ -199,7 +199,7 @@ less than other numbers.</li>
 </li>
 </ul>
 <p>These examples demonstrate the simple cases with implicit type conversions:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">2</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">2</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="mf">1.0</span> <span class="o">&lt;</span> <span class="mf">2.0</span>
 <span class="bp">True</span>
@@ -217,7 +217,7 @@ less than other numbers.</li>
 <span class="bp">True</span>
 </pre></div>
 <p>Here are the examples for <code>float('nan')</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;nan&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">==</span> <span class="n">nan</span>
 <span class="bp">False</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">nan</span> <span class="o">!=</span> <span class="n">nan</span>
@@ -232,7 +232,7 @@ less than other numbers.</li>
 <span class="bp">False</span>
 </pre></div>
 <p>Here are the examples for <code>float('inf')</code> and <code>float('-inf')</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;inf&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">==</span> <span class="n">inf</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">!=</span> <span class="n">inf</span>
@@ -244,7 +244,7 @@ less than other numbers.</li>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">inf</span> <span class="o">&gt;</span> <span class="n">nan</span>
 <span class="bp">False</span>
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s">&#39;-inf&#39;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;-inf&#39;</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&lt;</span> <span class="n">ninf</span>
 <span class="bp">False</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">ninf</span> <span class="o">&lt;</span> <span class="n">nan</span>
@@ -254,7 +254,7 @@ less than other numbers.</li>
 </pre></div>
 <p>Here are the examples which compare <code>float('inf')</code> with the maximum
 floating point number on the system and a huge integer numbers.</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">sys</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">mx</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">max</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">huge</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">5000</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">mx</span> <span class="o">&lt;</span> <span class="n">huge</span>
@@ -269,7 +269,7 @@ floating point number on the system and a huge integer numbers.</p>
 </pre></div>
 <p>Please notice that the floating point arithmetics are performed in binary.
 As a result, the outcome might be different from the one computed in decimal:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span>
 <span class="mf">0.30000000000000004</span>
@@ -278,7 +278,7 @@ As a result, the outcome might be different from the one computed in decimal:</p
 <strong>identity operators</strong> (<code>is</code> or <code>is not</code>.)  Some implementations
 will reuse the objects for small numbers and give <em>non-intuitive</em>,
 <em>unexpected</em>, and <em>surprising</em> results:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">3</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">3</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="mi">4</span><span class="p">)</span> <span class="ow">is</span> <span class="mi">16</span>
 <span class="bp">True</span>
@@ -291,7 +291,7 @@ will reuse the objects for small numbers and give <em>non-intuitive</em>,
 <div class="section" id="complex-numbers">
 <h3>Complex Numbers</h3>
 <p>We can compare the complex numbers with equality or inequality operators:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.0</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mf">1.4j</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.4j</span>
 <span class="bp">True</span>
@@ -301,15 +301,15 @@ will reuse the objects for small numbers and give <em>non-intuitive</em>,
 <span class="bp">True</span>
 </pre></div>
 <p>However, the <code>complex</code> numbers are unordered:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">1j</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="mi">1j</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">int</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">()</span>
 </pre></div>
 <p>Even if their imaginary parts are equal to zero, they are unordered either:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">complex</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">complex</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -319,17 +319,17 @@ will reuse the objects for small numbers and give <em>non-intuitive</em>,
 words, the characters in the strings are element-wise compared.  The characters
 are encoded in unicode and the comparison is case sensitive.  If two strings
 have common prefix, then the shorter one is less than the longer one.</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;b&#39;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s1">&#39;b&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;b&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s1">&#39;b&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;aa&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="s1">&#39;aa&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;a&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;&#39;</span> <span class="o">&lt;</span> <span class="s1">&#39;a&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s">&#39;aa&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;aa&#39;</span> <span class="o">&lt;</span> <span class="s1">&#39;aa&#39;</span>
 <span class="bp">False</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="s">&#39;a&#39;</span> <span class="o">==</span> <span class="s">&#39;A&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="s1">&#39;a&#39;</span> <span class="o">==</span> <span class="s1">&#39;A&#39;</span>
 <span class="bp">False</span>
 </pre></div>
 </div>
@@ -339,7 +339,7 @@ have common prefix, then the shorter one is less than the longer one.</p>
 and <code>bytes</code>, are element-wise compared.  Like <code>str</code> objects, if two
 objects have common prefix, then the shorter one is less than the longer one.</p>
 <p>Here are the examples for <code>tuple</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">()</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="bp">True</span>
@@ -351,7 +351,7 @@ objects have common prefix, then the shorter one is less than the longer one.</p
 <span class="bp">False</span>
 </pre></div>
 <p>Here are the examples for <code>list</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,]</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
 <span class="bp">True</span>
@@ -363,40 +363,40 @@ objects have common prefix, then the shorter one is less than the longer one.</p
 <span class="bp">False</span>
 </pre></div>
 <p>Here are the examples for <code>bytes</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;abc&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;abc&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s">&#39;b&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;b&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;abc&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;abc&#39;</span>
 <span class="bp">False</span>
 </pre></div>
 <p>We are allowed to compare <code>bytearray</code> with <code>bytes</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;a&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s">&#39;aa&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b</span><span class="s">&#39;a&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;aa&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">False</span>
 </pre></div>
 <p>We are also allowed to compare <code>tuple</code> and <code>list</code> with equality and
 inequality operations:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,)</span>
 <span class="bp">True</span>
 </pre></div>
 <p>But, unfortunately, we can't get the order between <code>tuple</code> object and
 <code>list</code> object without type conversion:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">list</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nb">tuple</span><span class="p">()</span>
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&gt;</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">()</span> <span class="o">&gt;</span> <span class="nb">list</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -404,7 +404,7 @@ inequality operations:</p>
 <h3>Sets and FrozenSets</h3>
 <p>The <code>set</code> and <code>frozenset</code> instances are ordered by the <strong>subset</strong>
 relationship.  For example,</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">}</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
 <span class="bp">False</span>
@@ -421,7 +421,7 @@ relationship.  For example,</p>
 </pre></div>
 <p>Notice that <strong>subset</strong> is not a total order.  We can check this by adding
 <code>2</code> to <code>b</code>:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
 <span class="bp">False</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;=</span> <span class="n">b</span>
@@ -437,7 +437,7 @@ relationship.  For example,</p>
 </pre></div>
 <p>Of course, it is fine to compare <code>set</code> objects with <code>frozenset</code>
 objects:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">==</span> <span class="n">a</span>
 <span class="bp">True</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -450,7 +450,7 @@ objects:</p>
 <h2>User-defined Classes</h2>
 <p>We can declare a new class with a <code>class</code> statement.  For example, we can
 define a <code>Date</code> class in <code>date.py</code>:</p>
-<div class="highlight"><pre><span class="c">#!/usr/bin/env python3</span>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
@@ -459,17 +459,17 @@ define a <code>Date</code> class in <code>date.py</code>:</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
 
     <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;{0}/{1:02}/{2:02}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;{0}/{1:02}/{2:02}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="s">&#39;Date({0},{1},{2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s1">&#39;Date({0},{1},{2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 </pre></div>
 <p>What will happen if we compare two instances of <code>Date</code>?  By default, we
 can only compare them with <strong>equality/inequality operators</strong> and <strong>identity
 operators</strong>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>python3
+<div class="highlight"><pre><span></span>$ python3
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">==</span> <span class="n">b</span>
@@ -485,16 +485,16 @@ operators</strong>:</p>
 equal to the <strong>identity operators</strong>.</p>
 <p>If we compare the objects with other operators, such as <em>less-than operator</em>,
 then the <code>TypeError</code> exception will be raised:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span>
 <span class="n">Traceback</span> <span class="p">(</span><span class="n">most</span> <span class="n">recent</span> <span class="n">call</span> <span class="n">last</span><span class="p">):</span>
-  <span class="n">File</span> <span class="s">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+  <span class="n">File</span> <span class="s2">&quot;&lt;stdin&gt;&quot;</span><span class="p">,</span> <span class="n">line</span> <span class="mi">1</span><span class="p">,</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="ne">TypeError</span><span class="p">:</span> <span class="n">unorderable</span> <span class="n">types</span><span class="p">:</span> <span class="n">Date</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">Date</span><span class="p">()</span>
 </pre></div>
 <div class="section" id="customize-the-equality-and-inequality-operators">
 <h3>Customize the Equality and Inequality Operators</h3>
 <p>We can customize the <strong>equality operators</strong> by overriding <code>__eq__</code>:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="c"># ... skipped ...</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c1"># ... skipped ...</span>
 
     <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span>
@@ -502,7 +502,7 @@ then the <code>TypeError</code> exception will be raised:</p>
                 <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 </pre></div>
 <p>Let's try out:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -515,13 +515,13 @@ then the <code>TypeError</code> exception will be raised:</p>
 <p>Let's look at the <em>inequality</em> operator.  If you don't have special logic, it
 is suggested to define <code>__ne__</code> in terms of <code>not</code> and <code>==</code>.
 For example:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="c"># ... skipped ...</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c1"># ... skipped ...</span>
 
     <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -540,13 +540,13 @@ be used as the key of <code>dict</code>.  Besides, we have to make sure that
 <code>a == b</code> implies <code>hash(a) == hash(b)</code>; otherwise, the uniqueness
 property of the <code>set</code> will become invalid.  Here's the <code>__hash__</code>
 function for our <code>Date</code> class:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="c"># ... skipped ...</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c1"># ... skipped ...</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -561,8 +561,8 @@ function for our <code>Date</code> class:</p>
 <p>We can customize the ordering comparison operators by overriding <code>__lt__</code>,
 <code>__le__</code>, <code>__gt__</code>, and <code>__ge__</code>.  They are corresponding to
 <code>&lt;</code>, <code>&lt;=</code>, <code>&gt;</code>, and <code>&gt;=</code> respectively.  For example:</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="c"># ... skipped ...</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
+    <span class="c1"># ... skipped ...</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
@@ -573,7 +573,7 @@ function for our <code>Date</code> class:</p>
 <p>In our example, we simply implement <code>__lt__</code> by comparing the hash value
 of the object.  You may implement this with a series of integer comparisons and
 boolean arithmetics as well.  Here are the results:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -586,7 +586,7 @@ boolean arithmetics as well.  Here are the results:</p>
 </pre></div>
 <p>However, you might be surprised that the following code works as expected even
 though we haven't overridden <code>__gt__</code> yet:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span>
 <span class="bp">False</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">&gt;</span> <span class="n">a</span>
 <span class="bp">True</span>
@@ -648,11 +648,11 @@ the class with <code>functools.total_ordering</code>.</p>
 <p>With <code>functools.total_ordering</code> decorator, overriding <code>__eq__</code> and
 one of <code>__lt__</code>, <code>__le__</code>, <code>__gt__</code>, or <code>__ge__</code> is
 sufficient to define a total ordering class:</p>
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">functools</span>
+<div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">functools</span>
 
 <span class="nd">@functools.total_ordering</span>
 <span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="c"># ... skipped ...</span>
+    <span class="c1"># ... skipped ...</span>
 
     <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
@@ -665,7 +665,7 @@ sufficient to define a total ordering class:</p>
     <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </pre></div>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">b</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">14</span><span class="p">)</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">c</span> <span class="o">=</span> <span class="n">Date</span><span class="p">(</span><span class="mi">2015</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
@@ -687,7 +687,7 @@ The former will sort the associate list and the later will create a new sorted
 list from the iteratables (and leave the argument unchanged).  Both of them
 will sort the elements by <em>less-than</em> comparison (i.e. in ascending order.)
 For example,</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="n">a</span>
@@ -697,7 +697,7 @@ For example,</p>
 <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">13</span><span class="p">]</span>
 </pre></div>
 <p>The element type doesn't matter as long as they are pairwise comparable:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])])</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">([</span><span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">frozenset</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">])])</span>
 <span class="p">[</span><span class="nb">set</span><span class="p">(),</span> <span class="p">{</span><span class="mi">1</span><span class="p">},</span> <span class="nb">frozenset</span><span class="p">({</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}),</span> <span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">}]</span>
 </pre></div>
 <div class="section" id="sort-the-list-with-customized-ordering">
@@ -705,13 +705,13 @@ For example,</p>
 <p>If we want to sort the elements in different order, we can specify the <strong>key
 function</strong> to extract the key from the elements.</p>
 <p>First, let's sort the list of tuples with <code>sorted()</code> directly:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
 <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 </pre></div>
 <p>As what we have expected, the tuple are pairwisely compared.</p>
 <p>Second, let's sort the tuples by the first element:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 </pre></div>
@@ -721,7 +721,7 @@ the tuples with <code>x[0]</code> equals to <code>1</code> or <code>2</code>.  H
 <strong>stable</strong> guarantee of the sorting algorithm.</p>
 <p>Third, the key function can <strong>return a new tuple</strong> as well.  For example, we
 can compare the second element first and then compare the first element.</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 </pre></div>
@@ -734,7 +734,7 @@ necessary.</li>
 <p>It will be better to return primitive types if it is possible.  For example, if
 it is guaranteed that both <code>x[0]</code> and <code>x[1]</code> are less than 1000,
 then we can simply sort the tuples with:</p>
-<div class="highlight"><pre><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">xs</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 <span class="o">&gt;&gt;&gt;</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">1000</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
 <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)]</span>
 </pre></div>

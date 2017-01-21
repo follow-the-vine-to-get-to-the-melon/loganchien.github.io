@@ -56,7 +56,7 @@
 <div class="entry-content">
 <p>Today I have learned two different usages of <code>git</code> command.  First, to
 list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+<div class="highlight"><pre><span></span>$ git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
 </pre></div>
 <p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
 will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
@@ -67,11 +67,11 @@ ancestor.  If such commit is not available, then <code>git</code> will return wi
 error.</p>
 <p>The second usage I have learned is that we can create a <strong>orphan branch</strong> with
 following commands:</p>
-<div class="highlight"><pre><span class="nv">$ </span>git checkout --orphan &lt;new-branch-name&gt;
-<span class="nv">$ </span>git reset
-<span class="nv">$ </span>rm -rf *
+<div class="highlight"><pre><span></span>$ git checkout --orphan &lt;new-branch-name&gt;
+$ git reset
+$ rm -rf *
 ... add files ...
-<span class="nv">$ </span>git commit
+$ git commit
 </pre></div>
 <p>The orphan branch will be completely independent of the existing branches.
 This is helpful when creating <a class="reference external" href="https://pages.github.com/">GitHub Pages</a> branch.</p>

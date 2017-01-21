@@ -146,28 +146,28 @@ After the droplet is created, then try to log in with <code>ssh</code> command.<
 500MB RAM, then you must enable the swap file.  Otherwise, you will not be able
 to build the <a class="reference external" href="https://www.discourse.org/">Discourse</a> container.</p>
 <p>Here are the instructions to setup the <strong>swap file</strong>:</p>
-<div class="highlight"><pre><span class="c"># Create a new swap file.</span>
-<span class="nv">$ </span>sudo fallocate -l 4G /swapfile
+<div class="highlight"><pre><span></span><span class="c1"># Create a new swap file.</span>
+$ sudo fallocate -l 4G /swapfile
 
-<span class="c"># Change the file permission.</span>
-<span class="nv">$ </span>sudo chmod <span class="m">600</span> /swapfile
+<span class="c1"># Change the file permission.</span>
+$ sudo chmod <span class="m">600</span> /swapfile
 
-<span class="c"># Format the swap file.</span>
-<span class="nv">$ </span>sudo mkswap /swapfile
+<span class="c1"># Format the swap file.</span>
+$ sudo mkswap /swapfile
 
-<span class="c"># Enable the swap file.</span>
-<span class="nv">$ </span>sudo swapon /swapfile
+<span class="c1"># Enable the swap file.</span>
+$ sudo swapon /swapfile
 
-<span class="c"># Check that the swap file has been enabled.</span>
-<span class="nv">$ </span>sudo swapon -s
+<span class="c1"># Check that the swap file has been enabled.</span>
+$ sudo swapon -s
 Filenam    Type  Size     Used  Priority
 /swapfile  file  <span class="m">4194300</span>  <span class="m">0</span>     -1
 
-<span class="c"># Add the swap file to fstab</span>
-<span class="nv">$ </span>sudo bash -c <span class="s2">&quot;echo &#39;/swapfile none swap sw 0 0&#39; &gt;&gt; /etc/fstab&quot;</span>
+<span class="c1"># Add the swap file to fstab</span>
+$ sudo bash -c <span class="s2">&quot;echo &#39;/swapfile none swap sw 0 0&#39; &gt;&gt; /etc/fstab&quot;</span>
 
-<span class="c"># Reboot the machine now.</span>
-<span class="nv">$ </span>sudo reboot
+<span class="c1"># Reboot the machine now.</span>
+$ sudo reboot
 </pre></div>
 <p>You can further tweak the configuration by reading:
 <a class="reference external" href="https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04">How to Add Swap on Ubuntu 14.04</a>.</p>
@@ -190,38 +190,38 @@ should:</p>
 <li>Disable the root account</li>
 </ol>
 <p>First, we can enable automatic upgrade with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo dpkg-reconfigure -plow unattended-upgrades
-<span class="c"># Choose &lt;yes&gt; to enable automatic upgrade.</span>
+<div class="highlight"><pre><span></span>$ sudo dpkg-reconfigure -plow unattended-upgrades
+<span class="c1"># Choose &lt;yes&gt; to enable automatic upgrade.</span>
 </pre></div>
 <p>Second, we would like to disable the root accoount.  However, before doing so,
 we have to create a new user account:</p>
-<div class="highlight"><pre><span class="c"># Create a new user.</span>
-<span class="nv">$ </span>sudo adduser <span class="o">[</span>username<span class="o">]</span>
+<div class="highlight"><pre><span></span><span class="c1"># Create a new user.</span>
+$ sudo adduser <span class="o">[</span>username<span class="o">]</span>
 Enter new UNIX password:
 Retype new UNIX password:
 
-<span class="c"># Grant sudo access to that user.</span>
-<span class="nv">$ </span>sudo visudo
-<span class="c"># ... Add &quot;[username] ALL=(ALL:ALL) ALL&quot;</span>
+<span class="c1"># Grant sudo access to that user.</span>
+$ sudo visudo
+<span class="c1"># ... Add &quot;[username] ALL=(ALL:ALL) ALL&quot;</span>
 
-<span class="c"># Copy SSH keys.</span>
-<span class="nv">$ </span>sudo mkdir -p /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
-<span class="nv">$ </span>sudo cp /root/.ssh/authorized_keys /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
-<span class="nv">$ </span>sudo chown -R <span class="o">[</span>username<span class="o">]</span>:<span class="o">[</span>username<span class="o">]</span> /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
+<span class="c1"># Copy SSH keys.</span>
+$ sudo mkdir -p /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
+$ sudo cp /root/.ssh/authorized_keys /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
+$ sudo chown -R <span class="o">[</span>username<span class="o">]</span>:<span class="o">[</span>username<span class="o">]</span> /home/<span class="o">[</span>username<span class="o">]</span>/.ssh
 
-<span class="c"># Logout.</span>
-<span class="nv">$ </span><span class="nb">exit</span>
+<span class="c1"># Logout.</span>
+$ <span class="nb">exit</span>
 </pre></div>
 <p>Log in with the <em>new account</em> and disable the root account with:</p>
-<div class="highlight"><pre><span class="c"># Lock the root password.</span>
-<span class="nv">$ </span>sudo passwd -l root
+<div class="highlight"><pre><span></span><span class="c1"># Lock the root password.</span>
+$ sudo passwd -l root
 
-<span class="c"># Disable the ssh root login.</span>
-<span class="nv">$ </span>sudo vi /etc/ssh/sshd_config
-<span class="c"># ... Change &quot;PermitRootLogin&quot; to &quot;no&quot;</span>
+<span class="c1"># Disable the ssh root login.</span>
+$ sudo vi /etc/ssh/sshd_config
+<span class="c1"># ... Change &quot;PermitRootLogin&quot; to &quot;no&quot;</span>
 
-<span class="c"># Restart ssh server.</span>
-<span class="nv">$ </span>sudo service ssh restart
+<span class="c1"># Restart ssh server.</span>
+$ sudo service ssh restart
 </pre></div>
 </div>
 <div class="section" id="install-docker">
@@ -229,29 +229,29 @@ Retype new UNIX password:
 <p>It is preferred to install <a class="reference external" href="https://www.discourse.org/">Discourse</a> through the prebuilt <a class="reference external" href="https://www.docker.com">Docker</a> image.
 Thus, we have to install <a class="reference external" href="https://www.docker.com">Docker</a> beforehand.</p>
 <p>To install <a class="reference external" href="https://www.docker.com">Docker</a>, run the following command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>wget -qO- https://get.docker.com/ <span class="p">|</span> sudo sh
+<div class="highlight"><pre><span></span>$ wget -qO- https://get.docker.com/ <span class="p">|</span> sudo sh
 </pre></div>
 </div>
 <div class="section" id="install-discourse">
 <h3>Install Discourse</h3>
 <p>Now, we can install <a class="reference external" href="https://www.discourse.org/">Discourse</a> with:</p>
-<div class="highlight"><pre><span class="c"># Switch to root user.</span>
-<span class="nv">$ </span>sudo -s
+<div class="highlight"><pre><span></span><span class="c1"># Switch to root user.</span>
+$ sudo -s
 
-<span class="c"># Create a directory for Discourse.</span>
+<span class="c1"># Create a directory for Discourse.</span>
 &gt; mkdir /var/discourse
 
-<span class="c"># Clone the Discourse docker image.</span>
+<span class="c1"># Clone the Discourse docker image.</span>
 &gt; git clone https://github.com/discourse/discourse_docker.git <span class="se">\</span>
             /var/discourse
 
-<span class="c"># Change the directory to /var/discourse.</span>
+<span class="c1"># Change the directory to /var/discourse.</span>
 &gt; <span class="nb">cd</span> /var/discourse
 
-<span class="c"># Copy the sample configuration.</span>
+<span class="c1"># Copy the sample configuration.</span>
 &gt; cp samples/standalone.yml containers/app.yml
 
-<span class="c"># Edit the configuration.</span>
+<span class="c1"># Edit the configuration.</span>
 &gt; vi containers/app.yml
 </pre></div>
 <p>It is <em>mandatory</em> to change the following fields:</p>
@@ -271,11 +271,11 @@ hexadecimals.)</li>
 </li>
 </ul>
 <p>And then, we can bootstrap the installation with:</p>
-<div class="highlight"><pre>./launcher bootstrap app
+<div class="highlight"><pre><span></span>./launcher bootstrap app
 </pre></div>
 <p>This will take some time.  Get a cup of coffee and wait for a while.  :-)</p>
 <p>After the bootstrap succeed, we can launch the <a class="reference external" href="https://www.discourse.org/">Discourse</a> installation with:</p>
-<div class="highlight"><pre>./launcher start app
+<div class="highlight"><pre><span></span>./launcher start app
 </pre></div>
 <p><strong>Congratulations!</strong>  You should be able to checkout the installation through
 your favorite browser!</p>
@@ -304,7 +304,7 @@ and the certificate to <code>/var/discourse/shared/standalone/ssl/ssl.crt</code>
 </li>
 </ol>
 <p>Now, we should rebuild the container with:</p>
-<div class="highlight"><pre><span class="c"># Rebuild the container.</span>
+<div class="highlight"><pre><span></span><span class="c1"># Rebuild the container.</span>
 ./launcher rebuild app
 </pre></div>
 </div>

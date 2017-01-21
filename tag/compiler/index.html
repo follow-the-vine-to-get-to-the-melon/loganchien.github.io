@@ -41,12 +41,13 @@
 			</footer>
 			<div class="entry-content"><p>How to count the number of trailing zeros of an integer?  The simplest way is
 to use the built-in function <code>__builtin_ctz()</code>:</p>
-<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 <p>What will happen if we don't have <code>__builtin_ctz()</code>?  If we have another
-built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight ...</a></p></div>
+built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>
+(the …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/12/17/count-trailing-zeros/">More</a></p>
 		</article>
 	</li>
@@ -62,7 +63,7 @@ built-in function <code>__popcount()</code>, which can compute the <a class="ref
 Besides, a high performance, power efficient, and royalty-free open source
 implementation <a class="reference external" href="https://github.com/ucb-bar">Rocket Chip</a> is available.</p>
 <p>RISC-V was developed by Krste Asanović and David A. Patterson.  In their
-<a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf">technical report</a>, they claimed that an open instruction set can benefit both ...</p></div>
+<a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf">technical report</a>, they claimed that an open instruction set can benefit both …</p></div>
                         <p><a class="normal-btn" href="http://logan.tw/posts/2014/12/16/risc-v-microprocessor/">More</a></p>
 		</article>
 	</li>

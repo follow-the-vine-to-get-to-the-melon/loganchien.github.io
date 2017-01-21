@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-08T15:19:00+08:00</updated><entry><title>Fix Nautilus Video Thumbnails</title><link href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/" rel="alternate"></link><updated>2015-11-08T15:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-08:posts/2015/11/08/fix-nautilus-video-thumbnails/</id><summary type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - misc</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/misc.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-11-08T15:19:00+08:00</updated><entry><title>Fix Nautilus Video Thumbnails</title><link href="http://logan.tw/posts/2015/11/08/fix-nautilus-video-thumbnails/" rel="alternate"></link><published>2015-11-08T15:19:00+08:00</published><updated>2015-11-08T15:19:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-11-08:/posts/2015/11/08/fix-nautilus-video-thumbnails/</id><summary type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
+that video thumbnails (or previews) do not show up in Gnome &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt;:&lt;/p&gt;
+&lt;img alt="Nautilus without video preview thumbnails" src="http://logan.tw/static/images/nautilus-no-video-thumbnail.png" /&gt;
+&lt;p&gt;I prefer thumbnails to icons.  Besides, I remember that &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; will generate
+a thumbnail for each video in &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 14.04.  Thus, I took some …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have a clean &lt;a class="reference external" href="http://ubuntu.com"&gt;Ubuntu&lt;/a&gt; 15.10 installation these days.  However, I noticed
 that video thumbnails (or previews) do not show up in Gnome &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt;:&lt;/p&gt;
 &lt;img alt="Nautilus without video preview thumbnails" src="http://logan.tw/static/images/nautilus-no-video-thumbnail.png" /&gt;
 &lt;p&gt;I prefer thumbnails to icons.  Besides, I remember that &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; will generate
@@ -7,11 +11,11 @@ a thumbnail for each video in &lt;a class="reference external" href="http://ubun
 look for the reason.&lt;/p&gt;
 &lt;p&gt;After trials and errors, I found &lt;code&gt;gstreamer1.0-libav&lt;/code&gt; is the package in
 question.  It is not installed by default.  We can install it with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-libav
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install gstreamer1.0-libav
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In addition, we should clean the thumbnail cache; otherwise &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; won't
 regenerate thumbnails for videos.  To clean the thumbnail cache:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;rm -r ~/.cache/thumbnails/fail
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ rm -r ~/.cache/thumbnails/fail
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, refresh &lt;a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus"&gt;Nautilus&lt;/a&gt; with &lt;code&gt;Ctrl-R&lt;/code&gt;.  We should be able to see the
 thumbnails now:&lt;/p&gt;
@@ -19,8 +23,8 @@ thumbnails now:&lt;/p&gt;
 &lt;p&gt;If you still can't see thumbnails, it is possible that your videos are encoded
 by less popular codecs.  Installing &lt;code&gt;gstreamer1.0-plugins-ugly&lt;/code&gt; or
 &lt;code&gt;gstreamer1.0-plugins-bad&lt;/code&gt; might help:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-plugins-ugly
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gstreamer1.0-plugins-bad
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install gstreamer1.0-plugins-ugly
+$ sudo apt-get install gstreamer1.0-plugins-bad
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, please notice that &lt;code&gt;gstreamer1.0-plugins-ugly&lt;/code&gt; might be covered
 by more restrict licenses or patents.  And &lt;code&gt;gstreamer1.0-plugins-bad&lt;/code&gt;
@@ -33,10 +37,17 @@ etc.  Read &lt;a class="reference external" href="http://gstreamer.freedesktop.o
 &lt;li&gt;&lt;a class="reference external" href="http://gstreamer.freedesktop.org/documentation/splitup.html"&gt;GStreamer plug-ins splitup&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="ubuntu"></category><category term="gnome"></category></entry><entry><title>Troubleshooting adb No Permissions Problem</title><link href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/" rel="alternate"></link><updated>2015-05-25T21:59:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-25:posts/2015/05/25/troubleshooting-adb-no-permissions-problem/</id><summary type="html">&lt;p&gt;I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
+</content><category term="linux"></category><category term="ubuntu"></category><category term="gnome"></category></entry><entry><title>Troubleshooting adb No Permissions Problem</title><link href="http://logan.tw/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/" rel="alternate"></link><published>2015-05-25T21:59:00+08:00</published><updated>2015-05-25T21:59:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-25:/posts/2015/05/25/troubleshooting-adb-no-permissions-problem/</id><summary type="html">&lt;p&gt;I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
 the device to my computer and tried to list the devices with &lt;code&gt;adb
 devices&lt;/code&gt; command.  But, unfortunately, I got the following error message:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;adb devices
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ adb devices
+List of devices attached
+????????????    no permissions
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the following of …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I got an Android Nexus 7 (2013, Wi-Fi) device a short while ago.  I attached
+the device to my computer and tried to list the devices with &lt;code&gt;adb
+devices&lt;/code&gt; command.  But, unfortunately, I got the following error message:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ adb devices
 List of devices attached
 ????????????    no permissions
 &lt;/pre&gt;&lt;/div&gt;
@@ -46,21 +57,21 @@ problem.&lt;/p&gt;
 &lt;h2&gt;ADB Server with Root Permission&lt;/h2&gt;
 &lt;p&gt;First, we can run &lt;code&gt;adb&lt;/code&gt; command with &lt;strong&gt;root&lt;/strong&gt; permission, and check
 whether we can list the devices with &lt;code&gt;sudo&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# Stop the adb server (which will be restarted later.)&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;adb &lt;span class="nb"&gt;kill&lt;/span&gt;-server
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Stop the adb server (which will be restarted later.)&lt;/span&gt;
+$ adb kill-server
 
-&lt;span class="c"&gt;# Open a root shell.&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo -s
+&lt;span class="c1"&gt;# Open a root shell.&lt;/span&gt;
+$ sudo -s
 
-&lt;span class="c"&gt;# Run &amp;quot;adb device&amp;quot; with in the root shell.&lt;/span&gt;
+&lt;span class="c1"&gt;# Run &amp;quot;adb device&amp;quot; with in the root shell.&lt;/span&gt;
 &amp;gt; adb devices
 List of devices attached
 057d7cxx    device
 
-&lt;span class="c"&gt;# Stop the adb server with root permission.&lt;/span&gt;
-&amp;gt; adb &lt;span class="nb"&gt;kill&lt;/span&gt;-server
+&lt;span class="c1"&gt;# Stop the adb server with root permission.&lt;/span&gt;
+&amp;gt; adb kill-server
 
-&lt;span class="c"&gt;# Leave the root shell.&lt;/span&gt;
+&lt;span class="c1"&gt;# Leave the root shell.&lt;/span&gt;
 &amp;gt; &lt;span class="nb"&gt;exit&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;OK.  It seems that everything works fine with &lt;strong&gt;root&lt;/strong&gt; permission.  If we can
@@ -94,39 +105,39 @@ device are not listed in &lt;a class="reference external" href="http://source.an
 &lt;div class="section" id="find-usb-vendor-and-product-id-for-udev-rules"&gt;
 &lt;h2&gt;Find USB Vendor and Product ID for udev Rules&lt;/h2&gt;
 &lt;p&gt;We can check the USB &lt;em&gt;vendor ID&lt;/em&gt; and &lt;em&gt;product ID&lt;/em&gt; with &lt;code&gt;lsusb&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;lsusb
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ lsusb
 Bus &lt;span class="m"&gt;003&lt;/span&gt; Device 013: ID 18d1:4ee7 Google Inc.
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In this example, &lt;code&gt;18d1&lt;/code&gt; is the &lt;em&gt;vendor ID&lt;/em&gt; and &lt;code&gt;4ee7&lt;/code&gt; is the
 &lt;em&gt;product ID&lt;/em&gt; for my Android device.  Thus, I added the following rule:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# adb protocol on flo (Nexus 7 2013)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# adb protocol on flo (Nexus 7 2013)&lt;/span&gt;
 &lt;span class="nv"&gt;SUBSYSTEM&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;usb&amp;quot;&lt;/span&gt;, ATTR&lt;span class="o"&gt;{&lt;/span&gt;idVendor&lt;span class="o"&gt;}==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;18d1&amp;quot;&lt;/span&gt;, ATTR&lt;span class="o"&gt;{&lt;/span&gt;idProduct&lt;span class="o"&gt;}==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;4ee7&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;MODE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0600&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;OWNER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;username&amp;gt;&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Now, we can reload the &lt;strong&gt;udev&lt;/strong&gt; rules with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo udevadm control --reload-rules
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo udevadm control --reload-rules
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After re-pluging the device, we should be able to see the devices with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;adb devices
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ adb devices
 List of devices attached
 057d7cxx    device
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, notice that the bootloader has different &lt;em&gt;product ID&lt;/em&gt;, thus we have
 have to reboot to bootloader mode:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;adb reboot bootloader
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ adb reboot bootloader
 
-&lt;span class="nv"&gt;$ &lt;/span&gt;lsusb
+$ lsusb
 Bus &lt;span class="m"&gt;003&lt;/span&gt; Device 013: ID 18d1:4ee0 Google Inc.
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It seems that we have to add &lt;code&gt;18d1:4ee0&lt;/code&gt; to udev rules as well:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# fastboot protocol on flo (Nexus 7 2013)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# fastboot protocol on flo (Nexus 7 2013)&lt;/span&gt;
 &lt;span class="nv"&gt;SUBSYSTEM&lt;/span&gt;&lt;span class="o"&gt;==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;usb&amp;quot;&lt;/span&gt;, ATTR&lt;span class="o"&gt;{&lt;/span&gt;idVendor&lt;span class="o"&gt;}==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;18d1&amp;quot;&lt;/span&gt;, ATTR&lt;span class="o"&gt;{&lt;/span&gt;idProduct&lt;span class="o"&gt;}==&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;4ee0&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;MODE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;0600&amp;quot;&lt;/span&gt;, &lt;span class="nv"&gt;OWNER&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;username&amp;gt;&amp;quot;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Reload the &lt;strong&gt;udev&lt;/strong&gt; configuration again.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo udevadm control --reload-rules
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo udevadm control --reload-rules
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, re-plug the USB device again.  Everything should work now!&lt;/p&gt;
 &lt;p&gt;If this still doesn't work, then restart the &lt;strong&gt;udev&lt;/strong&gt; service with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo service udev restart
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo service udev restart
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Hoping this post will help.&lt;/p&gt;
 &lt;/div&gt;
@@ -136,7 +147,10 @@ Bus &lt;span class="m"&gt;003&lt;/span&gt; Device 013: ID 18d1:4ee0 Google Inc.
 &lt;li&gt;StackExchange: &lt;a class="reference external" href="http://unix.stackexchange.com/questions/39370/how-to-reload-udev-rules-without-reboot"&gt;How to reload udev rules without reboot?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</summary><category term="android"></category><category term="udev"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Grub Install and Btrfs Root File System</title><link href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/" rel="alternate"></link><updated>2015-05-17T01:44:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-17:posts/2015/05/17/grub-install-and-btrfs-root-file-system/</id><summary type="html">&lt;p&gt;Recently, the Linux operating system on my laptop no longer boots.  It seems
+</content><category term="android"></category><category term="udev"></category><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Grub Install and Btrfs Root File System</title><link href="http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/" rel="alternate"></link><published>2015-05-17T01:44:00+08:00</published><updated>2015-05-17T01:44:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-05-17:/posts/2015/05/17/grub-install-and-btrfs-root-file-system/</id><summary type="html">&lt;p&gt;Recently, the Linux operating system on my laptop no longer boots.  It seems
+that the boot sector for &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; bootloader is corrupted.  I tried to
+&lt;strong&gt;reinstall GRUB&lt;/strong&gt; with an Ubuntu LiveCD; however, I have encountered some
+problem related to &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; file system (which is the file system for my root …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently, the Linux operating system on my laptop no longer boots.  It seems
 that the boot sector for &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; bootloader is corrupted.  I tried to
 &lt;strong&gt;reinstall GRUB&lt;/strong&gt; with an Ubuntu LiveCD; however, I have encountered some
 problem related to &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; file system (which is the file system for my root
@@ -173,29 +187,29 @@ problem inside the chroot.&lt;/li&gt;
 &lt;div class="section" id="mount-the-file-systems"&gt;
 &lt;h3&gt;Mount the File Systems&lt;/h3&gt;
 &lt;p&gt;First, create a directory as a mount point for &lt;strong&gt;root file system&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mkdir mnt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mkdir mnt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Second, mount the &lt;strong&gt;root file system&lt;/strong&gt; with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mount -o &lt;span class="nv"&gt;subvol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;@ /dev/SDA4 mnt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mount -o &lt;span class="nv"&gt;subvol&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;@ /dev/SDA4 mnt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Notice that it is &lt;em&gt;required&lt;/em&gt; to specify the &lt;a class="reference external" href="https://btrfs.wiki.kernel.org/"&gt;Btrfs&lt;/a&gt; subvolume with the
 &lt;code&gt;-o subvol=&lt;/code&gt; option.  We will explain this later.  On the default Ubuntu
 installation, the subvolume for the root file system is named after &lt;code&gt;&amp;#64;&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Third, mount the special file system for the &lt;strong&gt;chroot&lt;/strong&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; i in dev dev/pts sys proc run&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo mount --bind /&lt;span class="nv"&gt;$i&lt;/span&gt; mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="k"&gt;for&lt;/span&gt; i in dev dev/pts sys proc run&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo mount --bind /&lt;span class="nv"&gt;$i&lt;/span&gt; mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Fourth, if you are using &lt;a class="reference external" href="http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface"&gt;UEFI&lt;/a&gt;, you should mount the EFI boot partition
 as well:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo mount /dev/SDA1 mnt/boot/efi
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo mount /dev/SDA1 mnt/boot/efi
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="change-root-and-reinstall-grub"&gt;
 &lt;h3&gt;Change Root and Reinstall GRUB&lt;/h3&gt;
 &lt;p&gt;Now, we can switch to the root file system with the &lt;code&gt;chroot&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo chroot mnt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo chroot mnt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In the chroot, we can reinstall the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; bootloader with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; grub-install /dev/SDA
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; grub-install /dev/SDA
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Remarks: If you see the error messages like &amp;quot;&lt;code&gt;cannot find a device for
 ...&lt;/code&gt;&amp;quot;, then it is possible that some partition is not mounted properly.  As a
@@ -210,12 +224,12 @@ mounting the root file system in the first attempt.  If you encounter similar
 error messages, double check the &lt;code&gt;/etc/fstab&lt;/code&gt; and the mount options.&lt;/p&gt;
 &lt;p&gt;Now, we can verify the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB&lt;/a&gt; installation and update the configuration files
 with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; grub-install --recheck /dev/SDA
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; grub-install --recheck /dev/SDA
 
 &amp;gt; update-grub
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Finally, leave the chroot with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&amp;gt; &lt;span class="nb"&gt;exit&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; &lt;span class="nb"&gt;exit&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="unmount-the-file-systems"&gt;
@@ -223,15 +237,15 @@ with:&lt;/p&gt;
 &lt;p&gt;Now, we would like to unmount the file systems so that the changes can be
 flushed properly.&lt;/p&gt;
 &lt;p&gt;First, unmount the EFI partition (if available):&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo umount mnt/boot/efi
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo umount mnt/boot/efi
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Second, unmount the special file systems:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; i in run proc sys dev/pts dev&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo umount mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="k"&gt;for&lt;/span&gt; i in run proc sys dev/pts dev&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; sudo umount mnt/&lt;span class="nv"&gt;$i&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Third, unmount the root file systems and delete the mount point:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo umount mnt
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo umount mnt
 
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo rmdir mnt
+$ sudo rmdir mnt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;That's all.  You can reboot the computer now!  Hoping this will fix your
 problem.&lt;/p&gt;
@@ -243,7 +257,10 @@ problem.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://howtoubuntu.org/how-to-repair-restore-reinstall-grub-2-with-a-ubuntu-live-cd"&gt;How to Repair, Restore, or Reinstall Grub 2 with a Ubuntu Live CD or USB&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+</content><category term="linux"></category><category term="grub"></category></entry><entry><title>Using Aria2 Download Manager</title><link href="http://logan.tw/posts/2015/02/21/using-aria2-download-manager/" rel="alternate"></link><published>2015-02-21T23:02:00+08:00</published><updated>2015-02-21T23:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-02-21:/posts/2015/02/21/using-aria2-download-manager/</id><summary type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
+resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
+the size of the output file, and download the rest of the file from the server.
+I can even restart the download task with a &lt;strong&gt;different …&lt;/strong&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;I used to download the large files with &lt;code&gt;wget&lt;/code&gt; because I can simply
 resume the download tasks with &lt;code&gt;-c&lt;/code&gt; option.  This option will check
 the size of the output file, and download the rest of the file from the server.
 I can even restart the download task with a &lt;strong&gt;different URI&lt;/strong&gt;.  This &lt;em&gt;feature&lt;/em&gt;
@@ -263,33 +280,33 @@ there are several features which are not available in &lt;code&gt;wget&lt;/code&
 &lt;h2&gt;Installation&lt;/h2&gt;
 &lt;p&gt;Before we can start our discussion, we have to install &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; first.&lt;/p&gt;
 &lt;p&gt;To install &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; on Ubuntu (or Debian), run the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install aria2
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install aria2
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Besides, check the file permission of your &lt;code&gt;.netrc&lt;/code&gt; file.  It should be
 600, i.e. only the owner can read or write the file.  You can change the
 file permission with following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;chmod &lt;span class="m"&gt;600&lt;/span&gt; ~/.netrc
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ chmod &lt;span class="m"&gt;600&lt;/span&gt; ~/.netrc
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="download-files-with-aria2"&gt;
 &lt;h2&gt;Download Files with Aria2&lt;/h2&gt;
 &lt;p&gt;&lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; is similar to &lt;code&gt;wget&lt;/code&gt; command line tool.  We can simply download
 the files with &lt;code&gt;aria2c&lt;/code&gt; command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example, to download the Debian 7.8 minimal CD image:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c http://cdimage.debian.org/debian-cd/7.8.0/amd64/iso-cd/debian-7.8.0-amd64-netinst.iso
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We can specify the output file name with &lt;code&gt;-o&lt;/code&gt; option:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To resume a download task, we can specify the &lt;code&gt;-c&lt;/code&gt; option:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+$ aria2c -c &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; -o &lt;span class="o"&gt;[&lt;/span&gt;filename&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;If we wish to download a file parallelly, we can try the &lt;code&gt;-x&lt;/code&gt; option:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -x&lt;span class="o"&gt;[&lt;/span&gt;num-parts&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c -x2 &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;  &lt;span class="c"&gt;# Split the task into two parts.&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c -x&lt;span class="o"&gt;[&lt;/span&gt;num-parts&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;
+$ aria2c -x2 &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt;  &lt;span class="c1"&gt;# Split the task into two parts.&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="run-aria2-as-a-daemon"&gt;
@@ -297,14 +314,14 @@ the files with &lt;code&gt;aria2c&lt;/code&gt; command:&lt;/p&gt;
 &lt;p&gt;If we wish to use &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; as a download manager, we should run &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; as a
 daemon.&lt;/p&gt;
 &lt;p&gt;To start the Aria2 daemon:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c --enable-rpc --rpc-listen-all
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;By default, &lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; will perform 5 tasks at the same time, to change the
 number of concurrent download tasks, we can specify the &lt;code&gt;-j&lt;/code&gt; option:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all -j&lt;span class="o"&gt;[&lt;/span&gt;num-parallel&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c --enable-rpc --rpc-listen-all -j&lt;span class="o"&gt;[&lt;/span&gt;num-parallel&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example, to download the files sequentially:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2c --enable-rpc --rpc-listen-all -j1
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2c --enable-rpc --rpc-listen-all -j1
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After starting the Aria2 daemon, click here for the &lt;a class="reference external" href="http://ziahamza.github.io/webui-aria2/"&gt;Aria2 Web UI&lt;/a&gt;.  You can
 add/remove the download tasks in the &lt;a class="reference external" href="http://ziahamza.github.io/webui-aria2/"&gt;Aria2 Web UI&lt;/a&gt;.&lt;/p&gt;
@@ -314,24 +331,29 @@ add/remove the download tasks in the &lt;a class="reference external" href="http
 &lt;p&gt;&lt;a class="reference external" href="http://aria2.sourceforge.net/"&gt;Aria2&lt;/a&gt; provides a command line tool, &lt;code&gt;aria2rpc&lt;/code&gt;, to control the daemon.
 However, it is not installed by default.&lt;/p&gt;
 &lt;p&gt;To obtain &lt;code&gt;aria2rpc&lt;/code&gt;, run the following command:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;cat /usr/share/doc/aria2/xmlrpc/aria2rpc.gz &lt;span class="p"&gt;|&lt;/span&gt; gzip -d &amp;gt; aria2rpc
-&lt;span class="nv"&gt;$ &lt;/span&gt;chmod +x aria2rpc
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cat /usr/share/doc/aria2/xmlrpc/aria2rpc.gz &lt;span class="p"&gt;|&lt;/span&gt; gzip -d &amp;gt; aria2rpc
+$ chmod +x aria2rpc
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After these steps, move &lt;code&gt;aria2rpc&lt;/code&gt; to your &lt;code&gt;$PATH&lt;/code&gt;, so that we
 can run &lt;code&gt;aria2rpc&lt;/code&gt; directly.&lt;/p&gt;
 &lt;p&gt;Now, we can add a download task with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc addUri &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;options&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2rpc addUri &lt;span class="o"&gt;[&lt;/span&gt;URI&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt;options&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;span class="o"&gt;[&lt;/span&gt;task-id&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After adding a download task, an ID will be printed.  We can remove a task
 with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc remove &lt;span class="o"&gt;[&lt;/span&gt;task-id&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2rpc remove &lt;span class="o"&gt;[&lt;/span&gt;task-id&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;You may find more usages with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;aria2rpc --help
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ aria2rpc --help
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="aria2"></category></entry><entry><title>2014 Year End Review</title><link href="http://logan.tw/posts/2014/12/31/2014-year-end-review/" rel="alternate"></link><updated>2014-12-31T23:54:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-31:posts/2014/12/31/2014-year-end-review/</id><summary type="html">&lt;p&gt;It's the end of 2014.  It has been an amazing year with a lot of astonishing
+</content><category term="linux"></category><category term="aria2"></category></entry><entry><title>2014 Year End Review</title><link href="http://logan.tw/posts/2014/12/31/2014-year-end-review/" rel="alternate"></link><published>2014-12-31T23:54:00+08:00</published><updated>2014-12-31T23:54:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-31:/posts/2014/12/31/2014-year-end-review/</id><summary type="html">&lt;p&gt;It's the end of 2014.  It has been an amazing year with a lot of astonishing
+moments!&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;This is my first year to work as a &lt;em&gt;full-time software engineer&lt;/em&gt;.  I have
+learned a lot from the real world software development, including the PMD,
+annaul planning, software schedule estimation, and etc …&lt;/li&gt;&lt;/ul&gt;</summary><content type="html">&lt;p&gt;It's the end of 2014.  It has been an amazing year with a lot of astonishing
 moments!&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;This is my first year to work as a &lt;em&gt;full-time software engineer&lt;/em&gt;.  I have
@@ -359,11 +381,15 @@ lot to learn as a professional software engineer and life hacker.  I decided to
 write more notes and blog posts, so that I can have some retrospection in the
 end of year.&lt;/p&gt;
 &lt;p&gt;Hoping that I can become a better person next year.&lt;/p&gt;
-</summary><category term="diary"></category></entry><entry><title>Debian Backports</title><link href="http://logan.tw/posts/2014/12/20/debian-backports/" rel="alternate"></link><updated>2014-12-20T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-20:posts/2014/12/20/debian-backports/</id><summary type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
+</content><category term="diary"></category></entry><entry><title>Debian Backports</title><link href="http://logan.tw/posts/2014/12/20/debian-backports/" rel="alternate"></link><published>2014-12-20T22:04:00+08:00</published><updated>2014-12-20T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-20:/posts/2014/12/20/debian-backports/</id><summary type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
 packages are very old and well-tested.  However, this become a problem to me.&lt;/p&gt;
 &lt;p&gt;Since &lt;a class="reference external" href="http://www.git-scm.org/"&gt;Git&lt;/a&gt; 1.9, we have to run the following command to silence a warning
 when we are running &lt;code&gt;git push&lt;/code&gt;.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;git config --global push.default simple
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git config --global …&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;It is well-known that &lt;a class="reference external" href="http://www.debian.org/"&gt;Debian&lt;/a&gt; stable release is very &lt;em&gt;stable&lt;/em&gt;, i.e. the
+packages are very old and well-tested.  However, this become a problem to me.&lt;/p&gt;
+&lt;p&gt;Since &lt;a class="reference external" href="http://www.git-scm.org/"&gt;Git&lt;/a&gt; 1.9, we have to run the following command to silence a warning
+when we are running &lt;code&gt;git push&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git config --global push.default simple
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;But this command will add settings to &lt;code&gt;.gitconfig&lt;/code&gt; in the home directory,
 which is unknown to the &lt;code&gt;git&lt;/code&gt; command from the Wheezy repository.  And,
@@ -374,21 +400,25 @@ repositories that contains the newer software for Debian stable releases (with
 necessary modification.)&lt;/p&gt;
 &lt;p&gt;To install the packages from the backports, add the following line to
 &lt;code&gt;/etc/apt/sources.list&lt;/code&gt;:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;deb http://ftp.us.debian.org/debian wheezy-backports main
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;deb http://ftp.us.debian.org/debian wheezy-backports main
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Note: The URL can be any &lt;a class="reference external" href="https://www.debian.org/mirror/official"&gt;official Debian mirrors&lt;/a&gt;.  Usually, there will be
 one line similar to &lt;code&gt;deb [URL] wheezy main&lt;/code&gt; in your &lt;code&gt;sources.list&lt;/code&gt;.
 You can copy the line and replace &lt;code&gt;wheezy&lt;/code&gt; with &lt;code&gt;wheezy-backport&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;Update the local APT information with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get update
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;To install the packages from the backports:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports &lt;span class="o"&gt;[&lt;/span&gt;package-name&lt;span class="o"&gt;]&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install -t wheezy-backports &lt;span class="o"&gt;[&lt;/span&gt;package-name&lt;span class="o"&gt;]&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;For example, to install &lt;code&gt;git&lt;/code&gt; from the backports:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install -t wheezy-backports git
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install -t wheezy-backports git
 &lt;/pre&gt;&lt;/div&gt;
-</summary><category term="linux"></category><category term="debian"></category></entry><entry><title>RISC-V Microprocessor</title><link href="http://logan.tw/posts/2014/12/16/risc-v-microprocessor/" rel="alternate"></link><updated>2014-12-16T23:20:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-16:posts/2014/12/16/risc-v-microprocessor/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt; is an instruction set architecture (ISA) released by UC Berkeley.
+</content><category term="linux"></category><category term="debian"></category></entry><entry><title>RISC-V Microprocessor</title><link href="http://logan.tw/posts/2014/12/16/risc-v-microprocessor/" rel="alternate"></link><published>2014-12-16T23:20:00+08:00</published><updated>2014-12-16T23:20:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-12-16:/posts/2014/12/16/risc-v-microprocessor/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt; is an instruction set architecture (ISA) released by UC Berkeley.
+Besides, a high performance, power efficient, and royalty-free open source
+implementation &lt;a class="reference external" href="https://github.com/ucb-bar"&gt;Rocket Chip&lt;/a&gt; is available.&lt;/p&gt;
+&lt;p&gt;RISC-V was developed by Krste Asanović and David A. Patterson.  In their
+&lt;a class="reference external" href="http://www.eecs.berkeley.edu/Pubs/TechRpts/2014/EECS-2014-146.pdf"&gt;technical report&lt;/a&gt;, they claimed that an open instruction set can benefit both …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="http://riscv.org"&gt;RISC-V&lt;/a&gt; is an instruction set architecture (ISA) released by UC Berkeley.
 Besides, a high performance, power efficient, and royalty-free open source
 implementation &lt;a class="reference external" href="https://github.com/ucb-bar"&gt;Rocket Chip&lt;/a&gt; is available.&lt;/p&gt;
 &lt;p&gt;RISC-V was developed by Krste Asanović and David A. Patterson.  In their
@@ -465,7 +495,11 @@ forward to the future of &lt;a class="reference external" href="http://riscv.org
 &lt;li&gt;&lt;a class="reference external" href="http://www.eejournal.com/archives/articles/20141210-risc-v/"&gt;EE Journal: Berkeley's RISC-V Wants to Be Free&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</summary><category term="processor"></category><category term="compiler"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+</content><category term="processor"></category><category term="compiler"></category></entry><entry><title>Ubuntu Bluetooth Headset</title><link href="http://logan.tw/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="alternate"></link><published>2014-11-24T23:04:00+08:00</published><updated>2014-11-24T23:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-24:/posts/2014/11/24/ubuntu-bluetooth-headset/</id><summary type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
+was quite disappointed with the sound quality.  Fortunately, after searching on
+the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
+quality.&lt;/p&gt;
+&lt;p&gt;Here are the steps to switch to the mode with better …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have bought a Bluetooth headset recently.  After connecting the device, I
 was quite disappointed with the sound quality.  Fortunately, after searching on
 the web, it seems that I am using the &amp;quot;Telphony Duplex&amp;quot; mode, which has low
 quality.&lt;/p&gt;
@@ -478,7 +512,10 @@ quality.&lt;/p&gt;
 (A2DP)&lt;/strong&gt;&amp;quot;.&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Reference: &lt;a class="reference external" href="http://ubuntuforums.org/showthread.php?t=2171043"&gt;Ubuntu Forums: Bluetooth Headset Bad Sound Quality&lt;/a&gt;.&lt;/p&gt;
-</summary><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Install GCIN on Ubuntu 14.04</title><link href="http://logan.tw/posts/2014/11/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-23:posts/2014/11/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
+</content><category term="linux"></category><category term="ubuntu"></category></entry><entry><title>Install GCIN on Ubuntu 14.04</title><link href="http://logan.tw/posts/2014/11/23/install-gcin-on-ubuntu-1404/" rel="alternate"></link><published>2014-11-23T14:36:00+08:00</published><updated>2014-11-23T14:36:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-23:/posts/2014/11/23/install-gcin-on-ubuntu-1404/</id><summary type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
+its long latency to switch between input methods for a long time.  As a
+Taiwanese, both &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; and &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; came up to my mind.  Unfortunately, both of
+them need extra configuration after &lt;code&gt;apt-get&lt;/code&gt;.  Here's my note to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I decided to look for some alternatives to &lt;a class="reference external" href="https://code.google.com/p/ibus/"&gt;IBus&lt;/a&gt; input method after tolerating
 its long latency to switch between input methods for a long time.  As a
 Taiwanese, both &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; and &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt; came up to my mind.  Unfortunately, both of
 them need extra configuration after &lt;code&gt;apt-get&lt;/code&gt;.  Here's my note to install
@@ -492,18 +529,18 @@ your keyboard.&lt;/p&gt;
 &lt;p&gt;Here are the instructions:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Install the input methods&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# To install gcin:&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# To install gcin:&lt;/span&gt;
+$ sudo apt-get install gcin gcin-chewing
 
-&lt;span class="c"&gt;# To install hime:&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime hime-chewing
+&lt;span class="c1"&gt;# To install hime:&lt;/span&gt;
+$ sudo apt-get install hime hime-chewing
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Install the &lt;a class="reference external" href="http://chewing.im/"&gt;chewing&lt;/a&gt; packages if you are interested in:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c"&gt;# For gcin users:&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install gcin-chewing
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# For gcin users:&lt;/span&gt;
+$ sudo apt-get install gcin-chewing
 
-&lt;span class="c"&gt;# For hime users:&lt;/span&gt;
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get install hime-chewing
+&lt;span class="c1"&gt;# For hime users:&lt;/span&gt;
+$ sudo apt-get install hime-chewing
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Change the system settings for input method system:&lt;/p&gt;
@@ -529,19 +566,19 @@ problem, we have to install the Unity package built by the third-party.&lt;/p&gt
 &lt;p&gt;Here are the instructions for Ubuntu 14.04 &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;:&lt;/p&gt;
 &lt;ol class="arabic"&gt;
 &lt;li&gt;&lt;p class="first"&gt;Add APT repository for systray&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo add-apt-repository ppa:gurqn/systray-trusty
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo add-apt-repository ppa:gurqn/systray-trusty
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Edit configuration&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo vim /etc/apt/preferences.d/systray-trusty
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /etc/apt/preferences.d/systray-trusty
 Package: *
 Pin: release &lt;span class="nv"&gt;o&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;LP-PPA-gurqn-systray-trusty
 Pin-Priority: 600
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Update APT&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get update
-&lt;span class="nv"&gt;$ &lt;/span&gt;sudo apt-get upgrade
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get update
+$ sudo apt-get upgrade
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Reboot the system (logout and login again)&lt;/p&gt;
@@ -567,7 +604,13 @@ Pin-Priority: 600
 &lt;p&gt;These are the tweaks for me to install &lt;a class="reference external" href="http://hyperrate.com/dir.php?eid=67"&gt;gcin&lt;/a&gt; or &lt;a class="reference external" href="http://hime.luna.com.tw/"&gt;hime&lt;/a&gt;, and hope this is
 helpful.  Feel free to let me know if you have any problem.&lt;/p&gt;
 &lt;/div&gt;
-</summary><category term="linux"></category><category term="ubuntu"></category><category term="gcin"></category></entry><entry><title>Fix GRUB2 Warning</title><link href="http://logan.tw/posts/2014/11/17/fix-grub2-warning/" rel="alternate"></link><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-17:posts/2014/11/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
+</content><category term="linux"></category><category term="ubuntu"></category><category term="gcin"></category></entry><entry><title>Fix GRUB2 Warning</title><link href="http://logan.tw/posts/2014/11/17/fix-grub2-warning/" rel="alternate"></link><published>2014-11-17T23:50:00+08:00</published><updated>2014-11-17T23:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-17:/posts/2014/11/17/fix-grub2-warning/</id><summary type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
+Besides, I noticed that there was a warning message during the execution of
+&lt;code&gt;update-grub&lt;/code&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+Warning: Setting GRUB_TIMEOUT to a non-zero value when GRUB_HIDDEN_TIMEOUT
+is set is no longer supported.&lt;/blockquote&gt;
+&lt;p&gt;After checking the manual, I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;It has been for a while that my desktop PC was not showing the &lt;a class="reference external" href="http://www.gnu.org/software/grub/"&gt;GRUB2&lt;/a&gt; menu.
 Besides, I noticed that there was a warning message during the execution of
 &lt;code&gt;update-grub&lt;/code&gt;:&lt;/p&gt;
 &lt;blockquote&gt;
@@ -579,13 +622,17 @@ following line from &lt;code&gt;/etc/default/grub&lt;/code&gt;:&lt;/p&gt;
 GRUB_HIDDEN_TIMEOUT=0
 &lt;/pre&gt;
 &lt;p&gt;And update the GRUB with:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nv"&gt;$ &lt;/span&gt;sudo update-grub
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo update-grub
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;After rebooting, GRUB should work now.&lt;/p&gt;
-</summary><category term="linux"></category><category term="grub"></category></entry><entry><title>First Post</title><link href="http://logan.tw/posts/2014/11/11/first-post/" rel="alternate"></link><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-11:posts/2014/11/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
+</content><category term="linux"></category><category term="grub"></category></entry><entry><title>First Post</title><link href="http://logan.tw/posts/2014/11/11/first-post/" rel="alternate"></link><published>2014-11-11T23:38:00+08:00</published><updated>2014-11-11T23:38:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2014-11-11:/posts/2014/11/11/first-post/</id><summary type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
+&lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
+notes, and ideas with reStructuredText.  As a result, I can update the blog
+more frequently.&lt;/p&gt;
+&lt;p&gt;In the foreseeable future, I will start to …&lt;/p&gt;</summary><content type="html">&lt;p&gt;After using &lt;a class="reference external" href="https://blogger.com"&gt;Blogger&lt;/a&gt; for several years, I decided to switch to &lt;a class="reference external" href="http://docs.getpelican.com"&gt;Pelican&lt;/a&gt; and
 &lt;a class="reference external" href="https://pages.github.com"&gt;GitHub Pages&lt;/a&gt;.  I feel it will be much easier to write down my thoughts,
 notes, and ideas with reStructuredText.  As a result, I can update the blog
 more frequently.&lt;/p&gt;
 &lt;p&gt;In the foreseeable future, I will start to write some C++ related articles.
 Stay tuned!  :-)&lt;/p&gt;
-</summary></entry></feed>
+</content></entry></feed>

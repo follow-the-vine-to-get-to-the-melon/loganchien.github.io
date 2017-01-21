@@ -74,40 +74,40 @@ manage the certificates.  Let's start.</p>
 <div class="section" id="create-a-certificate-authority">
 <h2>Create a Certificate Authority</h2>
 <p>Create directory to save everything:</p>
-<div class="highlight"><pre><span class="nv">$ </span>mkdir MyCA
-<span class="nv">$ </span>chmod <span class="m">700</span> MyCA
-<span class="nv">$ </span><span class="nb">cd </span>MyCA
+<div class="highlight"><pre><span></span>$ mkdir MyCA
+$ chmod <span class="m">700</span> MyCA
+$ <span class="nb">cd</span> MyCA
 </pre></div>
 <p>Copy the tools:</p>
-<div class="highlight"><pre><span class="nv">$ </span>cp /usr/lib/ssl/misc/CA.pl .
-<span class="nv">$ </span>cp /etc/ssl/openssl.cnf .
+<div class="highlight"><pre><span></span>$ cp /usr/lib/ssl/misc/CA.pl .
+$ cp /etc/ssl/openssl.cnf .
 </pre></div>
 <p>Edit the configurations to fit your need, and finally create the certificate
 for your CA:</p>
-<div class="highlight"><pre><span class="nv">$ </span>./CA.pl -newca
+<div class="highlight"><pre><span></span>$ ./CA.pl -newca
 </pre></div>
 <p>By default, the <code>cacert.pem</code> will be generated at
 <code>demoCA/cacert.pem</code>.  Install this certificate as an authority in your
 browser.  You can also check the fingerprint with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>openssl x509 -fingerprint -noout -in cacert.pem
-<span class="nv">$ </span>openssl x509 -sha256 -fingerprint -noout -in cacert.pem
+<div class="highlight"><pre><span></span>$ openssl x509 -fingerprint -noout -in cacert.pem
+$ openssl x509 -sha256 -fingerprint -noout -in cacert.pem
 </pre></div>
 </div>
 <div class="section" id="generate-certificates-for-your-service">
 <h2>Generate Certificates for Your Service</h2>
 <p>To create the SSL certificate for your service:</p>
-<div class="highlight"><pre><span class="c"># Create a certificate request</span>
-<span class="nv">$ </span>./CA.pl -newreq
+<div class="highlight"><pre><span></span><span class="c1"># Create a certificate request</span>
+$ ./CA.pl -newreq
 
-<span class="c"># Sign a certificate request</span>
-<span class="nv">$ </span>./CA.pl -sign
+<span class="c1"># Sign a certificate request</span>
+$ ./CA.pl -sign
 </pre></div>
 <p>The generated <code>newkey.pem</code> and <code>newcert.pem</code> are the private key
 and the certificate respectively.</p>
 <p>Please notice that the <code>newkey.pem</code> has been encrypted with a passpharse.
 Under some situation, you have to decrypt it before installing the certificate
 (e.g. Apache2).  Here's the command to decrypt the private key:</p>
-<div class="highlight"><pre><span class="nv">$ </span>openssl rsa -in newkey.pem -out newkey.nopass.pem
+<div class="highlight"><pre><span></span>$ openssl rsa -in newkey.pem -out newkey.nopass.pem
 </pre></div>
 </div>
 

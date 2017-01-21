@@ -76,8 +76,8 @@ raw pointer <code>p</code>.</li>
 <code>nullptr</code>.  This function does not delete the pointee.</li>
 </ul>
 <p>For example:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;memory&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
 
 <span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -142,13 +142,13 @@ raw pointer <code>p</code>.</li>
 to be non-copyable.  In the other words, you can't create an unique pointer
 by copying the other unique pointer instance.  For example, the following code
 is illegal:</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">example1</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">example1</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">p1</span><span class="p">(</span><span class="k">new</span> <span class="n">A</span><span class="p">());</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">p2</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>  <span class="c1">// WON&#39;T COMPILE</span>
 <span class="p">}</span>
 </pre></div>
 <p>This doesn't compile either:</p>
-<div class="highlight"><pre><span class="kt">void</span> <span class="nf">example2</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">void</span> <span class="nf">example2</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">p1</span><span class="p">(</span><span class="k">new</span> <span class="n">A</span><span class="p">());</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">p2</span><span class="p">;</span>
   <span class="n">p2</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>  <span class="c1">// WON&#39;T COMPILE</span>
@@ -156,7 +156,7 @@ is illegal:</p>
 </pre></div>
 <p>Fortunately, the unique pointer is movable, thus we can return an unique
 pointer without problems:</p>
-<div class="highlight"><pre><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">create_instance</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">create_instance</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">result</span><span class="p">(</span><span class="k">new</span> <span class="n">A</span><span class="p">());</span>
   <span class="c1">// ...</span>
   <span class="k">return</span> <span class="n">result</span><span class="p">;</span>  <span class="c1">// OK</span>
@@ -168,7 +168,7 @@ pointer without problems:</p>
 </pre></div>
 <p>In addition, the unique pointer can be assigned from
 <code>std::unique_ptr&lt;T&gt;&amp;&amp;</code>, the R-value reference to the unique pointer:</p>
-<div class="highlight"><pre><span class="kt">bool</span> <span class="nf">build_object</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">bool</span> <span class="nf">build_object</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="o">&gt;</span> <span class="n">tmp</span><span class="p">(</span><span class="k">new</span> <span class="n">A</span><span class="p">());</span>
   <span class="c1">// ...</span>
   <span class="n">result</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>  <span class="c1">// OK</span>
@@ -189,7 +189,7 @@ similar to the raw pointer, the late binding will only happen on the
 virtual functions.  For the non-virtual functions, the callee function
 will be statically resolved at compile time.  This rule also applies to
 the destructor of the pointee.</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span> <span class="cm">/* ... Skipped ... */</span> <span class="p">};</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span> <span class="cm">/* ... Skipped ... */</span> <span class="p">};</span>
 
 <span class="k">class</span> <span class="nc">B</span> <span class="o">:</span> <span class="k">public</span> <span class="n">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
@@ -215,7 +215,7 @@ the destructor of the pointee.</p>
 <span class="p">}</span>
 </pre></div>
 <p>The output shows that:</p>
-<div class="highlight"><pre>### TEST 1
+<div class="highlight"><pre><span></span>### TEST 1
 A::A(this=0xa6d010)
 B::B(this=0xa6d010)
 A::~A(this=0xa6d010)
@@ -229,7 +229,7 @@ A::~A(this=0xa6d010)
 <p>Notice that the object allocated at address 0xa6d010 is not destructed with
 <code>B::~B()</code>.  Conceptually, the <code>main()</code> function above is equivalent
 to:</p>
-<div class="highlight"><pre><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;### TEST 1&quot;</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
   <span class="p">{</span>
     <span class="n">A</span> <span class="o">*</span><span class="n">pa</span> <span class="o">=</span> <span class="k">new</span> <span class="n">B</span><span class="p">();</span>
@@ -254,7 +254,7 @@ declare <code>A::~A()</code> as virtual.</p>
 that the pointer type should be <code>A[]</code> instead of <code>A</code>.  If the
 element type is incorrect, then the default deleter won't be able to delete
 the array properly.</p>
-<div class="highlight"><pre><span class="c1">// Correct Example</span>
+<div class="highlight"><pre><span></span><span class="c1">// Correct Example</span>
 <span class="p">{</span>
   <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">A</span><span class="p">[]</span><span class="o">&gt;</span> <span class="n">p</span><span class="p">(</span><span class="k">new</span> <span class="n">A</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
 <span class="p">}</span>
@@ -267,7 +267,7 @@ the array properly.</p>
 <span class="p">}</span>
 </pre></div>
 <p>Here is the output of the code snippet above:</p>
-<div class="highlight"><pre>A::A(this=0x2161018)
+<div class="highlight"><pre><span></span>A::A(this=0x2161018)
 A::A(this=0x2161019)
 A::A(this=0x216101a)
 A::~A(this=0x216101a)
@@ -297,10 +297,10 @@ array type.</p>
 <p>In the following example, we are going to define a <code>ExampleDeleter</code>
 function object which will call the object pool to reclaim and recycle the
 pointee instead of deleting the pointee:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;cassert&gt;</span>
-<span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;list&gt;</span>
-<span class="cp">#include &lt;memory&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;cassert&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
 
 <span class="k">class</span> <span class="nc">ExamplePool</span><span class="p">;</span>
 
@@ -414,8 +414,8 @@ pointee instead of deleting the pointee:</p>
 <h2>Linked List Example</h2>
 <p>Finally, I would like to demonstrate that can implement the singly linked
 list with the following code:</p>
-<div class="highlight"><pre><span class="cp">#include &lt;iostream&gt;</span>
-<span class="cp">#include &lt;memory&gt;</span>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;memory&gt;</span><span class="cp"></span>
 
 <span class="k">class</span> <span class="nc">List</span> <span class="p">{</span>
 <span class="k">private</span><span class="o">:</span>

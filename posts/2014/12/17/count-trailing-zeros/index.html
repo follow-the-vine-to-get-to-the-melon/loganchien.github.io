@@ -54,14 +54,14 @@
 <div class="entry-content">
 <p>How to count the number of trailing zeros of an integer?  The simplest way is
 to use the built-in function <code>__builtin_ctz()</code>:</p>
-<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>
 <p>What will happen if we don't have <code>__builtin_ctz()</code>?  If we have another
 built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>
 (the number of set bits), then we can compute the number of trailing zeros with:</p>
-<div class="highlight"><pre><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">return</span> <span class="n">__popcount</span><span class="p">((</span><span class="n">n</span> <span class="o">&amp;</span> <span class="o">-</span><span class="n">n</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
 <span class="p">}</span>
 </pre></div>

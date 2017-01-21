@@ -91,29 +91,29 @@ problem inside the chroot.</li>
 <div class="section" id="mount-the-file-systems">
 <h3>Mount the File Systems</h3>
 <p>First, create a directory as a mount point for <strong>root file system</strong>:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo mkdir mnt
+<div class="highlight"><pre><span></span>$ sudo mkdir mnt
 </pre></div>
 <p>Second, mount the <strong>root file system</strong> with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo mount -o <span class="nv">subvol</span><span class="o">=</span>@ /dev/SDA4 mnt
+<div class="highlight"><pre><span></span>$ sudo mount -o <span class="nv">subvol</span><span class="o">=</span>@ /dev/SDA4 mnt
 </pre></div>
 <p>Notice that it is <em>required</em> to specify the <a class="reference external" href="https://btrfs.wiki.kernel.org/">Btrfs</a> subvolume with the
 <code>-o subvol=</code> option.  We will explain this later.  On the default Ubuntu
 installation, the subvolume for the root file system is named after <code>&#64;</code>.</p>
 <p>Third, mount the special file system for the <strong>chroot</strong>:</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in dev dev/pts sys proc run<span class="p">;</span> <span class="k">do</span> sudo mount --bind /<span class="nv">$i</span> mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span>$ <span class="k">for</span> i in dev dev/pts sys proc run<span class="p">;</span> <span class="k">do</span> sudo mount --bind /<span class="nv">$i</span> mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
 </pre></div>
 <p>Fourth, if you are using <a class="reference external" href="http://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface">UEFI</a>, you should mount the EFI boot partition
 as well:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo mount /dev/SDA1 mnt/boot/efi
+<div class="highlight"><pre><span></span>$ sudo mount /dev/SDA1 mnt/boot/efi
 </pre></div>
 </div>
 <div class="section" id="change-root-and-reinstall-grub">
 <h3>Change Root and Reinstall GRUB</h3>
 <p>Now, we can switch to the root file system with the <code>chroot</code> command:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo chroot mnt
+<div class="highlight"><pre><span></span>$ sudo chroot mnt
 </pre></div>
 <p>In the chroot, we can reinstall the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> bootloader with:</p>
-<div class="highlight"><pre>&gt; grub-install /dev/SDA
+<div class="highlight"><pre><span></span>&gt; grub-install /dev/SDA
 </pre></div>
 <p>Remarks: If you see the error messages like &quot;<code>cannot find a device for
 ...</code>&quot;, then it is possible that some partition is not mounted properly.  As a
@@ -128,12 +128,12 @@ mounting the root file system in the first attempt.  If you encounter similar
 error messages, double check the <code>/etc/fstab</code> and the mount options.</p>
 <p>Now, we can verify the <a class="reference external" href="http://www.gnu.org/software/grub/">GRUB</a> installation and update the configuration files
 with:</p>
-<div class="highlight"><pre>&gt; grub-install --recheck /dev/SDA
+<div class="highlight"><pre><span></span>&gt; grub-install --recheck /dev/SDA
 
 &gt; update-grub
 </pre></div>
 <p>Finally, leave the chroot with:</p>
-<div class="highlight"><pre>&gt; <span class="nb">exit</span>
+<div class="highlight"><pre><span></span>&gt; <span class="nb">exit</span>
 </pre></div>
 </div>
 <div class="section" id="unmount-the-file-systems">
@@ -141,15 +141,15 @@ with:</p>
 <p>Now, we would like to unmount the file systems so that the changes can be
 flushed properly.</p>
 <p>First, unmount the EFI partition (if available):</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo umount mnt/boot/efi
+<div class="highlight"><pre><span></span>$ sudo umount mnt/boot/efi
 </pre></div>
 <p>Second, unmount the special file systems:</p>
-<div class="highlight"><pre><span class="nv">$ </span><span class="k">for</span> i in run proc sys dev/pts dev<span class="p">;</span> <span class="k">do</span> sudo umount mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
+<div class="highlight"><pre><span></span>$ <span class="k">for</span> i in run proc sys dev/pts dev<span class="p">;</span> <span class="k">do</span> sudo umount mnt/<span class="nv">$i</span><span class="p">;</span> <span class="k">done</span>
 </pre></div>
 <p>Third, unmount the root file systems and delete the mount point:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo umount mnt
+<div class="highlight"><pre><span></span>$ sudo umount mnt
 
-<span class="nv">$ </span>sudo rmdir mnt
+$ sudo rmdir mnt
 </pre></div>
 <p>That's all.  You can reboot the computer now!  Hoping this will fix your
 problem.</p>

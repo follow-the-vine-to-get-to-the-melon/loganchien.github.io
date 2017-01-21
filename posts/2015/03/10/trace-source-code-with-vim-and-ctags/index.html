@@ -70,7 +70,7 @@ code.  In this post, I would like to give a brief introduction to <a class="refe
 <h2>Installation</h2>
 <p>First, we have to install <code>exuberant-ctags</code> package for <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a>.  On
 Ubuntu or Debian, we can install <code>exuberant-ctags</code> with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install exuberant-ctags
+<div class="highlight"><pre><span></span>$ sudo apt-get install exuberant-ctags
 </pre></div>
 <p>Second, I would suggest to <em>tweak</em> the <code>.vimrc</code> as well.  By default,
 <a class="reference external" href="http://www.vim.org">vim</a> will only load the <strong>tags file</strong> from:</p>
@@ -85,12 +85,12 @@ parent directories, such as <code>../../tags</code> won't be considered.</p>
 <p>To ask <a class="reference external" href="http://www.vim.org">vim</a> to search for <strong>tags file</strong> in the parent directories, we should
 add an extra semicolon <code>;</code> after <code>./tags</code> and <code>./TAGS</code>.  For
 example,</p>
-<div class="highlight"><pre><span class="k">set</span> <span class="k">tags</span><span class="p">=</span>.<span class="sr">/tags;,./</span>TAGS;<span class="p">,</span><span class="k">tags</span><span class="p">,</span>TAGS
+<div class="highlight"><pre><span></span><span class="k">set</span> <span class="k">tags</span><span class="p">=</span>.<span class="sr">/tags;,./</span>TAGS;<span class="p">,</span><span class="k">tags</span><span class="p">,</span>TAGS
 </pre></div>
 <p>Third, if you wish to put the generated <strong>tags file</strong> in the <code>.git</code>
 directory so that the <strong>tags file</strong> won't be added to git repository, then you
 may wish to add the following snippets to the <code>.vimrc</code> as well:</p>
-<div class="highlight"><pre><span class="c">&quot; Check .git/tags for ctags file.</span>
+<div class="highlight"><pre><span></span><span class="c">&quot; Check .git/tags for ctags file.</span>
 <span class="k">fun</span><span class="p">!</span> FindTagsFileInGitDir<span class="p">(</span><span class="k">file</span><span class="p">)</span>
   <span class="k">let</span> <span class="nb">path</span> <span class="p">=</span> fnamemodify<span class="p">(</span><span class="k">a</span>:<span class="k">file</span><span class="p">,</span> <span class="s1">&#39;:p:h&#39;</span><span class="p">)</span>
   <span class="k">while</span> <span class="nb">path</span> <span class="p">!=</span> <span class="s1">&#39;/&#39;</span>
@@ -115,12 +115,12 @@ directory of the parent directories of the source file, such as
 <h2>Usage</h2>
 <p>After installation, we have to generate the <strong>tags file</strong> as the index.  We
 can generate the <strong>tags file</strong> with the following commands:</p>
-<div class="highlight"><pre><span class="nv">$ </span>ctags -R <span class="o">[</span>dir<span class="o">]</span>
-<span class="nv">$ </span>ctags -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
-<span class="nv">$ </span>ctags --tag-relative<span class="o">=</span>yes -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
+<div class="highlight"><pre><span></span>$ ctags -R <span class="o">[</span>dir<span class="o">]</span>
+$ ctags -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
+$ ctags --tag-relative<span class="o">=</span>yes -R -f <span class="o">[</span>tags-file<span class="o">]</span> <span class="o">[</span>dir<span class="o">]</span>
 </pre></div>
 <p>Usually, I prefer to run this command in the git repository:</p>
-<div class="highlight"><pre><span class="nv">$ </span>ctags --tag-relative<span class="o">=</span>yes -R -f .git/tags .
+<div class="highlight"><pre><span></span>$ ctags --tag-relative<span class="o">=</span>yes -R -f .git/tags .
 </pre></div>
 <p>It is highly recommended to add <code>--tag-relative=yes</code> to the <code>ctags</code>
 command.  Without this option, <a class="reference external" href="http://www.vim.org">vim</a> won't be able to open the correct source
@@ -129,7 +129,7 @@ file under certain circumstances.</p>
 index those files, we can change the programming language map with
 <code>--langmap</code> option.  For example, to treat the <code>.inc</code> file
 extension as C++ source code:</p>
-<div class="highlight"><pre><span class="nv">$ </span>ctags --langmap<span class="o">=</span>c++:+*.inc ...
+<div class="highlight"><pre><span></span>$ ctags --langmap<span class="o">=</span>c++:+*.inc ...
 </pre></div>
 <p>This options <em>adds</em> <code>.inc</code> to the C++ file extensions (in addition to the
 default file extensions such as <code>.c</code>, <code>.cpp</code>, and etc.)</p>

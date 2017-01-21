@@ -61,7 +61,7 @@ implementation.  Some extra care should be paid if the programmer didn't
 specify the desturctor.  For example, in the following code, the base class
 <code>A</code> has a virtual destructor and the derived class <code>B</code> does not
 define any destructor.  What will happen when after running <code>delete a</code>?</p>
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>
   <span class="k">virtual</span> <span class="o">~</span><span class="n">A</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
 <span class="p">};</span>
@@ -91,7 +91,7 @@ table and pass the object address to the corresponding function, which is
 <p>In fact, if you define the destructor in the derived class, then your destructor
 will be part of the <code>_ZN1BD2Ev()</code>.  You can check the behavior with the
 following code:</p>
-<div class="highlight"><pre><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="k">throw</span> <span class="p">();</span>
+<div class="highlight"><pre><span></span><span class="k">extern</span> <span class="s">&quot;C&quot;</span> <span class="kt">void</span> <span class="n">test</span><span class="p">()</span> <span class="k">throw</span> <span class="p">();</span>
 
 <span class="k">class</span> <span class="nc">A</span> <span class="p">{</span>
 <span class="k">public</span><span class="o">:</span>

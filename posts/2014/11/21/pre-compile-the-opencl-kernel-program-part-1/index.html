@@ -65,7 +65,7 @@ program</strong>.  For example:</p>
 </ol>
 <p>Fortunately, there are some OpenCL APIs which can make this possible.</p>
 <p>First, we have to compile our OpenCL kernel function:</p>
-<div class="highlight"><pre><span class="nv">$ </span>ioc64 -cmd<span class="o">=</span>build -input<span class="o">=</span>vec_add.cl -ir<span class="o">=</span>vec_add.bin
+<div class="highlight"><pre><span></span>$ ioc64 -cmd<span class="o">=</span>build -input<span class="o">=</span>vec_add.cl -ir<span class="o">=</span>vec_add.bin
 </pre></div>
 <p>Now, we have converted <code>vec_add.cl</code> into binary executable for
 <a class="reference external" href="https://software.intel.com/en-us/intel-opencl">Intel OpenCL SDK</a>.</p>
@@ -73,7 +73,7 @@ program</strong>.  For example:</p>
 loading <code>vec_add.cl</code> with <code>clCreateProgramWithSource()</code>, we should
 use <code>clCreateProgramWithBinary()</code> instead.  Here's the listing of the
 changed lines:</p>
-<div class="highlight"><pre><span class="c1">// Create program</span>
+<div class="highlight"><pre><span></span><span class="c1">// Create program</span>
 <span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span> <span class="n">program_file</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
 <span class="kt">size_t</span> <span class="n">program_size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
 <span class="n">read_file</span><span class="p">(</span><span class="o">&amp;</span><span class="n">program_file</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">program_size</span><span class="p">,</span> <span class="s">&quot;vec_add.bin&quot;</span><span class="p">);</span>

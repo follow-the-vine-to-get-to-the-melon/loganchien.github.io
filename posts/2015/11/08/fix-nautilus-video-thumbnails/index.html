@@ -64,11 +64,11 @@ a thumbnail for each video in <a class="reference external" href="http://ubuntu.
 look for the reason.</p>
 <p>After trials and errors, I found <code>gstreamer1.0-libav</code> is the package in
 question.  It is not installed by default.  We can install it with:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install gstreamer1.0-libav
+<div class="highlight"><pre><span></span>$ sudo apt-get install gstreamer1.0-libav
 </pre></div>
 <p>In addition, we should clean the thumbnail cache; otherwise <a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus">Nautilus</a> won't
 regenerate thumbnails for videos.  To clean the thumbnail cache:</p>
-<div class="highlight"><pre><span class="nv">$ </span>rm -r ~/.cache/thumbnails/fail
+<div class="highlight"><pre><span></span>$ rm -r ~/.cache/thumbnails/fail
 </pre></div>
 <p>Finally, refresh <a class="reference external" href="https://wiki.gnome.org/Apps/Nautilus">Nautilus</a> with <code>Ctrl-R</code>.  We should be able to see the
 thumbnails now:</p>
@@ -76,8 +76,8 @@ thumbnails now:</p>
 <p>If you still can't see thumbnails, it is possible that your videos are encoded
 by less popular codecs.  Installing <code>gstreamer1.0-plugins-ugly</code> or
 <code>gstreamer1.0-plugins-bad</code> might help:</p>
-<div class="highlight"><pre><span class="nv">$ </span>sudo apt-get install gstreamer1.0-plugins-ugly
-<span class="nv">$ </span>sudo apt-get install gstreamer1.0-plugins-bad
+<div class="highlight"><pre><span></span>$ sudo apt-get install gstreamer1.0-plugins-ugly
+$ sudo apt-get install gstreamer1.0-plugins-bad
 </pre></div>
 <p>However, please notice that <code>gstreamer1.0-plugins-ugly</code> might be covered
 by more restrict licenses or patents.  And <code>gstreamer1.0-plugins-bad</code>

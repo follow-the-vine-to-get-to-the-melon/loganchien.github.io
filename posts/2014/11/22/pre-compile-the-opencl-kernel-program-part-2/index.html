@@ -71,7 +71,7 @@ greater than or equal to the size returned in the second step.</li>
 <code>clGetProgramInfo(program, CL_PROGRAM_BINARIES, ...)</code>.</li>
 </ol>
 <p>Here's the code listing:</p>
-<div class="highlight"><pre><span class="n">cl_int</span> <span class="nf">write_binaries</span><span class="p">(</span><span class="n">cl_program</span> <span class="n">program</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">num_devices</span><span class="p">,</span>
+<div class="highlight"><pre><span></span><span class="n">cl_int</span> <span class="nf">write_binaries</span><span class="p">(</span><span class="n">cl_program</span> <span class="n">program</span><span class="p">,</span> <span class="kt">unsigned</span> <span class="n">num_devices</span><span class="p">,</span>
                       <span class="n">cl_uint</span> <span class="n">platform_idx</span><span class="p">)</span> <span class="p">{</span>
   <span class="kt">unsigned</span> <span class="n">i</span><span class="p">;</span>
   <span class="n">cl_int</span> <span class="n">err</span> <span class="o">=</span> <span class="n">CL_SUCCESS</span><span class="p">;</span>
