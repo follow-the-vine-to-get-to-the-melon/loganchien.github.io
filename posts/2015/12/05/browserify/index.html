@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Browserify | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="babel" />
+	<meta name="tags" content="es2015" />
+	<meta name="tags" content="es6" />
+	<meta name="tags" content="javascript" />
+
+	<meta property="og:title" content="Browserify" />
+	<meta property="og:url" content="http://logan.tw/posts/2015/12/05/browserify/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/12/05/browserify/" rel="bookmark" title="Permalink to Browserify">Browserify</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2015-12-05T19:30:00+08:00">
+		Sat 05 December 2015
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/babel/">babel</a>
+		<a class="tags" href="/tag/es2015/">es2015</a>
+		<a class="tags" href="/tag/es6/">es6</a>
+		<a class="tags" href="/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>It is common to organize the code in several modules when we are developing
+Javascript applications.  In <a class="reference external" href="https://nodejs.org">Node.js</a> ecosystem, we can import a module with
+the <code>require()</code> function and export symbols by adding them to the
+<code>module.exports</code> object.  On the other hand, ES2015 adds <code>import</code>
+statements and <code>export</code> keywords.  But unfortunately, both of these
+techniques are not supported by any browsers.  To deploy our Javascript
+applications through browsers, we have to bundle our Javascript source code with
+<a class="reference external" href="http://browserify.org/">Browserify</a> in advance.</p>
+<div class="section" id="bundling-modules-into-one-file">
+<h2>Bundling Modules into One File</h2>
+<p>We can install Browserify with:</p>
+<div class="highlight"><pre><span></span>$ npm install -g browserify
+</pre></div>
+<p>And then, we can bundle Javascript source files with:</p>
+<div class="highlight"><pre><span></span>$ browserify -o <span class="o">[</span>output.js<span class="o">]</span> <span class="o">[</span>mainapp.js<span class="o">]</span>
+</pre></div>
+<div class="section" id="example">
+<h3>Example</h3>
+<p>In this example, we separated our code into three modules: <code>utils.js</code>,
+<code>posts.js</code>, and <cite>app.js</cite>, and we would like to bundle them into one
+<code>output.js</code>.</p>
+<p>This is the content of <code>utils.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">lessThan</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">reduce</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">lessThan</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">a</span> <span class="o">:</span> <span class="nx">b</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">lessThan</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">reduce</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">lessThan</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">:</span> <span class="nx">a</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">};</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">findMin</span> <span class="o">=</span> <span class="nx">findMin</span><span class="p">;</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">findMax</span> <span class="o">=</span> <span class="nx">findMax</span><span class="p">;</span>
+</pre></div>
+<p>This is the content of <code>posts.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Post</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">numVisited</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="nx">title</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">numVisited</span> <span class="o">=</span> <span class="nx">numVisited</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Post</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">title</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">compareByTitle</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">title</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">title</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">compareByNumVisited</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">numVisited</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">numVisited</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">exports</span><span class="p">.</span><span class="nx">Post</span> <span class="o">=</span> <span class="nx">Post</span><span class="p">;</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">compareByTitle</span> <span class="o">=</span> <span class="nx">compareByTitle</span><span class="p">;</span>
+<span class="nx">exports</span><span class="p">.</span><span class="nx">compareByNumVisited</span> <span class="o">=</span> <span class="nx">compareByNumVisited</span><span class="p">;</span>
+</pre></div>
+<p>This is the content of <code>app.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">posts</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./posts&#39;</span><span class="p">),</span>
+    <span class="nx">Post</span> <span class="o">=</span> <span class="nx">posts</span><span class="p">.</span><span class="nx">Post</span><span class="p">,</span>
+    <span class="nx">compareByNumVisited</span> <span class="o">=</span> <span class="nx">posts</span><span class="p">.</span><span class="nx">compareByNumVisited</span><span class="p">,</span>
+    <span class="nx">compareByTitle</span> <span class="o">=</span> <span class="nx">posts</span><span class="p">.</span><span class="nx">compareByTitle</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">utils</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./utils&#39;</span><span class="p">),</span>
+    <span class="nx">findMin</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">findMin</span><span class="p">,</span>
+    <span class="nx">findMax</span> <span class="o">=</span> <span class="nx">utils</span><span class="p">.</span><span class="nx">findMax</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">leastPopular</span> <span class="o">=</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByNumVisited</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">mostPopular</span> <span class="o">=</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByNumVisited</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Least Popular:&#39;</span><span class="p">,</span> <span class="nx">leastPopular</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Most Popular:&#39;</span><span class="p">,</span> <span class="nx">mostPopular</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+
+<span class="kd">var</span> <span class="nx">minTitle</span> <span class="o">=</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByTitle</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">maxTitle</span> <span class="o">=</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByTitle</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;First in Alphabetical Order:&#39;</span><span class="p">,</span> <span class="nx">minTitle</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Last in Alphabetical Order:&#39;</span><span class="p">,</span> <span class="nx">maxTitle</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+</pre></div>
+<p>Now, we can bundle Javascript source files with:</p>
+<div class="highlight"><pre><span></span>$ browserify -o output.js app.js
+</pre></div>
+<p>Then, we can run <code>output.js</code> with:</p>
+<div class="highlight"><pre><span></span>$ node output.js
+Least Popular: c
+Most Popular: d
+First in Alphabetical Order: a
+Last in Alphabetical Order: e
+</pre></div>
+<p>We can also create <code>index.html</code> to include <code>output.js</code> and test
+the bundled output in the browser:</p>
+<div class="highlight"><pre><span></span><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en-US&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span> <span class="p">/&gt;</span>
+    <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>Test<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;output.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="source-map">
+<h2>Source Map</h2>
+<p>Bundling several Javascript modules into one makes it more difficult to debug. A
+developer has to spend time finding the corresponding module.  <strong>Source Map</strong>
+was created to map the processed Javascript file back to their source Javascript
+files.  To generate source map with <code>browserify</code>, specify <code>-d</code>
+option:</p>
+<div class="highlight"><pre><span></span>$ browserify -d -o output.js app.js
+</pre></div>
+<p>And then, open the debugger in your favorite browser (remember to enable source
+map support in your browser.)</p>
+<p>For example, if you add <code>undefined</code> to the end of <code>array</code>, then you
+will see the differece:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="kc">undefined</span><span class="p">,</span>  <span class="c1">// CHANGED</span>
+<span class="p">];</span>
+</pre></div>
+</div>
+<div class="section" id="ecmascript-2015">
+<h2>ECMAScript 2015</h2>
+<p>To bundle ECMAScript 2015 source files, we have to transform them with
+<code>babelify</code> (the Babel transpiler integration).</p>
+<p>First, we have to install <code>babelify</code> and <code>babel-preset-es2015</code>:</p>
+<div class="highlight"><pre><span></span>$ npm install -g browserify babelify babel-preset-es2015
+</pre></div>
+<p>Second, pass extra <code>-t</code> option when we are bundling source files:</p>
+<div class="highlight"><pre><span></span>$ browserify -o output.js -t <span class="o">[</span> babelify --presets <span class="o">[</span> es2015 <span class="o">]</span> <span class="o">]</span> app.js
+</pre></div>
+<p>For example, here is the content of <code>utils.js</code> (using ES2015):</p>
+<div class="highlight"><pre><span></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">lessThan</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">reduce</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">lessThan</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">a</span> <span class="o">:</span> <span class="nx">b</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">lessThan</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">reduce</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">lessThan</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="o">?</span> <span class="nx">b</span> <span class="o">:</span> <span class="nx">a</span><span class="p">;</span>
+    <span class="p">});</span>
+<span class="p">};</span>
+</pre></div>
+<p>This is the content of <code>posts.js</code> (using ES2015):</p>
+<div class="highlight"><pre><span></span><span class="kr">export</span> <span class="kd">function</span> <span class="nx">Post</span><span class="p">(</span><span class="nx">title</span><span class="p">,</span> <span class="nx">numVisited</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">title</span> <span class="o">=</span> <span class="nx">title</span><span class="p">;</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">numVisited</span> <span class="o">=</span> <span class="nx">numVisited</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Post</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">toString</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">title</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">compareByTitle</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">title</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">title</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kr">export</span> <span class="kd">function</span> <span class="nx">compareByNumVisited</span><span class="p">(</span><span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nx">a</span><span class="p">.</span><span class="nx">numVisited</span> <span class="o">&lt;</span> <span class="nx">b</span><span class="p">.</span><span class="nx">numVisited</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>This is the content of <code>app.js</code> (using ES2015):</p>
+<div class="highlight"><pre><span></span><span class="kr">import</span> <span class="p">{</span><span class="nx">Post</span><span class="p">,</span> <span class="nx">compareByNumVisited</span><span class="p">,</span> <span class="nx">compareByTitle</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./posts&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span><span class="nx">findMax</span><span class="p">,</span> <span class="nx">findMin</span><span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;./utils&#39;</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">array</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;c&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="k">new</span> <span class="nx">Post</span><span class="p">(</span><span class="s1">&#39;e&#39;</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">leastPopular</span> <span class="o">=</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByNumVisited</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">mostPopular</span> <span class="o">=</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByNumVisited</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Least Popular:&#39;</span><span class="p">,</span> <span class="nx">leastPopular</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Most Popular:&#39;</span><span class="p">,</span> <span class="nx">mostPopular</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+
+<span class="kd">var</span> <span class="nx">minTitle</span> <span class="o">=</span> <span class="nx">findMin</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByTitle</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">maxTitle</span> <span class="o">=</span> <span class="nx">findMax</span><span class="p">(</span><span class="nx">array</span><span class="p">,</span> <span class="nx">compareByTitle</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;First in Alphabetical Order:&#39;</span><span class="p">,</span> <span class="nx">minTitle</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Last in Alp`habetical Order:&#39;</span><span class="p">,</span> <span class="nx">maxTitle</span><span class="p">.</span><span class="nx">toString</span><span class="p">());</span>
+</pre></div>
+<p>Bundle source files with <code>browserify</code> command and <code>babelify</code>:</p>
+<div class="highlight"><pre><span></span>$ browserify -o output.js -t <span class="o">[</span> babelify --presets <span class="o">[</span> es2015 <span class="o">]</span> <span class="o">]</span> app.js
+</pre></div>
+<p>Finally, run the output script:</p>
+<div class="highlight"><pre><span></span>$ node output.js
+Least Popular: c
+Most Popular: d
+First in Alphabetical Order: a
+Last in Alphabetical Order: e
+</pre></div>
+</div>
+<div class="section" id="epilogue">
+<h2>Epilogue</h2>
+<p>In this post, we introduced <code>Browserify</code> which is able to bundle multiple
+Javascript source files into one output file.  We also mentioned the concept of
+source map and ES2015 transformation.  Hope you enjoy this article.</p>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

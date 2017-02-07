@@ -34,6 +34,33 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2014/11/14/c-stdlist-operations/" rel="bookmark" title="Permalink to C++ std::list Operations">C++ std::list Operations</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2014-11-14T23:53:00+08:00">Fri 14 November 2014</time>
+			</footer>
+			<div class="entry-content"><p>To sort the doubly linked list <code>std::list</code>, we can simply call the
+<code>sort()</code> member function.  For example,</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;list&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">list</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">{</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">};</span>
+
+  <span class="n">xs</span><span class="p">.</span><span class="n">sort</span><span class="p">();</span>  <span class="c1">// Sort the std::list!</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="o">&amp;</span><span class="nl">x</span> <span class="p">:</span> <span class="n">xs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">x</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>We can't …</p></div>
+                        <p><a class="normal-btn" href="/posts/2014/11/14/c-stdlist-operations/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2014/11/13/c-associative-container-and-iterator-validness/" rel="bookmark" title="Permalink to C++ Associative Container and Iterator Validness">C++ Associative Container and Iterator Validness</a></h1>
 			</header>
 			<footer class="post-info">

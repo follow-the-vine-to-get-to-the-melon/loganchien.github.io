@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/12/05/browserify/</loc>
+<lastmod>2015-12-05</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2015/11/29/run-es2015-with-babel-6/</loc>
 <lastmod>2015-11-29</lastmod>
@@ -51,11 +56,6 @@
 <changefreq>daily</changefreq>
 <priority>0.80</priority>
 </url><url>
-<loc>http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/</loc>
-<lastmod>2015-05-19</lastmod>
-<changefreq>daily</changefreq>
-<priority>0.80</priority>
-</url><url>
 <loc>http://logan.tw/posts/2015/05/17/grub-install-and-btrfs-root-file-system/</loc>
 <lastmod>2015-05-17</lastmod>
 <changefreq>daily</changefreq>
@@ -63,6 +63,11 @@
 </url><url>
 <loc>http://logan.tw/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/</loc>
 <lastmod>2015-04-28</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
+</url><url>
+<loc>http://logan.tw/posts/2015/03/10/trace-source-code-with-vim-and-ctags/</loc>
+<lastmod>2015-03-10</lastmod>
 <changefreq>daily</changefreq>
 <priority>0.80</priority>
 </url><url>
@@ -242,7 +247,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/programming/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -272,7 +277,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/babel/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -282,7 +287,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/c/</loc>
-<lastmod>2015-05-19</lastmod>
+<lastmod>2015-03-10</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -297,12 +302,12 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/ctags/</loc>
-<lastmod>2015-05-19</lastmod>
+<lastmod>2015-03-10</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/cxx/</loc>
-<lastmod>2015-05-19</lastmod>
+<lastmod>2015-03-10</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -322,12 +327,12 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/es2015/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/es6/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -377,7 +382,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/javascript/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -477,7 +482,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/vim/</loc>
-<lastmod>2015-05-19</lastmod>
+<lastmod>2015-03-10</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -492,7 +497,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan/</loc>
-<lastmod>2015-11-29</lastmod>
+<lastmod>2015-12-05</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>
