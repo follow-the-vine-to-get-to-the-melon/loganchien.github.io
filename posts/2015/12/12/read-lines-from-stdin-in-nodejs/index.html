@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Read Lines from stdin in Node.js | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="node" />
+	<meta name="tags" content="javascript" />
+
+	<meta property="og:title" content="Read Lines from stdin in Node.js" />
+	<meta property="og:url" content="http://logan.tw/posts/2015/12/12/read-lines-from-stdin-in-nodejs/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/12/12/read-lines-from-stdin-in-nodejs/" rel="bookmark" title="Permalink to Read Lines from stdin in Node.js">Read Lines from stdin in Node.js</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2015-12-12T22:13:00+08:00">
+		Sat 12 December 2015
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/node/">node</a>
+		<a class="tags" href="/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>It is easy to write a hello world program in Node.js:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+</pre></div>
+<p>However, due to the asynchronous nature of Javascript, reading inputs and
+writing outputs are less straight-forward.  We have to pass the callback
+functions or register event listeners.</p>
+<div class="section" id="first-attempt">
+<h2>First Attempt</h2>
+<p>For example, to read some data from <strong>standard input</strong>, we have to write:</p>
+<div class="highlight"><pre><span></span><span class="nx">process</span><span class="p">.</span><span class="nx">stdin</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+<p>In this example, <code>process</code> is the global hosting object of Javascript
+environment in Node.js, and <code>process.stdin</code> is an instance of
+<code>ReadStream</code>.  The <code>.on()</code> function call registers a callback for
+<code>data</code> event.  The callback function will be invoked when data are
+available.</p>
+<p>If we run this example with <code>node test.js</code> and type the input manually,
+then it will <em>seem</em> to work:</p>
+<div class="highlight"><pre><span></span>$ node test.js
+aa
+3
+bbbb
+5
+</pre></div>
+<p>But it does not always work.  It is just a coincident to receive a <code>data</code>
+event when we hit the Enter key.  For example, if we pipe the standard input,
+then we will see a completely different output:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
+8
+</pre></div>
+</div>
+<div class="section" id="corrent-answer">
+<h2>Corrent Answer</h2>
+<p>So, how do we read lines from standard input?  The answer is to wrap
+<code>process.stdin</code> with a <strong>readline</strong> interface.  For example:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">readline</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;readline&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">rl</span> <span class="o">=</span> <span class="nx">readline</span><span class="p">.</span><span class="nx">createInterface</span><span class="p">({</span>
+  <span class="nx">input</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdin</span><span class="p">,</span>
+  <span class="nx">output</span><span class="o">:</span> <span class="nx">process</span><span class="p">.</span><span class="nx">stdout</span><span class="p">,</span>
+  <span class="nx">terminal</span><span class="o">:</span> <span class="kc">false</span>
+<span class="p">});</span>
+
+<span class="nx">rl</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">line</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">line</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+<span class="p">});</span>
+</pre></div>
+<p>We import <code>readline</code> module and invoke <code>readline.createInterface()</code>
+to create a wrapper interface.  Besides, we are listening to <code>line</code> event
+instead of <code>data</code> event now.  There is one pitfall: you might wish to
+specify <code>terminal: false</code>, otherwise some extra output will be printed to
+standard output.</p>
+<p>Here's the output:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
+2
+4
+</pre></div>
+<p>If you remove <code>terminal: false</code> from the options, then you will see:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
+aa
+2
+bbbb
+4
+</pre></div>
+<p>In this post, we introduced the basic usage of <a class="reference external" href="https://nodejs.org/api/stream.html">Stream</a> and <a class="reference external" href="https://nodejs.org/api/readline.html">Readline</a> module in
+Node.js.  Check the links in the <a class="reference internal" href="#reference">Reference</a> section for further information.</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://nodejs.org/api/process.html">Node API: Process</a></li>
+<li><a class="reference external" href="https://nodejs.org/api/stream.html">Node API: Stream</a></li>
+<li><a class="reference external" href="https://nodejs.org/api/readline.html">Node API: Readline</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

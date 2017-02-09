@@ -1,5 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-12-05T19:30:00+08:00</updated><entry><title>Browserify</title><link href="http://logan.tw/posts/2015/12/05/browserify/" rel="alternate"></link><published>2015-12-05T19:30:00+08:00</published><updated>2015-12-05T19:30:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-05:/posts/2015/12/05/browserify/</id><summary type="html">&lt;p&gt;It is common to organize the code in several modules when we are developing
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-12-12T22:13:00+08:00</updated><entry><title>Read Lines from stdin in Node.js</title><link href="http://logan.tw/posts/2015/12/12/read-lines-from-stdin-in-nodejs/" rel="alternate"></link><published>2015-12-12T22:13:00+08:00</published><updated>2015-12-12T22:13:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-12:/posts/2015/12/12/read-lines-from-stdin-in-nodejs/</id><summary type="html">&lt;p&gt;It is easy to write a hello world program in Node.js:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, due to the asynchronous nature of Javascript, reading inputs and
+writing outputs are less straight-forward.  We have to pass the callback
+functions or register event listeners.&lt;/p&gt;
+&lt;div class="section" id="first-attempt"&gt;
+&lt;h2&gt;First Attempt&lt;/h2&gt;
+&lt;p&gt;For example, to read some …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;It is easy to write a hello world program in Node.js:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, due to the asynchronous nature of Javascript, reading inputs and
+writing outputs are less straight-forward.  We have to pass the callback
+functions or register event listeners.&lt;/p&gt;
+&lt;div class="section" id="first-attempt"&gt;
+&lt;h2&gt;First Attempt&lt;/h2&gt;
+&lt;p&gt;For example, to read some data from &lt;strong&gt;standard input&lt;/strong&gt;, we have to write:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stdin&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;data&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this example, &lt;code&gt;process&lt;/code&gt; is the global hosting object of Javascript
+environment in Node.js, and &lt;code&gt;process.stdin&lt;/code&gt; is an instance of
+&lt;code&gt;ReadStream&lt;/code&gt;.  The &lt;code&gt;.on()&lt;/code&gt; function call registers a callback for
+&lt;code&gt;data&lt;/code&gt; event.  The callback function will be invoked when data are
+available.&lt;/p&gt;
+&lt;p&gt;If we run this example with &lt;code&gt;node test.js&lt;/code&gt; and type the input manually,
+then it will &lt;em&gt;seem&lt;/em&gt; to work:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ node test.js
+aa
+3
+bbbb
+5
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But it does not always work.  It is just a coincident to receive a &lt;code&gt;data&lt;/code&gt;
+event when we hit the Enter key.  For example, if we pipe the standard input,
+then we will see a completely different output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;printf&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;aa\nbbbb\n&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; node test.js
+8
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="corrent-answer"&gt;
+&lt;h2&gt;Corrent Answer&lt;/h2&gt;
+&lt;p&gt;So, how do we read lines from standard input?  The answer is to wrap
+&lt;code&gt;process.stdin&lt;/code&gt; with a &lt;strong&gt;readline&lt;/strong&gt; interface.  For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;readline&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;readline&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;rl&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;readline&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;createInterface&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+  &lt;span class="nx"&gt;input&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stdin&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nx"&gt;output&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;process&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;stdout&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+  &lt;span class="nx"&gt;terminal&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;false&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;rl&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;line&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;line&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We import &lt;code&gt;readline&lt;/code&gt; module and invoke &lt;code&gt;readline.createInterface()&lt;/code&gt;
+to create a wrapper interface.  Besides, we are listening to &lt;code&gt;line&lt;/code&gt; event
+instead of &lt;code&gt;data&lt;/code&gt; event now.  There is one pitfall: you might wish to
+specify &lt;code&gt;terminal: false&lt;/code&gt;, otherwise some extra output will be printed to
+standard output.&lt;/p&gt;
+&lt;p&gt;Here's the output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;printf&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;aa\nbbbb\n&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; node test.js
+2
+4
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you remove &lt;code&gt;terminal: false&lt;/code&gt; from the options, then you will see:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;printf&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;aa\nbbbb\n&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; node test.js
+aa
+2
+bbbb
+4
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In this post, we introduced the basic usage of &lt;a class="reference external" href="https://nodejs.org/api/stream.html"&gt;Stream&lt;/a&gt; and &lt;a class="reference external" href="https://nodejs.org/api/readline.html"&gt;Readline&lt;/a&gt; module in
+Node.js.  Check the links in the &lt;a class="reference internal" href="#reference"&gt;Reference&lt;/a&gt; section for further information.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://nodejs.org/api/process.html"&gt;Node API: Process&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://nodejs.org/api/stream.html"&gt;Node API: Stream&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://nodejs.org/api/readline.html"&gt;Node API: Readline&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="node"></category><category term="javascript"></category></entry><entry><title>Browserify</title><link href="http://logan.tw/posts/2015/12/05/browserify/" rel="alternate"></link><published>2015-12-05T19:30:00+08:00</published><updated>2015-12-05T19:30:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-05:/posts/2015/12/05/browserify/</id><summary type="html">&lt;p&gt;It is common to organize the code in several modules when we are developing
 Javascript applications.  In &lt;a class="reference external" href="https://nodejs.org"&gt;Node.js&lt;/a&gt; ecosystem, we can import a module with
 the &lt;code&gt;require()&lt;/code&gt; function and export symbols by adding them to the
 &lt;code&gt;module.exports&lt;/code&gt; object.  On the other hand, ES2015 adds &lt;code&gt;import&lt;/code&gt;
