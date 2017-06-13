@@ -90,7 +90,7 @@ built-in.</p>
 <p>For example, <code>int.sh</code> contains following code:</p>
 <div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="nb">trap</span> <span class="s2">&quot;echo \&quot;User abort\&quot;; exit 1&quot;</span> INT
-sleep 10
+sleep <span class="m">10</span>
 </pre></div>
 <p>Run the script and press <code>Ctrl-C</code>:</p>
 <div class="highlight"><pre><span></span>$ chmod +x int.sh
@@ -106,7 +106,7 @@ $ ./int.sh
 <code>defer.sh</code>:</p>
 <div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
 <span class="nb">trap</span> <span class="s2">&quot;echo \&quot;EXIT\&quot;&quot;</span> EXIT    <span class="c1"># &lt;-- Changed to EXIT</span>
-sleep 10
+sleep <span class="m">10</span>
 </pre></div>
 <p>We can notice that <code>echo &quot;EXIT&quot;</code> will always be executed:</p>
 <div class="highlight"><pre><span></span>$ ./defer.sh
@@ -129,7 +129,7 @@ EXIT
 <p>OK.  Now, let's work on a real world example: start and stop a SSH agent.
 To start a SSH agent and export the environment variables, we have to run:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -s<span class="k">)</span>
-Agent pid 10176
+Agent pid <span class="m">10176</span>
 </pre></div>
 <p>On the other hand, to stop a SSH agent:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">eval</span> <span class="k">$(</span>ssh-agent -k<span class="k">)</span>
@@ -155,7 +155,7 @@ ssh-add ~/.ssh/id_rsa
 </pre></div>
 <p>Try to run the script:</p>
 <div class="highlight"><pre><span></span>$ ./run.sh
-Agent pid 10248
+Agent pid <span class="m">10248</span>
 Enter passphrase <span class="k">for</span> /home/username/.ssh/id_rsa:
 Identity added: /home/username/.ssh/id_rsa <span class="o">(</span>/home/username/.ssh/id_rsa<span class="o">)</span>
 Agent pid <span class="m">10248</span> killed

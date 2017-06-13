@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 12 Dec 2015 22:13:00 +0800</lastBuildDate><item><title>Read Lines from stdin in Node.js</title><link>http://logan.tw/posts/2015/12/12/read-lines-from-stdin-in-nodejs/</link><description>&lt;p&gt;It is easy to write a hello world program in Node.js:&lt;/p&gt;
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 19 Dec 2015 23:21:00 +0800</lastBuildDate><item><title>JavaScript Prototype and Object Oriented</title><link>http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/</link><description>&lt;p&gt;Javascript is a prototype-based object-oriented programming language.  Unlike
+the conventional class-based object-oriented programming languages (e.g. C++ or
+Java), which ask programmers to write a class and then instantiate several
+similar objects from the class, Javascript adopts a different approach.  In the
+world of Javascript, we have to craft a …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 19 Dec 2015 23:21:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2015-12-19:/posts/2015/12/19/javascript-prototype-and-object-oriented/</guid><category>javascript</category></item><item><title>Read Lines from stdin in Node.js</title><link>http://logan.tw/posts/2015/12/12/read-lines-from-stdin-in-nodejs/</link><description>&lt;p&gt;It is easy to write a hello world program in Node.js:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello world!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, due to the asynchronous nature of Javascript, reading inputs and

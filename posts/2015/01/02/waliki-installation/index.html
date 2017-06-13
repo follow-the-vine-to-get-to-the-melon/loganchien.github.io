@@ -126,11 +126,11 @@ $ <span class="nb">source</span> ENV/bin/activate
     <span class="c1"># url(r&#39;^$&#39;, &#39;waliki_site.views.home&#39;, name=&#39;home&#39;),</span>
     <span class="c1"># url(r&#39;^blog/&#39;, include(&#39;blog.urls&#39;)),</span>
 
-    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^admin/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="n">admin</span><span class="o">.</span><span class="n">site</span><span class="o">.</span><span class="n">urls</span><span class="p">)),</span>
 
     <span class="c1"># BEGIN OF CHANGE</span>
-    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;allauth.urls&#39;</span><span class="p">)),</span>
-    <span class="n">url</span><span class="p">(</span><span class="s1">r&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;waliki.urls&#39;</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^accounts/&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;allauth.urls&#39;</span><span class="p">)),</span>
+    <span class="n">url</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="n">include</span><span class="p">(</span><span class="s1">&#39;waliki.urls&#39;</span><span class="p">)),</span>
     <span class="c1"># END OF CHANGE</span>
 <span class="p">)</span>
 </pre></div>

@@ -106,7 +106,7 @@ device are not listed in &lt;a class="reference external" href="http://source.an
 &lt;h2&gt;Find USB Vendor and Product ID for udev Rules&lt;/h2&gt;
 &lt;p&gt;We can check the USB &lt;em&gt;vendor ID&lt;/em&gt; and &lt;em&gt;product ID&lt;/em&gt; with &lt;code&gt;lsusb&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ lsusb
-Bus &lt;span class="m"&gt;003&lt;/span&gt; Device 013: ID 18d1:4ee7 Google Inc.
+Bus &lt;span class="m"&gt;003&lt;/span&gt; Device &lt;span class="m"&gt;013&lt;/span&gt;: ID 18d1:4ee7 Google Inc.
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;In this example, &lt;code&gt;18d1&lt;/code&gt; is the &lt;em&gt;vendor ID&lt;/em&gt; and &lt;code&gt;4ee7&lt;/code&gt; is the
 &lt;em&gt;product ID&lt;/em&gt; for my Android device.  Thus, I added the following rule:&lt;/p&gt;
@@ -126,7 +126,7 @@ have to reboot to bootloader mode:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ adb reboot bootloader
 
 $ lsusb
-Bus &lt;span class="m"&gt;003&lt;/span&gt; Device 013: ID 18d1:4ee0 Google Inc.
+Bus &lt;span class="m"&gt;003&lt;/span&gt; Device &lt;span class="m"&gt;013&lt;/span&gt;: ID 18d1:4ee0 Google Inc.
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It seems that we have to add &lt;code&gt;18d1:4ee0&lt;/code&gt; to udev rules as well:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# fastboot protocol on flo (Nexus 7 2013)&lt;/span&gt;
@@ -573,7 +573,7 @@ problem, we have to install the Unity package built by the third-party.&lt;/p&gt
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /etc/apt/preferences.d/systray-trusty
 Package: *
 Pin: release &lt;span class="nv"&gt;o&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;LP-PPA-gurqn-systray-trusty
-Pin-Priority: 600
+Pin-Priority: &lt;span class="m"&gt;600&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p class="first"&gt;Update APT&lt;/p&gt;

@@ -159,10 +159,10 @@ the service.</p>
 </pre></div>
 <p>The environment file resembles to a Bash script.  Here's the example for our
 <a class="reference external" href="http://www.harding.motd.ca/autossh/">autossh</a> service:</p>
-<div class="highlight"><pre><span></span><span class="nv">AUTOSSH_POLL</span><span class="o">=</span>60
-<span class="nv">AUTOSSH_FIRST_POLL</span><span class="o">=</span>30
-<span class="nv">AUTOSSH_GATETIME</span><span class="o">=</span>0
-<span class="nv">AUTOSSH_PORT</span><span class="o">=</span>22000
+<div class="highlight"><pre><span></span><span class="nv">AUTOSSH_POLL</span><span class="o">=</span><span class="m">60</span>
+<span class="nv">AUTOSSH_FIRST_POLL</span><span class="o">=</span><span class="m">30</span>
+<span class="nv">AUTOSSH_GATETIME</span><span class="o">=</span><span class="m">0</span>
+<span class="nv">AUTOSSH_PORT</span><span class="o">=</span><span class="m">22000</span>
 <span class="nv">SSH_OPTIONS</span><span class="o">=</span><span class="s2">&quot;-N -R 2222:localhost:22 example.com -i /home/autossh/.ssh/id_rsa&quot;</span>
 </pre></div>
 <p>We can find more options by reading <a class="reference external" href="http://www.harding.motd.ca/autossh/">autossh</a> man pages.</p>

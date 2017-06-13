@@ -123,7 +123,7 @@ device are not listed in <a class="reference external" href="http://source.andro
 <h2>Find USB Vendor and Product ID for udev Rules</h2>
 <p>We can check the USB <em>vendor ID</em> and <em>product ID</em> with <code>lsusb</code>:</p>
 <div class="highlight"><pre><span></span>$ lsusb
-Bus <span class="m">003</span> Device 013: ID 18d1:4ee7 Google Inc.
+Bus <span class="m">003</span> Device <span class="m">013</span>: ID 18d1:4ee7 Google Inc.
 </pre></div>
 <p>In this example, <code>18d1</code> is the <em>vendor ID</em> and <code>4ee7</code> is the
 <em>product ID</em> for my Android device.  Thus, I added the following rule:</p>
@@ -143,7 +143,7 @@ have to reboot to bootloader mode:</p>
 <div class="highlight"><pre><span></span>$ adb reboot bootloader
 
 $ lsusb
-Bus <span class="m">003</span> Device 013: ID 18d1:4ee0 Google Inc.
+Bus <span class="m">003</span> Device <span class="m">013</span>: ID 18d1:4ee0 Google Inc.
 </pre></div>
 <p>It seems that we have to add <code>18d1:4ee0</code> to udev rules as well:</p>
 <div class="highlight"><pre><span></span><span class="c1"># fastboot protocol on flo (Nexus 7 2013)</span>

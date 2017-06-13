@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>JavaScript Prototype and Object Oriented | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="javascript" />
+
+	<meta property="og:title" content="JavaScript Prototype and Object Oriented" />
+	<meta property="og:url" content="http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/" rel="bookmark" title="Permalink to JavaScript Prototype and Object Oriented">JavaScript Prototype and Object Oriented</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2015-12-19T23:21:00+08:00">
+		Sat 19 December 2015
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Javascript is a prototype-based object-oriented programming language.  Unlike
+the conventional class-based object-oriented programming languages (e.g. C++ or
+Java), which ask programmers to write a class and then instantiate several
+similar objects from the class, Javascript adopts a different approach.  In the
+world of Javascript, we have to craft a <strong>prototypal</strong> object first and then
+create similar objects from the prototypal object.  In this article, we would
+like to give a gentle introduction to object-oriented programming in Javascript.</p>
+<div class="section" id="objects-and-methods">
+<h2>Objects and Methods</h2>
+<p>Let's start to create our first object in Javascript:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">robert</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Robert&#39;</span><span class="p">,</span>
+  <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+<p>In the code snippet above, we created a Javascript object holding Robert's first
+name and last name.  Objects in Javascript are essentially dictionaries.  We can
+access the properties with the <code>dot</code> operator.  For example, the following
+code snippet prints Robert's first name and the last name:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">firstName</span><span class="p">);</span>
+<span class="c1">// Prints: Robert</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">lastName</span><span class="p">);</span>
+<span class="c1">// Prints: Smith</span>
+</pre></div>
+<p>Now, we can write a function to get the full name:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">getFullName</span><span class="p">(</span><span class="nx">employee</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">employee</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="nx">employee</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">getFullName</span><span class="p">(</span><span class="nx">robert</span><span class="p">));</span>
+<span class="c1">// Prints: Robert Smith</span>
+</pre></div>
+<p>It works but it is suboptimal.  Compared with <code>getFullName(robert)</code>, it
+will be better to define a method for the object which was referred by the
+reference <code>robert</code> and invoke <code>robert.getFullName()</code> instead.  To
+achieve this, let's move <code>getFullName()</code> into the object literal and
+replace <code>employee</code> argument with the implicit <code>this</code> argument:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">robert</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Robert&#39;</span><span class="p">,</span>
+  <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span>
+
+  <span class="nx">getFullName</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Robert Smith</span>
+</pre></div>
+<p>The implicit <code>this</code> argument will be bound to the object before the
+<code>dot</code> operator at the callsite.  In this case, it will be bound to the
+object which <code>robert</code> refers to.</p>
+<p>Notice that this mechanism will only work if the <code>dot</code> operator and the
+function invocation are combined together.  If we write these operators
+separately, then we will get a different result.  For example, in the following
+code snippet, <code>this</code> will be bounded to the <strong>global host object</strong> of the
+Javascript run-time environment (<code>window</code> object in browsers and
+<code>global</code> object in Node.js) instead of the object which is referred by the
+reference <code>robert</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">func</span> <span class="o">=</span> <span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">func</span><span class="p">());</span>
+<span class="c1">// Prints: undefined undefined</span>
+</pre></div>
+<p>So far, we have learned to craft an object with several properties and methods.
+However, in the real world, many objects may share the same method.  For
+example, <code>getFullName()</code> is not specific to <code>robert</code>.  Are there
+any mechanisms to re-use this method?</p>
+</div>
+<div class="section" id="prototypal-inheritance">
+<h2>Prototypal Inheritance</h2>
+<p>Javascript supports prototypal inheritance.  With prototypal inheritance, a
+programmer can inherit properties and attributes from another <em>prototypal</em>
+object (a.k.a. prototype).  To inherit from an object <code>proto</code>, we can
+invoke <code>Object.create(proto)</code> which will return a new object resembles to
+the object <code>proto</code>.</p>
+<p>For example, the following code snippet creates a new object called <code>mike</code>
+which inherits from the object <code>robert</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">mike</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">robert</span><span class="p">);</span>
+
+<span class="nx">mike</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="s1">&#39;Mike&#39;</span><span class="p">;</span>
+<span class="nx">mike</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="s1">&#39;Williams&#39;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">mike</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Mike Williams</span>
+</pre></div>
+<p>Notice that we can override the properties from the prototypal object in the
+derived object.  In the example, we overrode <code>firstName</code> and
+<code>lastName</code>.  Methods from the prototypal object (<code>getFullName()</code> in
+this example) can get the overridden properties through the <code>this</code>
+keyword.</p>
+<p>Overriding properties will not change the prototypal object.  For example, the
+<code>firstName</code> and <code>lastName</code> properties in <code>robert</code> object
+remains unchanged.  The result of calling <code>robert.getFullName()</code> remains
+unchanged as well:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">firstName</span><span class="p">);</span>
+<span class="c1">// Prints: Robert</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">lastName</span><span class="p">);</span>
+<span class="c1">// Prints: Smith</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Robert Smith</span>
+</pre></div>
+<p>However, changes to the prototypal object will be visible to derived objects if
+such property is not overridden by the derived object.  For example, if we
+change the <code>getFullName</code> property in the <code>robert</code> object, then the
+result of calling <code>mike.getFullName()</code> will be changed:</p>
+<div class="highlight"><pre><span></span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">+</span> <span class="s1">&#39;, &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Smith, Robert</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">mike</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Williams, Mike</span>
+</pre></div>
+<p>We can get the prototypal object of an object with
+<code>Object.getPrototypeOf()</code>.  For example:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">mike</span><span class="p">));</span>
+<span class="c1">// Prints: { firstName: &#39;Robert&#39;,</span>
+<span class="c1">// Prints:   lastName: &#39;Smith&#39;,</span>
+<span class="c1">// Prints:   getFullName: [Function] }</span>
+</pre></div>
+<p>So far, we have discussed how to inherit properties and methods from another
+object.  However, <code>Object.create()</code> is a function introduced in ECMAScript
+5, which was released in 2011.  How did people use prototypal inheritance before
+<code>Object.create()</code> was introduced?</p>
+</div>
+<div class="section" id="constructor">
+<h2>Constructor</h2>
+<p>Before the introduction of <code>Object.create()</code>, the prototypal inheritance
+has to be done indirectly through the <code>new</code> operator and the constructor
+function.</p>
+<div class="section" id="new-operator-and-constructor">
+<h3>New Operator and Constructor</h3>
+<p>The <code>new</code> operator will create a new object whose <em>prototype</em> is the
+object referred by the <code>prototype</code> property of the constructor function
+and pass the newly created object through the implicit <code>this</code> argument.
+Constructor functions are functions which <strong>assume</strong> that the implicit
+<code>this</code> argument will bind to a newly created object.  These constructors
+will initialize the object by setting more properties.  For example:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Employee</span><span class="p">(</span><span class="nx">firstName</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">getFullName</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">robert</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Robert&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">mike</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Mike&#39;</span><span class="p">,</span> <span class="s1">&#39;Williams&#39;</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Robert Smith</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">mike</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Mike Williams</span>
+</pre></div>
+<p>The following code show that the prototype object of <code>robert</code> and
+<code>mike</code> is the object referred by <code>Employee.prototype</code>:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">robert</span><span class="p">),</span> <span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span>
+<span class="c1">// Prints: true</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="nx">mike</span><span class="p">),</span> <span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span>
+<span class="c1">// Prints: true</span>
+</pre></div>
+<p>To get more insights, let's add a <code>console.log()</code> in the <code>Employee</code>
+constructor function:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Employee</span><span class="p">(</span><span class="nx">firstName</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nb">Object</span><span class="p">.</span><span class="nx">getPrototypeOf</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span><span class="p">));</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Ada&#39;</span><span class="p">,</span> <span class="s1">&#39;Lovelace&#39;</span><span class="p">);</span>
+<span class="c1">// Prints: true</span>
+</pre></div>
+<p>The result shows that the object referred by the implicit <code>this</code> argument
+is using <code>Employee.prototype</code> as the prototype object.</p>
+</div>
+<div class="section" id="constructor-pitfalls">
+<h3>Constructor Pitfalls</h3>
+<p>We have learned about the <code>new</code> operator and the construction functions.
+However, please be aware that constructor functions are only functions following
+a specific convention.  This abstraction will be broken if we don't call these
+functions through the <code>new</code> operator.  For example:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">bob</span> <span class="o">=</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Bob&#39;</span><span class="p">,</span> <span class="s1">&#39;Taylor&#39;</span><span class="p">);</span>
+<span class="c1">// Prints: false</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">bob</span><span class="p">);</span>
+<span class="c1">// Prints: undefined</span>
+</pre></div>
+<p>In this code snippet, the implicit <code>this</code> argument will be bound to the
+global host object mentioned earlier, thus the prototype of the object won't be
+<code>Employee.prototype</code>.  Besides, the value of <code>bob</code> will be
+<code>undefiend</code> becaue the <code>Employee</code> function does not return any
+value.</p>
+<p>Return values of the constructor functions might cause some confusions as well.
+If a constructor does not return any value, then the <code>new</code> expression will
+become the newly created object referred by the implicit <code>this</code> argument
+as expected. However, if a constructor returns some value, then the <code>new</code>
+expression will become the returned value.  For example:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Employee</span><span class="p">(</span><span class="nx">firstName</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">firstName</span> <span class="o">===</span> <span class="s1">&#39;Bad&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">lastName</span> <span class="o">==</span> <span class="s1">&#39;Example&#39;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">&#39;Surprise&#39;</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Robert&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">));</span>
+<span class="c1">// Prints: { firstName: &#39;Robert&#39;,</span>
+<span class="c1">// Prints:   lastName: &#39;Smith&#39; }</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Bad&#39;</span><span class="p">,</span> <span class="s1">&#39;Example&#39;</span><span class="p">));</span>
+<span class="c1">// Prints: Surprise</span>
+</pre></div>
+<p>This mechanism is designed to give the writer of constructor functions an
+opportunity to change the prototypal inheritance hierarchy.  However, I
+personally don't use this <em>feature</em> in my code becuase it is too confusing.</p>
+</div>
+<div class="section" id="idiom-for-constructor-functions">
+<h3>Idiom for Constructor Functions</h3>
+<p>Now, let's get back to our first code snippet for <code>Employee</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Employee</span><span class="p">(</span><span class="nx">firstName</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">getFullName</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+</pre></div>
+<p>In the our first version, we assigned an object to <code>Employee.prototype</code>.
+This is not necessary to create a new object if we are not planning to inherit
+from other prototypal objects.  Javascript run-time will create an object and
+assign it to the <code>prototype</code> property of the function object when the
+function is <strong>defined</strong>.  We can add properties to that object directly.  Thus,
+the idiomatic implementation for <code>Employee</code> should be:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">Employee</span><span class="p">(</span><span class="nx">firstName</span><span class="p">,</span> <span class="nx">lastName</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="nx">firstName</span><span class="p">;</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="nx">lastName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">Employee</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">getFullName</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">robert</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Employee</span><span class="p">(</span><span class="s1">&#39;Robert&#39;</span><span class="p">,</span> <span class="s1">&#39;Smith&#39;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">robert</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Robert Smith</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="craft-a-polyfill">
+<h2>Craft a Polyfill</h2>
+<p>The <code>new</code> operator and the constructor function sound complex.  How could
+I implement an <code>Object.create()</code> in ECMAScript 3?  Here is a simple trick:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nx">f</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+<p>This code snippet defines a fucntion <code>f</code> locally, assign <code>proto</code> to
+<code>prototype</code> property, and return the object constructed by the <code>new</code>
+operator.</p>
+<p>For example, we can copy the code snippet in the <a class="reference internal" href="#prototypal-inheritance">Prototypal Inheritance</a>
+section and replace <code>Object.create()</code> with our version:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">robert</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">firstName</span><span class="o">:</span> <span class="s1">&#39;Robert&#39;</span><span class="p">,</span>
+  <span class="nx">lastName</span><span class="o">:</span> <span class="s1">&#39;Smith&#39;</span><span class="p">,</span>
+  <span class="nx">getFullName</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">lastName</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">mike</span> <span class="o">=</span> <span class="nx">create</span><span class="p">(</span><span class="nx">robert</span><span class="p">);</span>
+<span class="nx">mike</span><span class="p">.</span><span class="nx">firstName</span> <span class="o">=</span> <span class="s1">&#39;Mike&#39;</span><span class="p">;</span>
+<span class="nx">mike</span><span class="p">.</span><span class="nx">lastName</span> <span class="o">=</span> <span class="s1">&#39;Williams&#39;</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">mike</span><span class="p">.</span><span class="nx">getFullName</span><span class="p">());</span>
+<span class="c1">// Prints: Mike Williams</span>
+</pre></div>
+<p>It works, but this implementation can be more efficient.  We don't have to
+create a new function object <code>f</code> whenever we invoke <code>create()</code>.
+We can create one instance and reuse it:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">create</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+  <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{}</span>
+  <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nx">f</span><span class="p">();</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">create</span><span class="p">;</span>
+<span class="p">})();</span>
+</pre></div>
+<p>In addition, we can wrap our polyfill with a check, so that we can use the
+built-in implementation if the Javascript run-time supports
+<code>Object.create()</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span> <span class="o">!==</span> <span class="s1">&#39;function&#39;</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">f</span><span class="p">()</span> <span class="p">{}</span>
+    <span class="kd">function</span> <span class="nx">create</span><span class="p">(</span><span class="nx">proto</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">f</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">proto</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">new</span> <span class="nx">f</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nx">create</span><span class="p">;</span>
+  <span class="p">})();</span>
+<span class="p">}</span>
+</pre></div>
+<p>Of course, our naive implementation is not fully compliant to the one specified
+in ECMAScript 5.  Some features specified in ECMAScript 5 cannot be implemented
+with ECMAScript 3 unless some run-time specific hacks are applied.  But, this
+polyfill helps us to relate <code>Object.create()</code> function with the
+constructor function.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we started from the object literals, properties, and methods. And
+then, we introduced the prototypal inheritance with <code>Object.create()</code>,
+which creates an object inheriting from another object.  After having a solid
+idea on <code>Object.create()</code>, we went further to learn the <code>new</code>
+operator and constructor functions in ECMAScript 3.  It was how people write
+object-oriented program in ECMAScript in the past.  Finally, we connected two
+different methodologies by crafting an <code>Object.create()</code> polyfill.  Hope
+you enjoy this post.  See you next time.</p>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

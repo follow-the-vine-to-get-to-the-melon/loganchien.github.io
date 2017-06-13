@@ -79,15 +79,15 @@ available.</p>
 then it will <em>seem</em> to work:</p>
 <div class="highlight"><pre><span></span>$ node test.js
 aa
-3
+<span class="m">3</span>
 bbbb
-5
+<span class="m">5</span>
 </pre></div>
 <p>But it does not always work.  It is just a coincident to receive a <code>data</code>
 event when we hit the Enter key.  For example, if we pipe the standard input,
 then we will see a completely different output:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
-8
+<span class="m">8</span>
 </pre></div>
 </div>
 <div class="section" id="corrent-answer">
@@ -113,15 +113,15 @@ specify <code>terminal: false</code>, otherwise some extra output will be printe
 standard output.</p>
 <p>Here's the output:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
-2
-4
+<span class="m">2</span>
+<span class="m">4</span>
 </pre></div>
 <p>If you remove <code>terminal: false</code> from the options, then you will see:</p>
 <div class="highlight"><pre><span></span>$ <span class="nb">printf</span> <span class="s2">&quot;aa\nbbbb\n&quot;</span> <span class="p">|</span> node test.js
 aa
-2
+<span class="m">2</span>
 bbbb
-4
+<span class="m">4</span>
 </pre></div>
 <p>In this post, we introduced the basic usage of <a class="reference external" href="https://nodejs.org/api/stream.html">Stream</a> and <a class="reference external" href="https://nodejs.org/api/readline.html">Readline</a> module in
 Node.js.  Check the links in the <a class="reference internal" href="#reference">Reference</a> section for further information.</p>

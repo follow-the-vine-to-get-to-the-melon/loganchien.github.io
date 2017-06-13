@@ -366,21 +366,21 @@ objects have common prefix, then the shorter one is less than the longer one.</p
 <span class="bp">False</span>
 </pre></div>
 <p>Here are the examples for <code>bytes</code>:</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span> <span class="o">&lt;</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;abc&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="sa">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">&lt;</span> <span class="sa">b</span><span class="s1">&#39;abc&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="n">b</span><span class="s1">&#39;b&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span> <span class="o">&lt;</span> <span class="sa">b</span><span class="s1">&#39;b&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="sa">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;ab&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;abc&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="sa">b</span><span class="s1">&#39;ab&#39;</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;abc&#39;</span>
 <span class="bp">False</span>
 </pre></div>
 <p>We are allowed to compare <code>bytearray</code> with <code>bytes</code>:</p>
-<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">True</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">b</span><span class="s1">&#39;aa&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">b</span><span class="s1">&#39;a&#39;</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nb">bytearray</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;aa&#39;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="sa">b</span><span class="s1">&#39;a&#39;</span>
 <span class="bp">False</span>
 </pre></div>
 <p>We are also allowed to compare <code>tuple</code> and <code>list</code> with equality and
@@ -456,15 +456,15 @@ define a <code>Date</code> class in <code>date.py</code>:</p>
 <div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
 
 <span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">=</span> <span class="n">year</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">=</span> <span class="n">month</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">=</span> <span class="n">date</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;{0}/{1:02}/{2:02}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="s1">&#39;Date({0},{1},{2})&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 </pre></div>
 <p>What will happen if we compare two instances of <code>Date</code>?  By default, we
@@ -499,7 +499,7 @@ then the <code>TypeError</code> exception will be raised:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="c1"># ... skipped ...</span>
 
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">month</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
@@ -521,7 +521,7 @@ For example:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="c1"># ... skipped ...</span>
 
-    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
 </pre></div>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
@@ -546,7 +546,7 @@ function for our <code>Date</code> class:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="c1"># ... skipped ...</span>
 
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
 </pre></div>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>
@@ -567,10 +567,10 @@ function for our <code>Date</code> class:</p>
 <div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="c1"># ... skipped ...</span>
 
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
 
-    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </pre></div>
 <p>In our example, we simply implement <code>__lt__</code> by comparing the hash value
@@ -657,15 +657,15 @@ sufficient to define a total ordering class:</p>
 <span class="k">class</span> <span class="nc">Date</span><span class="p">:</span>
     <span class="c1"># ... skipped ...</span>
 
-    <span class="k">def</span> <span class="nf">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">*</span> <span class="mi">10000</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">*</span> <span class="mi">100</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">date</span>
 
-    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">year</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">month</span> <span class="ow">and</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">date</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">date</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">hash</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
 </pre></div>
 <div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="kn">from</span> <span class="nn">date</span> <span class="kn">import</span> <span class="n">Date</span>

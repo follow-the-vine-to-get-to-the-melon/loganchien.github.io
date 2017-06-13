@@ -117,7 +117,7 @@ with <code>-compile-command</code>.  For example,</p>
 <span class="nv">logfile</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>mktemp<span class="k">)</span><span class="s2">&quot;</span>
 
 <span class="c1"># Run your test command (and redirect the output messages)</span>
-llc <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span> &gt; <span class="s2">&quot;</span><span class="si">${</span><span class="nv">logfile</span><span class="si">}</span><span class="s2">&quot;</span> 2&gt;<span class="p">&amp;</span>1
+llc <span class="s2">&quot;</span><span class="nv">$@</span><span class="s2">&quot;</span> &gt; <span class="s2">&quot;</span><span class="si">${</span><span class="nv">logfile</span><span class="si">}</span><span class="s2">&quot;</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 <span class="nv">ret</span><span class="o">=</span><span class="s2">&quot;</span><span class="nv">$?</span><span class="s2">&quot;</span>
 
 <span class="c1"># Print messages when error occurs</span>
@@ -150,7 +150,7 @@ declaration in the LLVM bitcode, we can further strip the bitcode with:</p>
 <h2>Conclusion</h2>
 <p>After these steps, we should be able to obtain a minimal test case which is
 suitable for debugging.  We can find the exact pass causing the problem with:</p>
-<div class="highlight"><pre><span></span>$ opt -print-before-all -print-after-all -O2 strip.ll &gt; debug.txt 2&gt;<span class="p">&amp;</span>1
+<div class="highlight"><pre><span></span>$ opt -print-before-all -print-after-all -O2 strip.ll &gt; debug.txt <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
 </pre></div>
 <p>In this post, I have introduced the basic usage of <a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html">bugpoint</a> to reduce the
 test case for code generation bugs.  We can automate the test case reduction
