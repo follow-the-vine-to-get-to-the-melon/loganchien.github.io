@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>A Quick Guide to Grunt | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="javascript" />
+
+	<meta property="og:title" content="A Quick Guide to Grunt" />
+	<meta property="og:url" content="http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/" rel="bookmark" title="Permalink to A Quick Guide to Grunt">A Quick Guide to Grunt</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2015-12-26T17:34:00+08:00">
+		Sat 26 December 2015
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><a class="reference external" href="https://gruntjs.com/">Grunt</a> is a task runner for Javascript development.  <a class="reference external" href="https://gruntjs.com/">Grunt</a> automates the
+process to bundle, transpile, uglify, and compress the Javascript source code.
+This post would like to give a quick guide to <a class="reference external" href="https://gruntjs.com/">Grunt</a>.</p>
+<div class="section" id="installation">
+<h2>Installation</h2>
+<p>Our first step is to create a <code>package.json</code>.  We will need a
+<code>package.json</code> save the version of <a class="reference external" href="https://gruntjs.com/">Grunt</a> package.  Besides, we would like
+to load package information from <code>package.json</code> in the future. Thus, if
+you don't have an existing <code>package.json</code>, then create one with
+<code>npm init</code>:</p>
+<div class="highlight"><pre><span></span>$ mkdir hello_grunt
+$ <span class="nb">cd</span> hello_grunt
+$ npm init
+</pre></div>
+<p>Second, install <a class="reference external" href="https://gruntjs.com/">Grunt</a> and its command line tool with the following command.
+We should keep them as development dependencies, thus <code>--save-dev</code> is
+specified:</p>
+<div class="highlight"><pre><span></span>$ npm install --save-dev grunt grunt-cli
+</pre></div>
+<p>Third, add <code>node_modules/.bin</code> to <code>PATH</code> environment variable:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/node_modules/.bin:</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span><span class="s2">&quot;</span>
+</pre></div>
+<p>Now, we can test the <a class="reference external" href="https://gruntjs.com/">Grunt</a> command with:</p>
+<div class="highlight"><pre><span></span>$ grunt
+A valid Gruntfile could not be found. Please see the getting started guide <span class="k">for</span>
+more information on how to configure grunt: http://gruntjs.com/getting-started
+Fatal error: Unable to find Gruntfile.
+</pre></div>
+<p>Apparently, we get an error because we haven't written a <code>Gruntfile.js</code>
+yet.  We will cover the basic usage in the next section.</p>
+</div>
+<div class="section" id="gruntfile-basics">
+<h2>Gruntfile Basics</h2>
+<p><code>Gruntfile.js</code> is a Javascript module specifying the task to be run by
+<a class="reference external" href="https://gruntjs.com/">Grunt</a>.  Let's start with our first example:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+<span class="p">};</span>
+</pre></div>
+<p>This <code>Gruntfile.js</code> registers a default task which does nothing.  There
+are several points in this example.  First, <code>Gruntfile.js</code> is essentially
+a Node.js module.  It exports a function accepting a <code>grunt</code> argument
+which will be bound to a <a class="reference external" href="https://gruntjs.com/">Grunt</a> API object.  Second, it calls
+<code>grunt.initConfig()</code> and passes an object containing a <code>pkg</code>
+property.  This function call initializes the configuration that will be
+accessed by the tasks. Third, it calls <code>grunt.registerTask()</code> to register
+a task named <code>default</code>.</p>
+<p>After running the <code>grunt</code> command, we will see:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Done, without errors.
+</pre></div>
+<p>Apparently, <a class="reference external" href="https://gruntjs.com/">Grunt</a> did nothing because there is nothing to do.  Let's write a
+real <em>hello world</em> task.  The following code snippet registers another task
+named <code>hello</code>:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">grunt</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">writeln</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[]);</span>
+<span class="p">};</span>
+</pre></div>
+<p>With this <code>Gruntfile.js</code>, we can run the <code>hello</code> task with:</p>
+<div class="highlight"><pre><span></span>$ grunt hello
+Running <span class="s2">&quot;hello&quot;</span> task
+hello world
+
+Done, without errors.
+</pre></div>
+<p>To run the <code>hello</code> task without explicitly specifying it in the command
+line arguments, add <code>hello</code> task to the dependencies of the
+<code>default</code> task:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">grunt</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">writeln</span><span class="p">(</span><span class="s1">&#39;hello world&#39;</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">]);</span>  <span class="c1">// Modified</span>
+<span class="p">};</span>
+</pre></div>
+<p>After this modification, running <code>grunt</code> command (without arguments)
+should print the same output:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Running <span class="s2">&quot;hello&quot;</span> task
+hello world
+
+Done, without errors.
+</pre></div>
+<p>So far, we have learned to register a single task with <code>registerTask()</code>.
+However, under some circumstances, we would like to register multiple tasks with
+the same function code but different parameters.  We can achieve this goal with
+<code>grunt.registerMultiTask()</code>:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+
+        <span class="nx">hello</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="s1">&#39;world&#39;</span><span class="p">,</span>
+            <span class="nx">dist_other</span><span class="o">:</span> <span class="s1">&#39;grunt&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerMultiTask</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="nx">grunt</span><span class="p">.</span><span class="nx">log</span><span class="p">.</span><span class="nx">writeln</span><span class="p">(</span><span class="s1">&#39;hello &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">+</span> <span class="s1">&#39; from &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;hello&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+<p>In the code snippet above, we replaced <code>registerTask()</code> with
+<code>registerMultiTask()</code>.  In addition, an extra key-value pair <code>hello</code>
+is added to the configuration.  The <code>hello</code> property holds another object
+which keeps the key-value pairs for each targets.  When the task function is
+invoked, <code>this.target</code> will be bound to the key and <code>this.data</code>
+will be bound to the value.</p>
+<p>For example, in the first invocation, <code>this.target</code> will be bound to
+<code>dist</code> and <code>this.data</code> will be bound to <code>world</code>.  In the
+second invocation, <code>this.target</code> will be bound to <code>dist_other</code> and
+<code>this.data</code> will be bound to <code>grunt</code>.  Here is the output:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Running <span class="s2">&quot;hello:dist&quot;</span> <span class="o">(</span>hello<span class="o">)</span> task
+hello world from dist
+
+Running <span class="s2">&quot;hello:dist_other&quot;</span> <span class="o">(</span>hello<span class="o">)</span> task
+hello grunt from dist_other
+
+Done, without errors.
+</pre></div>
+<p>We can run a specific task by combining the task name and the target name with a
+colon.  For example, running <code>grunt hello:dist</code> will only invoke the
+<code>hello</code> task with the <code>dist</code> parameter:</p>
+<div class="highlight"><pre><span></span>$ grunt hello:dist
+Running <span class="s2">&quot;hello:dist&quot;</span> <span class="o">(</span>hello<span class="o">)</span> task
+hello world from dist
+
+Done, without errors.
+</pre></div>
+<p>This convention applies to all places where <a class="reference external" href="https://gruntjs.com/">Grunt</a> expects a task name.  For
+example, we can specify <code>hello:dist</code> as a dependency of the default task:</p>
+<div class="highlight"><pre><span></span><span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;hello:dist&#39;</span><span class="p">]);</span>
+</pre></div>
+<p>We have learned the basic usage of <a class="reference external" href="https://gruntjs.com/">Grunt</a>.  It's time for some real-world
+examples.  In the upcoming sections, we will cover three different <a class="reference external" href="https://gruntjs.com/">Grunt</a> tasks:
+<a class="reference internal" href="#uglify">uglify</a>, <a class="reference internal" href="#clean">clean</a>, and <a class="reference internal" href="#babel-transpilation">babel transpilation</a>.</p>
+</div>
+<div class="section" id="uglify">
+<h2>Uglify</h2>
+<p>In the past, web developers had to distribute Javascript source code to web site
+visitors.  It is undesirable because most people don't want their competitors
+take their code easily.  Besides, web developers would like to reduce the file
+size as well.  Since Javascript engines don't care about the comments and most
+local variable names, we can reduce the file size by removing comments or
+renaming local variables.</p>
+<p><a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a> is a Javascript minifier and compressor that can remove comments,
+rename variables, rewrite Javascript expressions or statements, etc.
+<code>grunt-contrib-uglify</code> integrates <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a> into <a class="reference external" href="https://gruntjs.com/">Grunt</a>, thus our first
+step is to install <code>grunt-contrib-uglify</code> with following command:</p>
+<div class="highlight"><pre><span></span>$ npm install --save-dev grunt-contrib-uglify
+</pre></div>
+<p>To demonstrate the functionality of <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a>, create an input file
+<code>src/hello_grunt.js</code> containing following Javascript code:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;hello &#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s1">&#39;!&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>Then, change <code>Gruntfile.js</code> to:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+
+        <span class="nx">uglify</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;dist/&lt;%= pkg.name %&gt;.min.js&#39;</span><span class="p">,</span>
+                <span class="nx">src</span><span class="o">:</span> <span class="s1">&#39;src/&lt;%= pkg.name %&gt;.js&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-uglify&#39;</span><span class="p">);</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;uglify&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+<p>Compared to the hello world example, there are two differences.  First, an extra
+<code>uglify</code> configuration is added and a <code>dist</code> target is declared. The
+<code>uglify:dist</code> target reads the input from <code>src/hello_grunt.js</code> and
+writes the output to <code>dist/hello_grunt.min.js</code>.  Notice that
+<code>&lt;%= pkg.name %&gt;</code> will be replaced by the package name specified in
+<code>package.json</code>.  Second, <code>grunt.loadNpmTasks()</code> loads
+<code>grunt-contrib-uglify</code> from the installed NPM package and registers the
+<code>uglify</code> tasks.</p>
+<p>After running the <code>grunt</code> command:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Running <span class="s2">&quot;uglify:dist&quot;</span> <span class="o">(</span>uglify<span class="o">)</span> task
+&gt;&gt; <span class="m">1</span> file created.
+
+Done, without errors.
+</pre></div>
+<p>An uglified Javascript file can be found at <code>dist/hello_grunt.min.js</code>.  It
+contains:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">a</span><span class="p">){</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;hello &quot;</span><span class="o">+</span><span class="nx">a</span><span class="o">+</span><span class="s2">&quot;!&quot;</span><span class="p">)}</span>
+</pre></div>
+<p>As shown by the code snippet, unnecessary whitespace characters or semicolons
+are removed and local variables are renamed.</p>
+</div>
+<div class="section" id="clean">
+<h2>Clean</h2>
+<p>During the build process, several temporary files or output files are generated.
+<code>grunt-contrib-clean</code> package allows us to clean up working directories
+with a single command <code>grunt clean</code>.</p>
+<p>To install <code>grunt-contrib-clean</code> package, run the following command:</p>
+<div class="highlight"><pre><span></span>$ npm install --save-dev grunt-contrib-clean
+</pre></div>
+<p>Next, load <code>grunt-contrib-clean</code> with <code>grunt.loadNpmTasks()</code> and
+add a <code>clean</code> property to the configuration:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+
+        <span class="nx">uglify</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;dist/&lt;%= pkg.name %&gt;.min.js&#39;</span><span class="p">,</span>
+                <span class="nx">src</span><span class="o">:</span> <span class="s1">&#39;src/&lt;%= pkg.name %&gt;.js&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+
+        <span class="nx">clean</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;dist&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-clean&#39;</span><span class="p">);</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-uglify&#39;</span><span class="p">);</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;uglify&#39;</span><span class="p">]);</span>
+<span class="p">};</span>
+</pre></div>
+<p>The <code>clean</code> property may specify multiple targets and configurations.  The
+data for each targets keep arrays of paths to be deleted.  In this example, the
+<code>clean:dist</code> target wants to remove the <code>dist</code> directory (specified
+in the array).</p>
+<p>To show how <code>grunt-contrib-clean</code> work, let's run the default task first:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Running <span class="s2">&quot;uglify:dist&quot;</span> <span class="o">(</span>uglify<span class="o">)</span> task
+&gt;&gt; <span class="m">1</span> file created.
+
+Done, without errors.
+
+$ find dist
+dist
+dist/hello_grunt.min.js
+</pre></div>
+<p>Then, run <code>grunt clean</code>:</p>
+<div class="highlight"><pre><span></span>$ grunt clean
+Running <span class="s2">&quot;clean:dist&quot;</span> <span class="o">(</span>clean<span class="o">)</span> task
+&gt;&gt; <span class="m">1</span> path cleaned.
+
+Done, without errors.
+
+$ find dist
+find: ‘dist’: No such file or directory
+</pre></div>
+<p>As expected, the <code>dist</code> directory was removed after running
+<code>grunt clean</code> command.</p>
+</div>
+<div class="section" id="babel-transpilation">
+<h2>Babel Transpilation</h2>
+<p><a class="reference external" href="https://babeljs.io">Babel</a> is a transpiler (source-to-source compiler) which converts the latest or
+experimental Javascript features into widely-adopted Javascript.  <a class="reference external" href="https://babeljs.io">Babel</a> has
+many functionalities, but the most notable one is its capability to convert
+ES2015 (ES6) source code into ES5 source code.  The upcoming example would like
+to demonstrate the interaction between <a class="reference external" href="https://babeljs.io">Babel</a>, <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a>, and <a class="reference external" href="https://gruntjs.com/">Grunt</a>.</p>
+<p>First, to transpile ES2015 source code, we have to install <code>grunt-babel</code>
+and <code>babel-preset-es2015</code>:</p>
+<div class="highlight"><pre><span></span>$ npm install --save-dev grunt-babel babel-preset-es2015
+</pre></div>
+<p>Second, add a <a class="reference external" href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals">template literal</a> to <code>src/hello_grunt.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`hello </span><span class="si">${</span><span class="nx">name</span><span class="si">}</span><span class="sb">!`</span><span class="p">);</span>  <span class="c1">// Modified</span>
+<span class="p">}</span>
+</pre></div>
+<p>Third, register a <code>babel</code> task and add <code>babel</code> to the dependencies
+of the <code>default</code> task:</p>
+<div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+        <span class="nx">pkg</span><span class="o">:</span> <span class="nx">grunt</span><span class="p">.</span><span class="nx">file</span><span class="p">.</span><span class="nx">readJSON</span><span class="p">(</span><span class="s1">&#39;package.json&#39;</span><span class="p">),</span>
+
+        <span class="nx">babel</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">presets</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;es2015&#39;</span><span class="p">],</span>
+            <span class="p">},</span>
+
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;dist/&lt;%= pkg.name %&gt;.es5.js&#39;</span><span class="p">,</span>  <span class="c1">// Notice</span>
+                <span class="nx">src</span><span class="o">:</span> <span class="s1">&#39;src/&lt;%= pkg.name %&gt;.js&#39;</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+
+        <span class="nx">uglify</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">dest</span><span class="o">:</span> <span class="s1">&#39;dist/&lt;%= pkg.name %&gt;.min.js&#39;</span><span class="p">,</span>
+                <span class="nx">src</span><span class="o">:</span> <span class="s1">&#39;dist/&lt;%= pkg.name %&gt;.es5.js&#39;</span><span class="p">,</span>  <span class="c1">// Modified</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+
+        <span class="nx">clean</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">dist</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;dist&#39;</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">});</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-babel&#39;</span><span class="p">);</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-clean&#39;</span><span class="p">);</span>
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-contrib-uglify&#39;</span><span class="p">);</span>
+
+    <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;babel&#39;</span><span class="p">,</span> <span class="s1">&#39;uglify&#39;</span><span class="p">]);</span>  <span class="c1">// Modified</span>
+<span class="p">};</span>
+</pre></div>
+<p>Four places in the code snippet above must be noticed.  First, there is an
+<code>options</code> property in the configuration for <code>babel</code>. The
+<code>options</code> property asks <a class="reference external" href="https://babeljs.io">Babel</a> to apply all ES2015-related
+transformations.  Second, the output file for the <code>babel:dist</code> target is
+<code>dist/hello_grunt.es5.js</code>.  Third, the output file for <code>babel:dist</code>
+will be the input file for <code>uglify:dist</code>.  Fourth, <code>babel</code> is added
+to the front of the dependencies array of the <code>default</code> task.  Since
+<a class="reference external" href="https://gruntjs.com/">Grunt</a> runs the tasks in the user-specified order, placing <code>babel</code> before
+<code>uglify</code> is necessary.</p>
+<p>Finally, run the <code>grunt</code> command:</p>
+<div class="highlight"><pre><span></span>$ grunt
+Running <span class="s2">&quot;babel:dist&quot;</span> <span class="o">(</span>babel<span class="o">)</span> task
+
+Running <span class="s2">&quot;uglify:dist&quot;</span> <span class="o">(</span>uglify<span class="o">)</span> task
+&gt;&gt; <span class="m">1</span> file created.
+
+Done, without errors.
+</pre></div>
+<p><a class="reference external" href="https://babeljs.io">Babel</a> will generate the following output file <code>dist/hello_grunt.es5.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;hello &quot;</span> <span class="o">+</span> <span class="nx">name</span> <span class="o">+</span> <span class="s2">&quot;!&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>And <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a> will convert it into <code>dist/hello_grunt.min.js</code>:</p>
+<div class="highlight"><pre><span></span><span class="s2">&quot;use strict&quot;</span><span class="p">;</span><span class="kd">function</span> <span class="nx">hello</span><span class="p">(</span><span class="nx">a</span><span class="p">){</span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;hello &quot;</span><span class="o">+</span><span class="nx">a</span><span class="o">+</span><span class="s2">&quot;!&quot;</span><span class="p">)}</span>
+</pre></div>
+<p>These output files complete our example.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we covered <a class="reference external" href="https://gruntjs.com/">Grunt</a> with several aspects.  We started from the
+<a class="reference internal" href="#gruntfile-basics">basic usages</a> and then walk through three common tasks such
+as <a class="reference internal" href="#uglify">uglify</a>, <a class="reference internal" href="#clean">clean</a>, and <a class="reference internal" href="#babel-transpilation">babel transpilation</a>.  I hope you enjoy this
+post.  Let's start to automate the Javascript build process with <a class="reference external" href="https://gruntjs.com/">Grunt</a>!</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>NPM packages and versions referred in this post:</p>
+<p class="last"><code>babel-preset-es2015&#64;6.3.13</code>
+<code>grunt&#64;0.4.5</code>
+<code>grunt-babel&#64;6.0.0</code>
+<code>grunt-cli&#64;0.1.13</code>
+<code>grunt-contrib-clean&#64;0.7.0</code>
+<code>grunt-contrib-uglify&#64;0.11.0</code></p>
+</div>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 19 Dec 2015 23:21:00 +0800</lastBuildDate><item><title>JavaScript Prototype and Object Oriented</title><link>http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/</link><description>&lt;p&gt;Javascript is a prototype-based object-oriented programming language.  Unlike
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 26 Dec 2015 17:34:00 +0800</lastBuildDate><item><title>A Quick Guide to Grunt</title><link>http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; is a task runner for Javascript development.  &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; automates the
+process to bundle, transpile, uglify, and compress the Javascript source code.
+This post would like to give a quick guide to &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Our first step is to create a &lt;code&gt;package.json&lt;/code&gt;.  We will need a
+&lt;code&gt;package.json&lt;/code&gt; save …&lt;/p&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 26 Dec 2015 17:34:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2015-12-26:/posts/2015/12/26/a-quick-guide-to-grunt/</guid><category>javascript</category></item><item><title>JavaScript Prototype and Object Oriented</title><link>http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/</link><description>&lt;p&gt;Javascript is a prototype-based object-oriented programming language.  Unlike
 the conventional class-based object-oriented programming languages (e.g. C++ or
 Java), which ask programmers to write a class and then instantiate several
 similar objects from the class, Javascript adopts a different approach.  In the

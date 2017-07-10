@@ -1,5 +1,387 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-12-19T23:21:00+08:00</updated><entry><title>JavaScript Prototype and Object Oriented</title><link href="http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/" rel="alternate"></link><published>2015-12-19T23:21:00+08:00</published><updated>2015-12-19T23:21:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-19:/posts/2015/12/19/javascript-prototype-and-object-oriented/</id><summary type="html">&lt;p&gt;Javascript is a prototype-based object-oriented programming language.  Unlike
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-12-26T17:34:00+08:00</updated><entry><title>A Quick Guide to Grunt</title><link href="http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/" rel="alternate"></link><published>2015-12-26T17:34:00+08:00</published><updated>2015-12-26T17:34:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-26:/posts/2015/12/26/a-quick-guide-to-grunt/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; is a task runner for Javascript development.  &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; automates the
+process to bundle, transpile, uglify, and compress the Javascript source code.
+This post would like to give a quick guide to &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Our first step is to create a &lt;code&gt;package.json&lt;/code&gt;.  We will need a
+&lt;code&gt;package.json&lt;/code&gt; save …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; is a task runner for Javascript development.  &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; automates the
+process to bundle, transpile, uglify, and compress the Javascript source code.
+This post would like to give a quick guide to &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;Our first step is to create a &lt;code&gt;package.json&lt;/code&gt;.  We will need a
+&lt;code&gt;package.json&lt;/code&gt; save the version of &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; package.  Besides, we would like
+to load package information from &lt;code&gt;package.json&lt;/code&gt; in the future. Thus, if
+you don't have an existing &lt;code&gt;package.json&lt;/code&gt;, then create one with
+&lt;code&gt;npm init&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ mkdir hello_grunt
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; hello_grunt
+$ npm init
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, install &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; and its command line tool with the following command.
+We should keep them as development dependencies, thus &lt;code&gt;--save-dev&lt;/code&gt; is
+specified:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-dev grunt grunt-cli
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, add &lt;code&gt;node_modules/.bin&lt;/code&gt; to &lt;code&gt;PATH&lt;/code&gt; environment variable:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;export&lt;/span&gt; &lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;/node_modules/.bin:&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;PATH&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we can test the &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; command with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+A valid Gruntfile could not be found. Please see the getting started guide &lt;span class="k"&gt;for&lt;/span&gt;
+more information on how to configure grunt: http://gruntjs.com/getting-started
+Fatal error: Unable to find Gruntfile.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Apparently, we get an error because we haven't written a &lt;code&gt;Gruntfile.js&lt;/code&gt;
+yet.  We will cover the basic usage in the next section.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="gruntfile-basics"&gt;
+&lt;h2&gt;Gruntfile Basics&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;Gruntfile.js&lt;/code&gt; is a Javascript module specifying the task to be run by
+&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.  Let's start with our first example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This &lt;code&gt;Gruntfile.js&lt;/code&gt; registers a default task which does nothing.  There
+are several points in this example.  First, &lt;code&gt;Gruntfile.js&lt;/code&gt; is essentially
+a Node.js module.  It exports a function accepting a &lt;code&gt;grunt&lt;/code&gt; argument
+which will be bound to a &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; API object.  Second, it calls
+&lt;code&gt;grunt.initConfig()&lt;/code&gt; and passes an object containing a &lt;code&gt;pkg&lt;/code&gt;
+property.  This function call initializes the configuration that will be
+accessed by the tasks. Third, it calls &lt;code&gt;grunt.registerTask()&lt;/code&gt; to register
+a task named &lt;code&gt;default&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;After running the &lt;code&gt;grunt&lt;/code&gt; command, we will see:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Apparently, &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; did nothing because there is nothing to do.  Let's write a
+real &lt;em&gt;hello world&lt;/em&gt; task.  The following code snippet registers another task
+named &lt;code&gt;hello&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeln&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;With this &lt;code&gt;Gruntfile.js&lt;/code&gt;, we can run the &lt;code&gt;hello&lt;/code&gt; task with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt hello
+Running &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt; task
+hello world
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To run the &lt;code&gt;hello&lt;/code&gt; task without explicitly specifying it in the command
+line arguments, add &lt;code&gt;hello&lt;/code&gt; task to the dependencies of the
+&lt;code&gt;default&lt;/code&gt; task:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeln&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;  &lt;span class="c1"&gt;// Modified&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;After this modification, running &lt;code&gt;grunt&lt;/code&gt; command (without arguments)
+should print the same output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Running &lt;span class="s2"&gt;&amp;quot;hello&amp;quot;&lt;/span&gt; task
+hello world
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So far, we have learned to register a single task with &lt;code&gt;registerTask()&lt;/code&gt;.
+However, under some circumstances, we would like to register multiple tasks with
+the same function code but different parameters.  We can achieve this goal with
+&lt;code&gt;grunt.registerMultiTask()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+
+        &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;world&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="nx"&gt;dist_other&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;grunt&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerMultiTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;writeln&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;data&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39; from &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;target&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the code snippet above, we replaced &lt;code&gt;registerTask()&lt;/code&gt; with
+&lt;code&gt;registerMultiTask()&lt;/code&gt;.  In addition, an extra key-value pair &lt;code&gt;hello&lt;/code&gt;
+is added to the configuration.  The &lt;code&gt;hello&lt;/code&gt; property holds another object
+which keeps the key-value pairs for each targets.  When the task function is
+invoked, &lt;code&gt;this.target&lt;/code&gt; will be bound to the key and &lt;code&gt;this.data&lt;/code&gt;
+will be bound to the value.&lt;/p&gt;
+&lt;p&gt;For example, in the first invocation, &lt;code&gt;this.target&lt;/code&gt; will be bound to
+&lt;code&gt;dist&lt;/code&gt; and &lt;code&gt;this.data&lt;/code&gt; will be bound to &lt;code&gt;world&lt;/code&gt;.  In the
+second invocation, &lt;code&gt;this.target&lt;/code&gt; will be bound to &lt;code&gt;dist_other&lt;/code&gt; and
+&lt;code&gt;this.data&lt;/code&gt; will be bound to &lt;code&gt;grunt&lt;/code&gt;.  Here is the output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Running &lt;span class="s2"&gt;&amp;quot;hello:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;hello&lt;span class="o"&gt;)&lt;/span&gt; task
+hello world from dist
+
+Running &lt;span class="s2"&gt;&amp;quot;hello:dist_other&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;hello&lt;span class="o"&gt;)&lt;/span&gt; task
+hello grunt from dist_other
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We can run a specific task by combining the task name and the target name with a
+colon.  For example, running &lt;code&gt;grunt hello:dist&lt;/code&gt; will only invoke the
+&lt;code&gt;hello&lt;/code&gt; task with the &lt;code&gt;dist&lt;/code&gt; parameter:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt hello:dist
+Running &lt;span class="s2"&gt;&amp;quot;hello:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;hello&lt;span class="o"&gt;)&lt;/span&gt; task
+hello world from dist
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This convention applies to all places where &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; expects a task name.  For
+example, we can specify &lt;code&gt;hello:dist&lt;/code&gt; as a dependency of the default task:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello:dist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We have learned the basic usage of &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.  It's time for some real-world
+examples.  In the upcoming sections, we will cover three different &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; tasks:
+&lt;a class="reference internal" href="#uglify"&gt;uglify&lt;/a&gt;, &lt;a class="reference internal" href="#clean"&gt;clean&lt;/a&gt;, and &lt;a class="reference internal" href="#babel-transpilation"&gt;babel transpilation&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="uglify"&gt;
+&lt;h2&gt;Uglify&lt;/h2&gt;
+&lt;p&gt;In the past, web developers had to distribute Javascript source code to web site
+visitors.  It is undesirable because most people don't want their competitors
+take their code easily.  Besides, web developers would like to reduce the file
+size as well.  Since Javascript engines don't care about the comments and most
+local variable names, we can reduce the file size by removing comments or
+renaming local variables.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://www.npmjs.com/package/uglifyjs"&gt;UglifyJS&lt;/a&gt; is a Javascript minifier and compressor that can remove comments,
+rename variables, rewrite Javascript expressions or statements, etc.
+&lt;code&gt;grunt-contrib-uglify&lt;/code&gt; integrates &lt;a class="reference external" href="https://www.npmjs.com/package/uglifyjs"&gt;UglifyJS&lt;/a&gt; into &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;, thus our first
+step is to install &lt;code&gt;grunt-contrib-uglify&lt;/code&gt; with following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-dev grunt-contrib-uglify
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To demonstrate the functionality of &lt;a class="reference external" href="https://www.npmjs.com/package/uglifyjs"&gt;UglifyJS&lt;/a&gt;, create an input file
+&lt;code&gt;src/hello_grunt.js&lt;/code&gt; containing following Javascript code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;hello &amp;#39;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, change &lt;code&gt;Gruntfile.js&lt;/code&gt; to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+
+        &lt;span class="nx"&gt;uglify&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dist/&amp;lt;%= pkg.name %&amp;gt;.min.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src/&amp;lt;%= pkg.name %&amp;gt;.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-contrib-uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Compared to the hello world example, there are two differences.  First, an extra
+&lt;code&gt;uglify&lt;/code&gt; configuration is added and a &lt;code&gt;dist&lt;/code&gt; target is declared. The
+&lt;code&gt;uglify:dist&lt;/code&gt; target reads the input from &lt;code&gt;src/hello_grunt.js&lt;/code&gt; and
+writes the output to &lt;code&gt;dist/hello_grunt.min.js&lt;/code&gt;.  Notice that
+&lt;code&gt;&amp;lt;%= pkg.name %&amp;gt;&lt;/code&gt; will be replaced by the package name specified in
+&lt;code&gt;package.json&lt;/code&gt;.  Second, &lt;code&gt;grunt.loadNpmTasks()&lt;/code&gt; loads
+&lt;code&gt;grunt-contrib-uglify&lt;/code&gt; from the installed NPM package and registers the
+&lt;code&gt;uglify&lt;/code&gt; tasks.&lt;/p&gt;
+&lt;p&gt;After running the &lt;code&gt;grunt&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Running &lt;span class="s2"&gt;&amp;quot;uglify:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;uglify&lt;span class="o"&gt;)&lt;/span&gt; task
+&amp;gt;&amp;gt; &lt;span class="m"&gt;1&lt;/span&gt; file created.
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;An uglified Javascript file can be found at &lt;code&gt;dist/hello_grunt.min.js&lt;/code&gt;.  It
+contains:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hello &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As shown by the code snippet, unnecessary whitespace characters or semicolons
+are removed and local variables are renamed.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="clean"&gt;
+&lt;h2&gt;Clean&lt;/h2&gt;
+&lt;p&gt;During the build process, several temporary files or output files are generated.
+&lt;code&gt;grunt-contrib-clean&lt;/code&gt; package allows us to clean up working directories
+with a single command &lt;code&gt;grunt clean&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;To install &lt;code&gt;grunt-contrib-clean&lt;/code&gt; package, run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-dev grunt-contrib-clean
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Next, load &lt;code&gt;grunt-contrib-clean&lt;/code&gt; with &lt;code&gt;grunt.loadNpmTasks()&lt;/code&gt; and
+add a &lt;code&gt;clean&lt;/code&gt; property to the configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+
+        &lt;span class="nx"&gt;uglify&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dist/&amp;lt;%= pkg.name %&amp;gt;.min.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src/&amp;lt;%= pkg.name %&amp;gt;.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+
+        &lt;span class="nx"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-contrib-clean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-contrib-uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;clean&lt;/code&gt; property may specify multiple targets and configurations.  The
+data for each targets keep arrays of paths to be deleted.  In this example, the
+&lt;code&gt;clean:dist&lt;/code&gt; target wants to remove the &lt;code&gt;dist&lt;/code&gt; directory (specified
+in the array).&lt;/p&gt;
+&lt;p&gt;To show how &lt;code&gt;grunt-contrib-clean&lt;/code&gt; work, let's run the default task first:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Running &lt;span class="s2"&gt;&amp;quot;uglify:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;uglify&lt;span class="o"&gt;)&lt;/span&gt; task
+&amp;gt;&amp;gt; &lt;span class="m"&gt;1&lt;/span&gt; file created.
+
+Done, without errors.
+
+$ find dist
+dist
+dist/hello_grunt.min.js
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, run &lt;code&gt;grunt clean&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt clean
+Running &lt;span class="s2"&gt;&amp;quot;clean:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;clean&lt;span class="o"&gt;)&lt;/span&gt; task
+&amp;gt;&amp;gt; &lt;span class="m"&gt;1&lt;/span&gt; path cleaned.
+
+Done, without errors.
+
+$ find dist
+find: ‘dist’: No such file or directory
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As expected, the &lt;code&gt;dist&lt;/code&gt; directory was removed after running
+&lt;code&gt;grunt clean&lt;/code&gt; command.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="babel-transpilation"&gt;
+&lt;h2&gt;Babel Transpilation&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://babeljs.io"&gt;Babel&lt;/a&gt; is a transpiler (source-to-source compiler) which converts the latest or
+experimental Javascript features into widely-adopted Javascript.  &lt;a class="reference external" href="https://babeljs.io"&gt;Babel&lt;/a&gt; has
+many functionalities, but the most notable one is its capability to convert
+ES2015 (ES6) source code into ES5 source code.  The upcoming example would like
+to demonstrate the interaction between &lt;a class="reference external" href="https://babeljs.io"&gt;Babel&lt;/a&gt;, &lt;a class="reference external" href="https://www.npmjs.com/package/uglifyjs"&gt;UglifyJS&lt;/a&gt;, and &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;First, to transpile ES2015 source code, we have to install &lt;code&gt;grunt-babel&lt;/code&gt;
+and &lt;code&gt;babel-preset-es2015&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-dev grunt-babel babel-preset-es2015
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, add a &lt;a class="reference external" href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Template_literals"&gt;template literal&lt;/a&gt; to &lt;code&gt;src/hello_grunt.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="sb"&gt;`hello &lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="sb"&gt;!`&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;  &lt;span class="c1"&gt;// Modified&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, register a &lt;code&gt;babel&lt;/code&gt; task and add &lt;code&gt;babel&lt;/code&gt; to the dependencies
+of the &lt;code&gt;default&lt;/code&gt; task:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+        &lt;span class="nx"&gt;pkg&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;file&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;readJSON&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;package.json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+
+        &lt;span class="nx"&gt;babel&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;presets&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;es2015&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dist/&amp;lt;%= pkg.name %&amp;gt;.es5.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;// Notice&lt;/span&gt;
+                &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src/&amp;lt;%= pkg.name %&amp;gt;.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+
+        &lt;span class="nx"&gt;uglify&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dist/&amp;lt;%= pkg.name %&amp;gt;.min.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;dist/&amp;lt;%= pkg.name %&amp;gt;.es5.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;  &lt;span class="c1"&gt;// Modified&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+
+        &lt;span class="nx"&gt;clean&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;dist&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+        &lt;span class="p"&gt;},&lt;/span&gt;
+    &lt;span class="p"&gt;});&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-babel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-contrib-clean&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-contrib-uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+    &lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerTask&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;default&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;babel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;uglify&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;  &lt;span class="c1"&gt;// Modified&lt;/span&gt;
+&lt;span class="p"&gt;};&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Four places in the code snippet above must be noticed.  First, there is an
+&lt;code&gt;options&lt;/code&gt; property in the configuration for &lt;code&gt;babel&lt;/code&gt;. The
+&lt;code&gt;options&lt;/code&gt; property asks &lt;a class="reference external" href="https://babeljs.io"&gt;Babel&lt;/a&gt; to apply all ES2015-related
+transformations.  Second, the output file for the &lt;code&gt;babel:dist&lt;/code&gt; target is
+&lt;code&gt;dist/hello_grunt.es5.js&lt;/code&gt;.  Third, the output file for &lt;code&gt;babel:dist&lt;/code&gt;
+will be the input file for &lt;code&gt;uglify:dist&lt;/code&gt;.  Fourth, &lt;code&gt;babel&lt;/code&gt; is added
+to the front of the dependencies array of the &lt;code&gt;default&lt;/code&gt; task.  Since
+&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; runs the tasks in the user-specified order, placing &lt;code&gt;babel&lt;/code&gt; before
+&lt;code&gt;uglify&lt;/code&gt; is necessary.&lt;/p&gt;
+&lt;p&gt;Finally, run the &lt;code&gt;grunt&lt;/code&gt; command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ grunt
+Running &lt;span class="s2"&gt;&amp;quot;babel:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;babel&lt;span class="o"&gt;)&lt;/span&gt; task
+
+Running &lt;span class="s2"&gt;&amp;quot;uglify:dist&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;(&lt;/span&gt;uglify&lt;span class="o"&gt;)&lt;/span&gt; task
+&amp;gt;&amp;gt; &lt;span class="m"&gt;1&lt;/span&gt; file created.
+
+Done, without errors.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://babeljs.io"&gt;Babel&lt;/a&gt; will generate the following output file &lt;code&gt;dist/hello_grunt.es5.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;use strict&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;name&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hello &amp;quot;&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="nx"&gt;name&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And &lt;a class="reference external" href="https://www.npmjs.com/package/uglifyjs"&gt;UglifyJS&lt;/a&gt; will convert it into &lt;code&gt;dist/hello_grunt.min.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;use strict&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="nx"&gt;hello&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;&lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hello &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="nx"&gt;a&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;These output files complete our example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we covered &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; with several aspects.  We started from the
+&lt;a class="reference internal" href="#gruntfile-basics"&gt;basic usages&lt;/a&gt; and then walk through three common tasks such
+as &lt;a class="reference internal" href="#uglify"&gt;uglify&lt;/a&gt;, &lt;a class="reference internal" href="#clean"&gt;clean&lt;/a&gt;, and &lt;a class="reference internal" href="#babel-transpilation"&gt;babel transpilation&lt;/a&gt;.  I hope you enjoy this
+post.  Let's start to automate the Javascript build process with &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;!&lt;/p&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;NPM packages and versions referred in this post:&lt;/p&gt;
+&lt;p class="last"&gt;&lt;code&gt;babel-preset-es2015&amp;#64;6.3.13&lt;/code&gt;
+&lt;code&gt;grunt&amp;#64;0.4.5&lt;/code&gt;
+&lt;code&gt;grunt-babel&amp;#64;6.0.0&lt;/code&gt;
+&lt;code&gt;grunt-cli&amp;#64;0.1.13&lt;/code&gt;
+&lt;code&gt;grunt-contrib-clean&amp;#64;0.7.0&lt;/code&gt;
+&lt;code&gt;grunt-contrib-uglify&amp;#64;0.11.0&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="javascript"></category></entry><entry><title>JavaScript Prototype and Object Oriented</title><link href="http://logan.tw/posts/2015/12/19/javascript-prototype-and-object-oriented/" rel="alternate"></link><published>2015-12-19T23:21:00+08:00</published><updated>2015-12-19T23:21:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-19:/posts/2015/12/19/javascript-prototype-and-object-oriented/</id><summary type="html">&lt;p&gt;Javascript is a prototype-based object-oriented programming language.  Unlike
 the conventional class-based object-oriented programming languages (e.g. C++ or
 Java), which ask programmers to write a class and then instantiate several
 similar objects from the class, Javascript adopts a different approach.  In the
