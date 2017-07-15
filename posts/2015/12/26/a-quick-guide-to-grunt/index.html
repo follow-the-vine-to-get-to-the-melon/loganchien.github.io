@@ -61,9 +61,9 @@ This post would like to give a quick guide to <a class="reference external" href
 <div class="section" id="installation">
 <h2>Installation</h2>
 <p>Our first step is to create a <code>package.json</code>.  We will need a
-<code>package.json</code> save the version of <a class="reference external" href="https://gruntjs.com/">Grunt</a> package.  Besides, we would like
-to load package information from <code>package.json</code> in the future. Thus, if
-you don't have an existing <code>package.json</code>, then create one with
+<code>package.json</code> to save the version of <a class="reference external" href="https://gruntjs.com/">Grunt</a> package.  Besides, we would
+like to load package information from <code>package.json</code> in the future. Thus,
+if you don't have an existing <code>package.json</code>, then create one with
 <code>npm init</code>:</p>
 <div class="highlight"><pre><span></span>$ mkdir hello_grunt
 $ <span class="nb">cd</span> hello_grunt
@@ -83,8 +83,8 @@ A valid Gruntfile could not be found. Please see the getting started guide <span
 more information on how to configure grunt: http://gruntjs.com/getting-started
 Fatal error: Unable to find Gruntfile.
 </pre></div>
-<p>Apparently, we get an error because we haven't written a <code>Gruntfile.js</code>
-yet.  We will cover the basic usage in the next section.</p>
+<p>Apparently, we got an error because we haven't written a <code>Gruntfile.js</code>
+yet.  We will cover the basic usages in the next section.</p>
 </div>
 <div class="section" id="gruntfile-basics">
 <h2>Gruntfile Basics</h2>
@@ -99,18 +99,18 @@ yet.  We will cover the basic usage in the next section.</p>
 <span class="p">};</span>
 </pre></div>
 <p>This <code>Gruntfile.js</code> registers a default task which does nothing.  There
-are several points in this example.  First, <code>Gruntfile.js</code> is essentially
-a Node.js module.  It exports a function accepting a <code>grunt</code> argument
-which will be bound to a <a class="reference external" href="https://gruntjs.com/">Grunt</a> API object.  Second, it calls
+are several important concepts in this example.  First, <code>Gruntfile.js</code> is
+essentially a Node.js module.  It exports a function accepting a <code>grunt</code>
+argument which will be bound to a <a class="reference external" href="https://gruntjs.com/">Grunt</a> API object.  Second, it calls
 <code>grunt.initConfig()</code> and passes an object containing a <code>pkg</code>
-property.  This function call initializes the configuration that will be
-accessed by the tasks. Third, it calls <code>grunt.registerTask()</code> to register
+property.  <code>grunt.initConfig()</code> initializes the configuration that will be
+accessed by the tasks.  Third, it calls <code>grunt.registerTask()</code> to register
 a task named <code>default</code>.</p>
 <p>After running the <code>grunt</code> command, we will see:</p>
 <div class="highlight"><pre><span></span>$ grunt
 Done, without errors.
 </pre></div>
-<p>Apparently, <a class="reference external" href="https://gruntjs.com/">Grunt</a> did nothing because there is nothing to do.  Let's write a
+<p>Apparently, <a class="reference external" href="https://gruntjs.com/">Grunt</a> did nothing because there was nothing to do.  Let's write a
 real <em>hello world</em> task.  The following code snippet registers another task
 named <code>hello</code>:</p>
 <div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
@@ -132,7 +132,7 @@ hello world
 
 Done, without errors.
 </pre></div>
-<p>To run the <code>hello</code> task without explicitly specifying it in the command
+<p>To run the <code>hello</code> task <em>without</em> explicitly specifying it in the command
 line arguments, add <code>hello</code> task to the dependencies of the
 <code>default</code> task:</p>
 <div class="highlight"><pre><span></span><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">grunt</span><span class="p">)</span> <span class="p">{</span>
@@ -250,14 +250,15 @@ step is to install <code>grunt-contrib-uglify</code> with following command:</p>
     <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;uglify&#39;</span><span class="p">]);</span>
 <span class="p">};</span>
 </pre></div>
-<p>Compared to the hello world example, there are two differences.  First, an extra
-<code>uglify</code> configuration is added and a <code>dist</code> target is declared. The
-<code>uglify:dist</code> target reads the input from <code>src/hello_grunt.js</code> and
-writes the output to <code>dist/hello_grunt.min.js</code>.  Notice that
-<code>&lt;%= pkg.name %&gt;</code> will be replaced by the package name specified in
-<code>package.json</code>.  Second, <code>grunt.loadNpmTasks()</code> loads
-<code>grunt-contrib-uglify</code> from the installed NPM package and registers the
-<code>uglify</code> tasks.</p>
+<p>Compared to the hello world example, there are two differences.</p>
+<p>First, an extra <code>uglify</code> configuration is added and a <code>dist</code> target
+is declared. The <code>uglify:dist</code> target reads the input from
+<code>src/hello_grunt.js</code> and writes the output to
+<code>dist/hello_grunt.min.js</code>.  (Note: <code>&lt;%= pkg.name %&gt;</code> will be replaced
+by the package name specified in <code>package.json</code>, i.e. <code>hello_grunt</code>
+in this example.)</p>
+<p>Second, <code>grunt.loadNpmTasks()</code> loads <code>grunt-contrib-uglify</code> from the
+installed NPM package and registers the <code>uglify</code> tasks.</p>
 <p>After running the <code>grunt</code> command:</p>
 <div class="highlight"><pre><span></span>$ grunt
 Running <span class="s2">&quot;uglify:dist&quot;</span> <span class="o">(</span>uglify<span class="o">)</span> task
@@ -304,10 +305,10 @@ add a <code>clean</code> property to the configuration:</p>
     <span class="nx">grunt</span><span class="p">.</span><span class="nx">registerTask</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;uglify&#39;</span><span class="p">]);</span>
 <span class="p">};</span>
 </pre></div>
-<p>The <code>clean</code> property may specify multiple targets and configurations.  The
-data for each targets keep arrays of paths to be deleted.  In this example, the
-<code>clean:dist</code> target wants to remove the <code>dist</code> directory (specified
-in the array).</p>
+<p>Multiple targets and configurations may be specified in the <code>clean</code>
+property.  The data for each target keep an array of paths to be deleted.  In
+this example, the <code>clean:dist</code> target wants to remove the <code>dist</code>
+directory (specified in the array).</p>
 <p>To show how <code>grunt-contrib-clean</code> work, let's run the default task first:</p>
 <div class="highlight"><pre><span></span>$ grunt
 Running <span class="s2">&quot;uglify:dist&quot;</span> <span class="o">(</span>uglify<span class="o">)</span> task
@@ -337,8 +338,8 @@ find: ‘dist’: No such file or directory
 <p><a class="reference external" href="https://babeljs.io">Babel</a> is a transpiler (source-to-source compiler) which converts the latest or
 experimental Javascript features into widely-adopted Javascript.  <a class="reference external" href="https://babeljs.io">Babel</a> has
 many functionalities, but the most notable one is its capability to convert
-ES2015 (ES6) source code into ES5 source code.  The upcoming example would like
-to demonstrate the interaction between <a class="reference external" href="https://babeljs.io">Babel</a>, <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a>, and <a class="reference external" href="https://gruntjs.com/">Grunt</a>.</p>
+ES2015 (ES6) source code into ES5 source code.  The upcoming example
+demonstrates the interaction between <a class="reference external" href="https://babeljs.io">Babel</a>, <a class="reference external" href="https://www.npmjs.com/package/uglifyjs">UglifyJS</a>, and <a class="reference external" href="https://gruntjs.com/">Grunt</a>.</p>
 <p>First, to transpile ES2015 source code, we have to install <code>grunt-babel</code>
 and <code>babel-preset-es2015</code>:</p>
 <div class="highlight"><pre><span></span>$ npm install --save-dev grunt-babel babel-preset-es2015
@@ -416,8 +417,8 @@ Done, without errors.
 </div>
 <div class="section" id="conclusion">
 <h2>Conclusion</h2>
-<p>In this post, we covered <a class="reference external" href="https://gruntjs.com/">Grunt</a> with several aspects.  We started from the
-<a class="reference internal" href="#gruntfile-basics">basic usages</a> and then walk through three common tasks such
+<p>In this post, we covered several aspects of <a class="reference external" href="https://gruntjs.com/">Grunt</a>.  We started from the
+<a class="reference internal" href="#gruntfile-basics">basic usages</a> and then walked through three common tasks such
 as <a class="reference internal" href="#uglify">uglify</a>, <a class="reference internal" href="#clean">clean</a>, and <a class="reference internal" href="#babel-transpilation">babel transpilation</a>.  I hope you enjoy this
 post.  Let's start to automate the Javascript build process with <a class="reference external" href="https://gruntjs.com/">Grunt</a>!</p>
 <div class="admonition note">
