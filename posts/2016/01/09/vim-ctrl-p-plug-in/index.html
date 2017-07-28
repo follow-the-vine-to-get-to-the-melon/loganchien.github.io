@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Vim Ctrl-P Plug-in | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="vim" />
+
+	<meta property="og:title" content="Vim Ctrl-P Plug-in" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/01/09/vim-ctrl-p-plug-in/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/01/09/vim-ctrl-p-plug-in/" rel="bookmark" title="Permalink to Vim Ctrl-P Plug-in">Vim Ctrl-P Plug-in</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-01-09T09:21:00+08:00">
+		Sat 09 January 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/vim/">vim</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><a class="reference external" href="https://github.com/ctrlpvim/ctrlp.vim">Ctrl-P plug-in</a> allows us to open files with fuzzy names or regular expression
+matches.  It boosts my productivity at lot!  I am glad to know about this
+plug-in and I would like to share my experience with you.</p>
+<div class="section" id="installation">
+<h2>Installation</h2>
+<p>If you are managing Vim plug-ins with <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vundle</a> <a class="footnote-reference" href="#id2" id="id1">[1]</a>, you can install Ctrl-P by
+adding the following line to <code>.vimrc</code>:</p>
+<div class="highlight"><pre><span></span>Plugin <span class="s1">&#39;ctrlpvim/ctrlp.vim&#39;</span>
+</pre></div>
+<p>And then, run the following command:</p>
+<div class="highlight"><pre><span></span>$ <span class="k">vim</span> <span class="p">+</span>PluginInstall <span class="p">+</span><span class="k">qall</span>
+</pre></div>
+</div>
+<div class="section" id="usage">
+<h2>Usage</h2>
+<p>After installing Ctrl-P plug-in, you will be able to open files with following
+steps:</p>
+<ol class="arabic simple">
+<li>Press <code>Ctrl-P</code>.  In a second, a file list will prompt up.  It will list
+the files under the current working directory (recursively.)</li>
+<li>Type the file name.  Ctrl-P will list the matching files.  Select the file
+with <code>Up</code> or <code>Down</code> button on the keyboard.</li>
+<li>Press <code>Enter</code> to open the file in the current buffer.  Or, press
+<code>Ctrl-T</code> to open the file in a new tab.</li>
+</ol>
+<p>To search files with regular expression, press <code>Ctrl-P</code> again when the
+file list are prompted, i.e. press <code>Ctrl-P</code> twice if you are in the normal
+mode.</p>
+</div>
+<div class="section" id="file-name-cache">
+<h2>File Name Cache</h2>
+<p>By default, Ctrl-P will walk through directories and build a file name cache to
+speed up the pattern matching.  As a side-effect, we won't be able to find the
+newly created files with Ctrl-P.  To workaround the problem, we have to rebuild
+the file name cache.</p>
+<p>To rebuild the cache, press <code>Ctrl-P</code> and then <code>F5</code>.  Ctrl-P will
+scan the directories again.  You will be able to see the newly created files
+in a moment.</p>
+<p>Alternatively, you can run <code>:CtrlPClearCache</code> in Vim command mode to clear
+the cache.  Ctrl-P will rebuild the cache if you press <code>Ctrl-P</code> later.</p>
+</div>
+<div class="section" id="open-files-in-new-tabs">
+<h2>Open Files in New Tabs</h2>
+<p>I personally don't like the default behavior of <code>Enter</code>.  I wish I could
+open the file in a new tab no matter I pressed <code>Enter</code> or <code>Ctrl-T</code>.
+Fortunately, we can change the default behavior by adding following lines to
+<code>.vimrc</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">let</span> <span class="k">g</span>:ctrlp_prompt_mappings <span class="p">=</span> {
+  \ <span class="s1">&#39;AcceptSelection(&quot;e&quot;)&#39;</span>: []<span class="p">,</span>
+  \ <span class="s1">&#39;AcceptSelection(&quot;t&quot;)&#39;</span>: [<span class="s1">&#39;&lt;cr&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;c-m&gt;&#39;</span>]<span class="p">,</span>
+  \ }
+</pre></div>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>If you are not aware of <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vundle</a>, it is highly recommended to give it a
+try.  I wrote an <a class="reference external" href="http://logan.tw/posts/2014/11/25/vim-vundle/">article</a> several
+years ago.</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

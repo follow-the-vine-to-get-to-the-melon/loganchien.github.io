@@ -1,5 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-02T19:08:00+08:00</updated><entry><title>Python New Style Class</title><link href="http://logan.tw/posts/2016/01/02/python-new-style-class/" rel="alternate"></link><published>2016-01-02T19:08:00+08:00</published><updated>2016-01-02T19:08:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-02:/posts/2016/01/02/python-new-style-class/</id><summary type="html">&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-09T09:21:00+08:00</updated><entry><title>Vim Ctrl-P Plug-in</title><link href="http://logan.tw/posts/2016/01/09/vim-ctrl-p-plug-in/" rel="alternate"></link><published>2016-01-09T09:21:00+08:00</published><updated>2016-01-09T09:21:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-09:/posts/2016/01/09/vim-ctrl-p-plug-in/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://github.com/ctrlpvim/ctrlp.vim"&gt;Ctrl-P plug-in&lt;/a&gt; allows us to open files with fuzzy names or regular expression
+matches.  It boosts my productivity at lot!  I am glad to know about this
+plug-in and I would like to share my experience with you.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;If you are managing Vim plug-ins with &lt;a class="reference external" href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt; &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;, you can …&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="https://github.com/ctrlpvim/ctrlp.vim"&gt;Ctrl-P plug-in&lt;/a&gt; allows us to open files with fuzzy names or regular expression
+matches.  It boosts my productivity at lot!  I am glad to know about this
+plug-in and I would like to share my experience with you.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;If you are managing Vim plug-ins with &lt;a class="reference external" href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt; &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;, you can install Ctrl-P by
+adding the following line to &lt;code&gt;.vimrc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Plugin &lt;span class="s1"&gt;&amp;#39;ctrlpvim/ctrlp.vim&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, run the following command:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="k"&gt;vim&lt;/span&gt; &lt;span class="p"&gt;+&lt;/span&gt;PluginInstall &lt;span class="p"&gt;+&lt;/span&gt;&lt;span class="k"&gt;qall&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="usage"&gt;
+&lt;h2&gt;Usage&lt;/h2&gt;
+&lt;p&gt;After installing Ctrl-P plug-in, you will be able to open files with following
+steps:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-P&lt;/code&gt;.  In a second, a file list will prompt up.  It will list
+the files under the current working directory (recursively.)&lt;/li&gt;
+&lt;li&gt;Type the file name.  Ctrl-P will list the matching files.  Select the file
+with &lt;code&gt;Up&lt;/code&gt; or &lt;code&gt;Down&lt;/code&gt; button on the keyboard.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Enter&lt;/code&gt; to open the file in the current buffer.  Or, press
+&lt;code&gt;Ctrl-T&lt;/code&gt; to open the file in a new tab.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To search files with regular expression, press &lt;code&gt;Ctrl-P&lt;/code&gt; again when the
+file list are prompted, i.e. press &lt;code&gt;Ctrl-P&lt;/code&gt; twice if you are in the normal
+mode.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="file-name-cache"&gt;
+&lt;h2&gt;File Name Cache&lt;/h2&gt;
+&lt;p&gt;By default, Ctrl-P will walk through directories and build a file name cache to
+speed up the pattern matching.  As a side-effect, we won't be able to find the
+newly created files with Ctrl-P.  To workaround the problem, we have to rebuild
+the file name cache.&lt;/p&gt;
+&lt;p&gt;To rebuild the cache, press &lt;code&gt;Ctrl-P&lt;/code&gt; and then &lt;code&gt;F5&lt;/code&gt;.  Ctrl-P will
+scan the directories again.  You will be able to see the newly created files
+in a moment.&lt;/p&gt;
+&lt;p&gt;Alternatively, you can run &lt;code&gt;:CtrlPClearCache&lt;/code&gt; in Vim command mode to clear
+the cache.  Ctrl-P will rebuild the cache if you press &lt;code&gt;Ctrl-P&lt;/code&gt; later.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="open-files-in-new-tabs"&gt;
+&lt;h2&gt;Open Files in New Tabs&lt;/h2&gt;
+&lt;p&gt;I personally don't like the default behavior of &lt;code&gt;Enter&lt;/code&gt;.  I wish I could
+open the file in a new tab no matter I pressed &lt;code&gt;Enter&lt;/code&gt; or &lt;code&gt;Ctrl-T&lt;/code&gt;.
+Fortunately, we can change the default behavior by adding following lines to
+&lt;code&gt;.vimrc&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;let&lt;/span&gt; &lt;span class="k"&gt;g&lt;/span&gt;:ctrlp_prompt_mappings &lt;span class="p"&gt;=&lt;/span&gt; {
+  \ &lt;span class="s1"&gt;&amp;#39;AcceptSelection(&amp;quot;e&amp;quot;)&amp;#39;&lt;/span&gt;: []&lt;span class="p"&gt;,&lt;/span&gt;
+  \ &lt;span class="s1"&gt;&amp;#39;AcceptSelection(&amp;quot;t&amp;quot;)&amp;#39;&lt;/span&gt;: [&lt;span class="s1"&gt;&amp;#39;&amp;lt;cr&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;&amp;lt;c-m&amp;gt;&amp;#39;&lt;/span&gt;]&lt;span class="p"&gt;,&lt;/span&gt;
+  \ }
+&lt;/pre&gt;&lt;/div&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;If you are not aware of &lt;a class="reference external" href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt;, it is highly recommended to give it a
+try.  I wrote an &lt;a class="reference external" href="http://logan.tw/posts/2014/11/25/vim-vundle/"&gt;article&lt;/a&gt; several
+years ago.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+</content><category term="vim"></category></entry><entry><title>Python New Style Class</title><link href="http://logan.tw/posts/2016/01/02/python-new-style-class/" rel="alternate"></link><published>2016-01-02T19:08:00+08:00</published><updated>2016-01-02T19:08:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-02:/posts/2016/01/02/python-new-style-class/</id><summary type="html">&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
         &lt;span class="k"&gt;pass&lt;/span&gt;

@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 02 Jan 2016 19:08:00 +0800</lastBuildDate><item><title>Python New Style Class</title><link>http://logan.tw/posts/2016/01/02/python-new-style-class/</link><description>&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 09 Jan 2016 09:21:00 +0800</lastBuildDate><item><title>Vim Ctrl-P Plug-in</title><link>http://logan.tw/posts/2016/01/09/vim-ctrl-p-plug-in/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://github.com/ctrlpvim/ctrlp.vim"&gt;Ctrl-P plug-in&lt;/a&gt; allows us to open files with fuzzy names or regular expression
+matches.  It boosts my productivity at lot!  I am glad to know about this
+plug-in and I would like to share my experience with you.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;If you are managing Vim plug-ins with &lt;a class="reference external" href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt; &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;, you can …&lt;/p&gt;&lt;/div&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 09 Jan 2016 09:21:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2016-01-09:/posts/2016/01/09/vim-ctrl-p-plug-in/</guid><category>vim</category></item><item><title>Python New Style Class</title><link>http://logan.tw/posts/2016/01/02/python-new-style-class/</link><description>&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
         &lt;span class="k"&gt;pass&lt;/span&gt;
