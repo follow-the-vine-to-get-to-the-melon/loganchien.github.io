@@ -60,7 +60,7 @@ Fortunately, we can change the default behavior by adding following lines to
 &lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
 &lt;tbody valign="top"&gt;
 &lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;If you are not aware of &lt;a class="reference external" href="https://github.com/VundleVim/Vundle.vim"&gt;Vundle&lt;/a&gt;, it is highly recommended to give it a
-try.  I wrote an &lt;a class="reference external" href="http://logan.tw/posts/2014/11/25/vim-vundle/"&gt;article&lt;/a&gt; several
+trial.  I wrote an &lt;a class="reference external" href="http://logan.tw/posts/2014/11/25/vim-vundle/"&gt;article&lt;/a&gt; several
 years ago.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
