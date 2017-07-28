@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Python New Style Class | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="python" />
+
+	<meta property="og:title" content="Python New Style Class" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/01/02/python-new-style-class/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/01/02/python-new-style-class/" rel="bookmark" title="Permalink to Python New Style Class">Python New Style Class</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-01-02T19:08:00+08:00">
+		Sat 02 January 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/python/">python</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Recently, I am curious about this code snippet:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">():</span>
+        <span class="k">pass</span>
+</pre></div>
+<p>Why do we have to extend or inherit from <code>object</code> type?</p>
+<p>There are no differences with or without <code>(object)</code> in Python 3.  But
+there are <em>significant</em> differences in Python 2.  If a class inherits (either
+directly or indirectly) from <code>object</code> type, then it will be a <strong>new-style
+class</strong>. Otherwise, it will be an <strong>old-style class</strong>.  It is suggested to avoid
+<em>old-style classes</em> in the newly written code.  However, knowing the differences
+between <em>old-style classes</em> and <em>new-style classes</em> is important to every Python
+2 programmers.  We will cover several aspects in this post.</p>
+<div class="section" id="slots">
+<h2>Slots</h2>
+<p><code>__slots__</code> is a special class attribute which controls the instance
+variables that can be get from or set to an instantiated object.  If
+<code>__slots__</code> is specified in a <em>new-style class</em>, heap memory usages can be
+reduced because <code>__slots__</code> prevents the creation of the <code>__dict__</code>
+data structure.</p>
+<p>If a <em>new-style class</em> has the <code>__slots__</code> class attribute and some code
+gets or sets an unspecified attribute from or to the instance, then
+<code>AttributeError</code> will be raised:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+    <span class="n">a</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+    <span class="k">print</span> <span class="s1">&#39;Caught expected exception&#39;</span>
+</pre></div>
+<p>However, <code>__slots__</code> does not work with <em>old-style classes</em>:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">B</span><span class="p">:</span>
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">B</span><span class="p">()</span>
+<span class="n">b</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="mi">10</span>  <span class="c1"># No AttributeError</span>
+<span class="k">print</span> <span class="s1">&#39;b.y = &#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">y</span>
+<span class="k">print</span> <span class="s1">&#39;b.__dict__ = &#39;</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="vm">__dict__</span>
+</pre></div>
+<p>In the snippet above, <code>b.__dict__</code> is created regardless the
+<code>__slots__</code> class attribute.  The code succeed setting the <code>y</code>
+attribute to the instance of <code>B</code>.  And, an extra item was added to
+<code>b.__dict__</code> after the assignment.  This indicates that we lose all of the
+benefits of <code>__slots__</code>.</p>
+</div>
+<div class="section" id="properties">
+<h2>Properties</h2>
+<p>If a class attribute of a <em>new-style class</em> refers to a <code>property</code>
+instance, then the associated getter, setter, or deleter will be invoked when
+some code access the corresponding instance attribute.  For example:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;get_x:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">set_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;set_x:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">del_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;del_x&#39;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_x</span><span class="p">,</span> <span class="n">set_x</span><span class="p">,</span> <span class="n">del_x</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">A</span><span class="p">()</span>
+
+<span class="c1"># Test getter</span>
+<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">x</span>
+<span class="c1"># Prints: get_x: 0</span>
+<span class="c1"># Prints: 0</span>
+
+<span class="c1"># Test setter</span>
+<span class="n">a</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1"># Prints: set_x: 0 5</span>
+<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">_value</span>
+<span class="c1"># Prints: 5</span>
+
+<span class="k">print</span> <span class="n">a</span><span class="o">.</span><span class="n">x</span>
+<span class="c1"># Prints: get_x: 5</span>
+<span class="c1"># Prints: 5</span>
+
+<span class="c1"># Test deleter</span>
+<span class="k">del</span> <span class="n">a</span><span class="o">.</span><span class="n">x</span>
+<span class="c1"># Prints: del_x</span>
+</pre></div>
+<p>In the code snippet above, we can see that every accesses to the instance of
+<code>a.x</code> will be delegated to the associated methods.  Furthermore, if a
+property does not have a setter and some code assign a value to such attribute,
+then an <code>AttributeError</code> exception will be raised:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A2</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_x</span><span class="p">)</span>
+
+<span class="n">a2</span> <span class="o">=</span> <span class="n">A2</span><span class="p">()</span>
+<span class="n">a2</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="c1"># Prints: Traceback (most recent call last):</span>
+<span class="c1"># Prints:   File &quot;test.py&quot;, line 10, in &lt;module&gt;</span>
+<span class="c1"># Prints:    a2.x = 5</span>
+<span class="c1"># Prints: AttributeError: can&#39;t set attribute</span>
+</pre></div>
+<p>However, property works differently if is referred by a class attribute of an
+<em>old-style class</em>.  In the code snippet below, an <em>old-style class</em> <code>B</code>
+has a class attribute <code>x</code> which is bound to a <code>property</code> instance:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">B</span><span class="p">:</span>  <span class="c1"># B is NOT derived from `object` type</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;get_x:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span>
+
+    <span class="k">def</span> <span class="nf">set_x</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;set_x:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">,</span> <span class="n">value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span> <span class="nf">del_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;del_x&#39;</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_x</span><span class="p">,</span> <span class="n">set_x</span><span class="p">,</span> <span class="n">del_x</span><span class="p">)</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">B</span><span class="p">()</span>
+
+<span class="c1"># Test getter</span>
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>
+<span class="c1"># Prints: get_x: 0</span>
+<span class="c1"># Prints: 0</span>
+</pre></div>
+<p>So far, the output looks similar.  However, the output will become different
+when the code assign a value to <code>b.x</code>:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Test setter</span>
+<span class="n">b</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># Not calling set_x()</span>
+
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="n">_value</span>  <span class="c1"># b._value left unchanged</span>
+<span class="c1"># Prints: 0</span>
+
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>  <span class="c1"># Not calling get_x()</span>
+<span class="c1"># Prints: 5</span>
+
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="c1"># Prints: {&#39;_value&#39;: 0, &#39;x&#39;: 5}</span>
+</pre></div>
+<p>In the code snippet above, the assignment statement (which assigned <code>5</code> to
+<code>b.x</code>) was not delegated to <code>set_x()</code>, thus <code>b._value</code> was
+left unchanged.  Besides, the assignment statement added a new attribute
+<code>x</code> to the instance attribute dictionary, thus <code>b.__dict__</code> contains
+two items: <code>_value</code> and <code>x</code>.  Furthermore, the attribute in the
+instance attribute dictionary <em>hides</em> the class attribute.  Consequently,
+accessing <code>b.x</code> will not be delegated to <code>get_x()</code> method after the
+assignment.</p>
+<p>In <em>old-style classes</em>, <code>del</code> statements will only remove the attribute
+from the instance attribute dictionary <code>__dict__</code>.  If the attribute is
+not in <code>__dict__</code>, then an <code>AttributeError</code> will be raised.  The
+deleter won't be called.  For example:</p>
+<div class="highlight"><pre><span></span><span class="c1"># Test deleter</span>
+<span class="k">del</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>  <span class="c1"># Remove x from b.__dict__</span>
+<span class="k">print</span> <span class="n">b</span><span class="o">.</span><span class="vm">__dict__</span>
+<span class="c1"># Prints: {&#39;_value&#39;: 0}</span>
+
+<span class="k">del</span> <span class="n">b</span><span class="o">.</span><span class="n">x</span>
+<span class="c1"># Prints: Traceback (most recent call last):</span>
+<span class="c1"># Prints:   File &quot;./test.py&quot;, line 44, in &lt;module&gt;</span>
+<span class="c1"># Prints:     del b.x</span>
+<span class="c1"># Prints: AttributeError: B instance has no attribute &#39;x&#39;</span>
+</pre></div>
+<p>Likewise, assigning a value to a property without a setter function will not
+result in <code>AttributeError</code>.  It will simply add a new attribute to
+instance attribute dictionary and hide the class attribute:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">B2</span><span class="p">:</span>  <span class="c1"># B2 is NOT derived from `object` type</span>
+    <span class="k">def</span> <span class="nf">get_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">get_x</span><span class="p">)</span>
+
+<span class="n">b2</span> <span class="o">=</span> <span class="n">B2</span><span class="p">()</span>
+<span class="n">b2</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># No AttributeError</span>
+<span class="k">print</span><span class="p">(</span><span class="n">b2</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">)</span>
+<span class="c1"># Prints: {&#39;x&#39;: 5}</span>
+</pre></div>
+<p>In short, the setter and deleter function do not work with old-style classes and
+the getter function will work only if the class attribute is not hidden by the
+instance attribute.</p>
+</div>
+<div class="section" id="method-resolution-order-mro">
+<h2>Method Resolution Order (MRO)</h2>
+<p>In Python, a derived class may override a method inherited from the base class.
+However, there are some differences when multiple inheritance is involved.  For
+example, which <code>test()</code> method will be invoked when class <code>D</code>
+inherits both class <code>B</code> and <code>C</code> but only class <code>C</code> overrides
+the <code>test()</code> method?</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;A.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">C</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;C.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="p">()</span>
+<span class="n">d</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="c1"># Prints: C.test()</span>
+</pre></div>
+<p>If these classes are <em>new-style classes</em>, then <code>C.test()</code> will be invoked.
+The <a class="reference external" href="https://www.python.org/download/releases/2.3/mro/">method resolution order</a> for <em>new-style classes</em> was introduced in Python
+2.3.  Conceptually, the <a class="reference external" href="https://www.python.org/download/releases/2.3/mro/">method resolution order</a> introduced in Python 2.3
+tries to pick the most specific method.  We can inspect the order by printing
+the <code>__mro__</code> class attribute:</p>
+<div class="highlight"><pre><span></span><span class="k">print</span> <span class="n">A</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="c1"># Prints: (&lt;class &#39;__main__.A&#39;&gt;, &lt;type &#39;object&#39;&gt;)</span>
+<span class="k">print</span> <span class="n">B</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="c1"># Prints: (&lt;class &#39;__main__.B&#39;&gt;, &lt;class &#39;__main__.A&#39;&gt;, &lt;type &#39;object&#39;&gt;)</span>
+<span class="k">print</span> <span class="n">C</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="c1"># Prints: (&lt;class &#39;__main__.C&#39;&gt;, &lt;class &#39;__main__.A&#39;&gt;, &lt;type &#39;object&#39;&gt;)</span>
+<span class="k">print</span> <span class="n">D</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="c1"># Prints: (&lt;class &#39;__main__.D&#39;&gt;, &lt;class &#39;__main__.B&#39;&gt;,</span>
+<span class="c1"># Prints: &lt;class &#39;__main__.C&#39;&gt;, &lt;class &#39;__main__.A&#39;&gt;, &lt;type &#39;object&#39;&gt;)</span>
+</pre></div>
+<p>As shown in the output, Python run-time will look for the <code>test()</code> method
+from class <code>D</code>, <code>B</code>, <code>C</code>:, and <code>A</code> (in order) when we
+call <code>d.test()</code>.</p>
+<p>The resolution order is different if these classes are <em>old-style classes</em>.  For
+example:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">E</span><span class="p">:</span>  <span class="c1"># E is NOT derived from `object` type.</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;E.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;G.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">H</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="k">pass</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="n">H</span><span class="p">()</span>
+<span class="n">h</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="c1"># Prints: E.test()</span>
+</pre></div>
+<p>In the code snippet above, the generic <code>E.test()</code> from the base class
+<code>E</code> will be invoked instead of the more specific <code>G.test()</code>.  If a
+<em>old-style class</em> does not override the method, then Python run-time will look
+for the method from its base classes (from left to right).  In this example, it
+will look for <code>test()</code> method in class <code>F</code> first and recursively
+look for <code>test()</code> method in class <code>E</code>, which is the base class of
+<code>F</code>.  Since class <code>E</code> defines a <code>test()</code> method, the
+resolution stops at class <code>E</code> and class <code>G</code> will not be queried.</p>
+<p>Besides, <em>old-style classes</em> do not have <code>__mro__</code> class attribute either:</p>
+<div class="highlight"><pre><span></span><span class="k">print</span> <span class="n">H</span><span class="o">.</span><span class="vm">__mro__</span>
+<span class="c1"># Prints: Traceback (most recent call last):</span>
+<span class="c1"># Prints:   File &quot;test.py&quot;, line 21, in &lt;module&gt;</span>
+<span class="c1"># Prints:     print H.__mro__</span>
+<span class="c1"># Prints: AttributeError: class H has no attribute &#39;__mro__&#39;</span>
+</pre></div>
+</div>
+<div class="section" id="super">
+<h2>Super</h2>
+<p><code>super()</code> is a built-in function which helps us to invoke the overridden
+method.  For example, when class <code>B</code> inherits from class <code>A</code>,
+<code>B.test()</code> overrides <code>A.test()</code>, and the implementation of <code>B.test()</code> would like to call <code>A.test()</code>, then it can utilize the
+<code>super()</code> function.  The <code>super()</code> function takes the current
+class object and the <code>self</code> reference as the argument and it will find the
+overridden method to be dispatched to.</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;A.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">B</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s1">&#39;B.test()&#39;</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">B</span><span class="p">()</span>
+<span class="n">b</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="c1"># Prints: A.test()</span>
+<span class="c1"># Prints: B.test()</span>
+</pre></div>
+<p>However, <code>super()</code> only works for <em>new-style classes</em>.  It does NOT work
+with <em>old-style classes</em>.  A <code>TypeError</code> exception will be raised, if an
+old-style class object is passed as the first argument:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">C</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span> <span class="s1">&#39;C.test()&#39;</span>
+
+<span class="k">class</span> <span class="nc">D</span><span class="p">(</span><span class="n">C</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+        <span class="k">print</span> <span class="s1">&#39;D.test()&#39;</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="n">D</span><span class="p">()</span>
+<span class="n">d</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="c1"># Prints: Traceback (most recent call last):</span>
+<span class="c1"># Prints:   File &quot;./test.py&quot;, line 13, in &lt;module&gt;</span>
+<span class="c1"># Prints:     d.test()</span>
+<span class="c1"># Prints:   File &quot;./test.py&quot;, line 9, in test</span>
+<span class="c1"># Prints:     super(D, self).test()</span>
+<span class="c1"># Prints: TypeError: super() argument 1 must be type, not classobj</span>
+</pre></div>
+<p>To call the parent methods in <em>old-style classess</em>, we have to explicitly get
+the methods from the class attribute, and pass the <code>self</code> argument
+explicitly.  For example:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">E</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;E.test()&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">F</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;F.test()&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">G</span><span class="p">(</span><span class="n">E</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;G.test()&#39;</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">H</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">G</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;H.test()&#39;</span><span class="p">)</span>
+
+<span class="n">h</span> <span class="o">=</span> <span class="n">H</span><span class="p">()</span>
+<span class="n">h</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">F</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">H</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+</pre></div>
+<p>However, this mechanism is sort of primitive.  If there is a <a class="reference external" href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem">diamond shape</a> in
+the inheritance hierarcy, then some methods from the base classes will be invoked more than once.  For example, the class <code>H</code> above inherits both
+<code>F</code> and <code>G</code> and both of them will invoke <code>E.test()</code>.  If this
+is undesired, then some extra bookkeeping code must be written.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we have covered four differents between <em>new-style classes</em> and
+<em>old-style classes</em>:</p>
+<ol class="arabic simple">
+<li>The <code>__slots__</code> mechanism doesn't work with old-style classes</li>
+<li>The setter and deleter of <code>property</code> doesn't work with old-style
+classes.</li>
+<li>The method resolution order is slightly different.</li>
+<li>The <code>super()</code> function doesn't work with old-style classes.</li>
+</ol>
+<p>There might still be some other nuances that are not covered by this post.
+However, IMO, the rule of thumb is to adopt <em>new-style classes</em> as soon as
+possible and only use <em>new-style classes</em> in your code because Python 3 doesn't
+support <em>old-style classes</em>.</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li>Guido van Rossum, <a class="reference external" href="https://www.python.org/download/releases/2.2.3/descrintro/">Unifying types and classes in Python 2.2</a></li>
+<li>Python Wiki, <a class="reference external" href="https://wiki.python.org/moin/NewClassVsClassicClass">New Class vs. Classic Class</a></li>
+<li>Python Wiki, <a class="reference external" href="https://www.python.org/doc/newstyle/">New-style Classes</a></li>
+<li><a class="reference external" href="https://www.python.org/download/releases/2.3/mro/">The Python 2.3 Method Resolution Order</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

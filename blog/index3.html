@@ -33,6 +33,27 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2015/01/20/c-stdmultimap-and-equal-range/" rel="bookmark" title="Permalink to C++ std::multimap and Equal Range">C++ std::multimap and Equal Range</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-01-20T23:17:00+08:00">Tue 20 January 2015</time>
+			</footer>
+			<div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
+keys in an instance of <code>std::multimap</code>, how could we list all of the
+corresponding values?  For example:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
+  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std …</span></pre></div></div>
+                        <p><a class="normal-btn" href="/posts/2015/01/20/c-stdmultimap-and-equal-range/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/01/02/waliki-installation/" rel="bookmark" title="Permalink to Waliki Installation">Waliki Installation</a></h1>
 			</header>
 			<footer class="post-info">
@@ -179,22 +200,6 @@ virtual functions.  If we don't define a virtual destructor, then the base
 class destructor will be invoked when you are deleting the object through the
 base class pointer even if the object is an instance of …</p></div>
                         <p><a class="normal-btn" href="/posts/2014/12/09/c-virtual-destructor-and-inheritence/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/26/llvm-bugpoint/" rel="bookmark" title="Permalink to LLVM Bugpoint">LLVM Bugpoint</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-26T23:03:00+08:00">Wed 26 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>In this post, I would like to introduce the <a class="reference external" href="http://llvm.org/docs/CommandGuide/bugpoint.html">bugpoint</a> command line tool.
-This is a automatic test case reduction tool which can help us generate
-minimal test case.</p>
-<p>As a compiler developer, the first step to debug is to create a minimal test
-case which can still reproduce the …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/26/llvm-bugpoint/">More</a></p>
 		</article>
 	</li>
 </ol>

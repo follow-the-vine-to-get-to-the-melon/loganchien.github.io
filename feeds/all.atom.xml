@@ -1,5 +1,385 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2015-12-26T17:34:00+08:00</updated><entry><title>A Quick Guide to Grunt</title><link href="http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/" rel="alternate"></link><published>2015-12-26T17:34:00+08:00</published><updated>2015-12-26T17:34:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-26:/posts/2015/12/26/a-quick-guide-to-grunt/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; is a task runner for Javascript development.  &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; automates the
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-02T19:08:00+08:00</updated><entry><title>Python New Style Class</title><link href="http://logan.tw/posts/2016/01/02/python-new-style-class/" rel="alternate"></link><published>2016-01-02T19:08:00+08:00</published><updated>2016-01-02T19:08:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-02:/posts/2016/01/02/python-new-style-class/</id><summary type="html">&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Why do we have to extend or inherit from &lt;code&gt;object&lt;/code&gt; type?&lt;/p&gt;
+&lt;p&gt;There are no differences with or without &lt;code&gt;(object)&lt;/code&gt; in Python 3.  But
+there are &lt;em&gt;significant&lt;/em&gt; differences in Python 2.  If a class inherits (either
+directly …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently, I am curious about this code snippet:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Why do we have to extend or inherit from &lt;code&gt;object&lt;/code&gt; type?&lt;/p&gt;
+&lt;p&gt;There are no differences with or without &lt;code&gt;(object)&lt;/code&gt; in Python 3.  But
+there are &lt;em&gt;significant&lt;/em&gt; differences in Python 2.  If a class inherits (either
+directly or indirectly) from &lt;code&gt;object&lt;/code&gt; type, then it will be a &lt;strong&gt;new-style
+class&lt;/strong&gt;. Otherwise, it will be an &lt;strong&gt;old-style class&lt;/strong&gt;.  It is suggested to avoid
+&lt;em&gt;old-style classes&lt;/em&gt; in the newly written code.  However, knowing the differences
+between &lt;em&gt;old-style classes&lt;/em&gt; and &lt;em&gt;new-style classes&lt;/em&gt; is important to every Python
+2 programmers.  We will cover several aspects in this post.&lt;/p&gt;
+&lt;div class="section" id="slots"&gt;
+&lt;h2&gt;Slots&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;__slots__&lt;/code&gt; is a special class attribute which controls the instance
+variables that can be get from or set to an instantiated object.  If
+&lt;code&gt;__slots__&lt;/code&gt; is specified in a &lt;em&gt;new-style class&lt;/em&gt;, heap memory usages can be
+reduced because &lt;code&gt;__slots__&lt;/code&gt; prevents the creation of the &lt;code&gt;__dict__&lt;/code&gt;
+data structure.&lt;/p&gt;
+&lt;p&gt;If a &lt;em&gt;new-style class&lt;/em&gt; has the &lt;code&gt;__slots__&lt;/code&gt; class attribute and some code
+gets or sets an unspecified attribute from or to the instance, then
+&lt;code&gt;AttributeError&lt;/code&gt; will be raised:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="vm"&gt;__slots__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;
+&lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;AttributeError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Caught expected exception&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, &lt;code&gt;__slots__&lt;/code&gt; does not work with &lt;em&gt;old-style classes&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="vm"&gt;__slots__&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;x&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+
+&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;  &lt;span class="c1"&gt;# No AttributeError&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b.y = &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;y&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;b.__dict__ = &amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__dict__&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the snippet above, &lt;code&gt;b.__dict__&lt;/code&gt; is created regardless the
+&lt;code&gt;__slots__&lt;/code&gt; class attribute.  The code succeed setting the &lt;code&gt;y&lt;/code&gt;
+attribute to the instance of &lt;code&gt;B&lt;/code&gt;.  And, an extra item was added to
+&lt;code&gt;b.__dict__&lt;/code&gt; after the assignment.  This indicates that we lose all of the
+benefits of &lt;code&gt;__slots__&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="properties"&gt;
+&lt;h2&gt;Properties&lt;/h2&gt;
+&lt;p&gt;If a class attribute of a &lt;em&gt;new-style class&lt;/em&gt; refers to a &lt;code&gt;property&lt;/code&gt;
+instance, then the associated getter, setter, or deleter will be invoked when
+some code access the corresponding instance attribute.  For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;get_x:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;set_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;set_x:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;del_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;del_x&amp;#39;&lt;/span&gt;
+
+    &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;property&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;set_x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;del_x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Test getter&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: get_x: 0&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 0&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Test setter&lt;/span&gt;
+&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: set_x: 0 5&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 5&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: get_x: 5&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 5&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Test deleter&lt;/span&gt;
+&lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: del_x&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the code snippet above, we can see that every accesses to the instance of
+&lt;code&gt;a.x&lt;/code&gt; will be delegated to the associated methods.  Furthermore, if a
+property does not have a setter and some code assign a value to such attribute,
+then an &lt;code&gt;AttributeError&lt;/code&gt; exception will be raised:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+    &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;property&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;a2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;A2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;a2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: Traceback (most recent call last):&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:   File &amp;quot;test.py&amp;quot;, line 10, in &amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:    a2.x = 5&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: AttributeError: can&amp;#39;t set attribute&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, property works differently if is referred by a class attribute of an
+&lt;em&gt;old-style class&lt;/em&gt;.  In the code snippet below, an &lt;em&gt;old-style class&lt;/em&gt; &lt;code&gt;B&lt;/code&gt;
+has a class attribute &lt;code&gt;x&lt;/code&gt; which is bound to a &lt;code&gt;property&lt;/code&gt; instance:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# B is NOT derived from `object` type&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;get_x:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;set_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;set_x:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;del_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;del_x&amp;#39;&lt;/span&gt;
+
+    &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;property&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;set_x&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;del_x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+&lt;span class="c1"&gt;# Test getter&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: get_x: 0&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 0&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;So far, the output looks similar.  However, the output will become different
+when the code assign a value to &lt;code&gt;b.x&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Test setter&lt;/span&gt;
+&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;  &lt;span class="c1"&gt;# Not calling set_x()&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;_value&lt;/span&gt;  &lt;span class="c1"&gt;# b._value left unchanged&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 0&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;  &lt;span class="c1"&gt;# Not calling get_x()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: 5&lt;/span&gt;
+
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__dict__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: {&amp;#39;_value&amp;#39;: 0, &amp;#39;x&amp;#39;: 5}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the code snippet above, the assignment statement (which assigned &lt;code&gt;5&lt;/code&gt; to
+&lt;code&gt;b.x&lt;/code&gt;) was not delegated to &lt;code&gt;set_x()&lt;/code&gt;, thus &lt;code&gt;b._value&lt;/code&gt; was
+left unchanged.  Besides, the assignment statement added a new attribute
+&lt;code&gt;x&lt;/code&gt; to the instance attribute dictionary, thus &lt;code&gt;b.__dict__&lt;/code&gt; contains
+two items: &lt;code&gt;_value&lt;/code&gt; and &lt;code&gt;x&lt;/code&gt;.  Furthermore, the attribute in the
+instance attribute dictionary &lt;em&gt;hides&lt;/em&gt; the class attribute.  Consequently,
+accessing &lt;code&gt;b.x&lt;/code&gt; will not be delegated to &lt;code&gt;get_x()&lt;/code&gt; method after the
+assignment.&lt;/p&gt;
+&lt;p&gt;In &lt;em&gt;old-style classes&lt;/em&gt;, &lt;code&gt;del&lt;/code&gt; statements will only remove the attribute
+from the instance attribute dictionary &lt;code&gt;__dict__&lt;/code&gt;.  If the attribute is
+not in &lt;code&gt;__dict__&lt;/code&gt;, then an &lt;code&gt;AttributeError&lt;/code&gt; will be raised.  The
+deleter won't be called.  For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Test deleter&lt;/span&gt;
+&lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;  &lt;span class="c1"&gt;# Remove x from b.__dict__&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__dict__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: {&amp;#39;_value&amp;#39;: 0}&lt;/span&gt;
+
+&lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: Traceback (most recent call last):&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:   File &amp;quot;./test.py&amp;quot;, line 44, in &amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:     del b.x&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: AttributeError: B instance has no attribute &amp;#39;x&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Likewise, assigning a value to a property without a setter function will not
+result in &lt;code&gt;AttributeError&lt;/code&gt;.  It will simply add a new attribute to
+instance attribute dictionary and hide the class attribute:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B2&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# B2 is NOT derived from `object` type&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+
+    &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;property&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;get_x&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;b2&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;B2&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;b2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;  &lt;span class="c1"&gt;# No AttributeError&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;b2&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__dict__&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: {&amp;#39;x&amp;#39;: 5}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In short, the setter and deleter function do not work with old-style classes and
+the getter function will work only if the class attribute is not hidden by the
+instance attribute.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="method-resolution-order-mro"&gt;
+&lt;h2&gt;Method Resolution Order (MRO)&lt;/h2&gt;
+&lt;p&gt;In Python, a derived class may override a method inherited from the base class.
+However, there are some differences when multiple inheritance is involved.  For
+example, which &lt;code&gt;test()&lt;/code&gt; method will be invoked when class &lt;code&gt;D&lt;/code&gt;
+inherits both class &lt;code&gt;B&lt;/code&gt; and &lt;code&gt;C&lt;/code&gt; but only class &lt;code&gt;C&lt;/code&gt; overrides
+the &lt;code&gt;test()&lt;/code&gt; method?&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;A.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;C&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;D&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;D&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: C.test()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If these classes are &lt;em&gt;new-style classes&lt;/em&gt;, then &lt;code&gt;C.test()&lt;/code&gt; will be invoked.
+The &lt;a class="reference external" href="https://www.python.org/download/releases/2.3/mro/"&gt;method resolution order&lt;/a&gt; for &lt;em&gt;new-style classes&lt;/em&gt; was introduced in Python
+2.3.  Conceptually, the &lt;a class="reference external" href="https://www.python.org/download/releases/2.3/mro/"&gt;method resolution order&lt;/a&gt; introduced in Python 2.3
+tries to pick the most specific method.  We can inspect the order by printing
+the &lt;code&gt;__mro__&lt;/code&gt; class attribute:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: (&amp;lt;class &amp;#39;__main__.A&amp;#39;&amp;gt;, &amp;lt;type &amp;#39;object&amp;#39;&amp;gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: (&amp;lt;class &amp;#39;__main__.B&amp;#39;&amp;gt;, &amp;lt;class &amp;#39;__main__.A&amp;#39;&amp;gt;, &amp;lt;type &amp;#39;object&amp;#39;&amp;gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: (&amp;lt;class &amp;#39;__main__.C&amp;#39;&amp;gt;, &amp;lt;class &amp;#39;__main__.A&amp;#39;&amp;gt;, &amp;lt;type &amp;#39;object&amp;#39;&amp;gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;D&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: (&amp;lt;class &amp;#39;__main__.D&amp;#39;&amp;gt;, &amp;lt;class &amp;#39;__main__.B&amp;#39;&amp;gt;,&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: &amp;lt;class &amp;#39;__main__.C&amp;#39;&amp;gt;, &amp;lt;class &amp;#39;__main__.A&amp;#39;&amp;gt;, &amp;lt;type &amp;#39;object&amp;#39;&amp;gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As shown in the output, Python run-time will look for the &lt;code&gt;test()&lt;/code&gt; method
+from class &lt;code&gt;D&lt;/code&gt;, &lt;code&gt;B&lt;/code&gt;, &lt;code&gt;C&lt;/code&gt;:, and &lt;code&gt;A&lt;/code&gt; (in order) when we
+call &lt;code&gt;d.test()&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The resolution order is different if these classes are &lt;em&gt;old-style classes&lt;/em&gt;.  For
+example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;E&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;  &lt;span class="c1"&gt;# E is NOT derived from `object` type.&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;E.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;F&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;G&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;G.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;H&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;pass&lt;/span&gt;
+
+&lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: E.test()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In the code snippet above, the generic &lt;code&gt;E.test()&lt;/code&gt; from the base class
+&lt;code&gt;E&lt;/code&gt; will be invoked instead of the more specific &lt;code&gt;G.test()&lt;/code&gt;.  If a
+&lt;em&gt;old-style class&lt;/em&gt; does not override the method, then Python run-time will look
+for the method from its base classes (from left to right).  In this example, it
+will look for &lt;code&gt;test()&lt;/code&gt; method in class &lt;code&gt;F&lt;/code&gt; first and recursively
+look for &lt;code&gt;test()&lt;/code&gt; method in class &lt;code&gt;E&lt;/code&gt;, which is the base class of
+&lt;code&gt;F&lt;/code&gt;.  Since class &lt;code&gt;E&lt;/code&gt; defines a &lt;code&gt;test()&lt;/code&gt; method, the
+resolution stops at class &lt;code&gt;E&lt;/code&gt; and class &lt;code&gt;G&lt;/code&gt; will not be queried.&lt;/p&gt;
+&lt;p&gt;Besides, &lt;em&gt;old-style classes&lt;/em&gt; do not have &lt;code&gt;__mro__&lt;/code&gt; class attribute either:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="vm"&gt;__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: Traceback (most recent call last):&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:   File &amp;quot;test.py&amp;quot;, line 21, in &amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:     print H.__mro__&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: AttributeError: class H has no attribute &amp;#39;__mro__&amp;#39;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="super"&gt;
+&lt;h2&gt;Super&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;super()&lt;/code&gt; is a built-in function which helps us to invoke the overridden
+method.  For example, when class &lt;code&gt;B&lt;/code&gt; inherits from class &lt;code&gt;A&lt;/code&gt;,
+&lt;code&gt;B.test()&lt;/code&gt; overrides &lt;code&gt;A.test()&lt;/code&gt;, and the implementation of &lt;code&gt;B.test()&lt;/code&gt; would like to call &lt;code&gt;A.test()&lt;/code&gt;, then it can utilize the
+&lt;code&gt;super()&lt;/code&gt; function.  The &lt;code&gt;super()&lt;/code&gt; function takes the current
+class object and the &lt;code&gt;self&lt;/code&gt; reference as the argument and it will find the
+overridden method to be dispatched to.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;A.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;B&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;A&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;B.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;b&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;B&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;b&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: A.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: B.test()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, &lt;code&gt;super()&lt;/code&gt; only works for &lt;em&gt;new-style classes&lt;/em&gt;.  It does NOT work
+with &lt;em&gt;old-style classes&lt;/em&gt;.  A &lt;code&gt;TypeError&lt;/code&gt; exception will be raised, if an
+old-style class object is passed as the first argument:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;C&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;D&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;C&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;D&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;D.test()&amp;#39;&lt;/span&gt;
+
+&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;D&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: Traceback (most recent call last):&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:   File &amp;quot;./test.py&amp;quot;, line 13, in &amp;lt;module&amp;gt;&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:     d.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:   File &amp;quot;./test.py&amp;quot;, line 9, in test&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints:     super(D, self).test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: TypeError: super() argument 1 must be type, not classobj&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To call the parent methods in &lt;em&gt;old-style classess&lt;/em&gt;, we have to explicitly get
+the methods from the class attribute, and pass the &lt;code&gt;self&lt;/code&gt; argument
+explicitly.  For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;E&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;E.test()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;F&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;F.test()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;G&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;G.test()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;H&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;H.test()&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, this mechanism is sort of primitive.  If there is a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem"&gt;diamond shape&lt;/a&gt; in
+the inheritance hierarcy, then some methods from the base classes will be invoked more than once.  For example, the class &lt;code&gt;H&lt;/code&gt; above inherits both
+&lt;code&gt;F&lt;/code&gt; and &lt;code&gt;G&lt;/code&gt; and both of them will invoke &lt;code&gt;E.test()&lt;/code&gt;.  If this
+is undesired, then some extra bookkeeping code must be written.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we have covered four differents between &lt;em&gt;new-style classes&lt;/em&gt; and
+&lt;em&gt;old-style classes&lt;/em&gt;:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;The &lt;code&gt;__slots__&lt;/code&gt; mechanism doesn't work with old-style classes&lt;/li&gt;
+&lt;li&gt;The setter and deleter of &lt;code&gt;property&lt;/code&gt; doesn't work with old-style
+classes.&lt;/li&gt;
+&lt;li&gt;The method resolution order is slightly different.&lt;/li&gt;
+&lt;li&gt;The &lt;code&gt;super()&lt;/code&gt; function doesn't work with old-style classes.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There might still be some other nuances that are not covered by this post.
+However, IMO, the rule of thumb is to adopt &lt;em&gt;new-style classes&lt;/em&gt; as soon as
+possible and only use &lt;em&gt;new-style classes&lt;/em&gt; in your code because Python 3 doesn't
+support &lt;em&gt;old-style classes&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Guido van Rossum, &lt;a class="reference external" href="https://www.python.org/download/releases/2.2.3/descrintro/"&gt;Unifying types and classes in Python 2.2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Python Wiki, &lt;a class="reference external" href="https://wiki.python.org/moin/NewClassVsClassicClass"&gt;New Class vs. Classic Class&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Python Wiki, &lt;a class="reference external" href="https://www.python.org/doc/newstyle/"&gt;New-style Classes&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://www.python.org/download/releases/2.3/mro/"&gt;The Python 2.3 Method Resolution Order&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="python"></category></entry><entry><title>A Quick Guide to Grunt</title><link href="http://logan.tw/posts/2015/12/26/a-quick-guide-to-grunt/" rel="alternate"></link><published>2015-12-26T17:34:00+08:00</published><updated>2015-12-26T17:34:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2015-12-26:/posts/2015/12/26/a-quick-guide-to-grunt/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; is a task runner for Javascript development.  &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt; automates the
 process to bundle, transpile, uglify, and compress the Javascript source code.
 This post would like to give a quick guide to &lt;a class="reference external" href="https://gruntjs.com/"&gt;Grunt&lt;/a&gt;.&lt;/p&gt;
 &lt;div class="section" id="installation"&gt;
