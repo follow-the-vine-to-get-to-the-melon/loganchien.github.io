@@ -409,14 +409,15 @@ explicitly.  For example:&lt;/p&gt;
 
 &lt;span class="n"&gt;h&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
 &lt;span class="n"&gt;h&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;E&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;G&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
-&lt;span class="o"&gt;//&lt;/span&gt; &lt;span class="n"&gt;Prints&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;H&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;test&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: E.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: F.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: E.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: G.test()&lt;/span&gt;
+&lt;span class="c1"&gt;# Prints: H.test()&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, this mechanism is sort of primitive.  If there is a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem"&gt;diamond shape&lt;/a&gt; in
-the inheritance hierarcy, then some methods from the base classes will be invoked more than once.  For example, the class &lt;code&gt;H&lt;/code&gt; above inherits both
+the inheritance hierarcy, then some methods from the base classes will be
+invoked more than once.  For example, the class &lt;code&gt;H&lt;/code&gt; above inherits both
 &lt;code&gt;F&lt;/code&gt; and &lt;code&gt;G&lt;/code&gt; and both of them will invoke &lt;code&gt;E.test()&lt;/code&gt;.  If this
 is undesired, then some extra bookkeeping code must be written.&lt;/p&gt;
 &lt;/div&gt;

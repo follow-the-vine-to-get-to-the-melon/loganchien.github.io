@@ -391,14 +391,15 @@ explicitly.  For example:</p>
 
 <span class="n">h</span> <span class="o">=</span> <span class="n">H</span><span class="p">()</span>
 <span class="n">h</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">F</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">E</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">G</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
-<span class="o">//</span> <span class="n">Prints</span><span class="p">:</span> <span class="n">H</span><span class="o">.</span><span class="n">test</span><span class="p">()</span>
+<span class="c1"># Prints: E.test()</span>
+<span class="c1"># Prints: F.test()</span>
+<span class="c1"># Prints: E.test()</span>
+<span class="c1"># Prints: G.test()</span>
+<span class="c1"># Prints: H.test()</span>
 </pre></div>
 <p>However, this mechanism is sort of primitive.  If there is a <a class="reference external" href="https://en.wikipedia.org/wiki/Multiple_inheritance#The_diamond_problem">diamond shape</a> in
-the inheritance hierarcy, then some methods from the base classes will be invoked more than once.  For example, the class <code>H</code> above inherits both
+the inheritance hierarcy, then some methods from the base classes will be
+invoked more than once.  For example, the class <code>H</code> above inherits both
 <code>F</code> and <code>G</code> and both of them will invoke <code>E.test()</code>.  If this
 is undesired, then some extra bookkeeping code must be written.</p>
 </div>
