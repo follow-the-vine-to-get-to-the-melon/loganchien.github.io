@@ -34,6 +34,24 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2014/11/13/git-merge-base-and-checkout/" rel="bookmark" title="Permalink to Git Merge Base and Checkout">Git Merge Base and Checkout</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2014-11-13T22:04:00+08:00">Thu 13 November 2014</time>
+			</footer>
+			<div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
+list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
+<div class="highlight"><pre><span></span>$ git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+</pre></div>
+<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
+will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
+<code>commit_n</code>, and …</p></div>
+                        <p><a class="normal-btn" href="/posts/2014/11/13/git-merge-base-and-checkout/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2014/11/12/soundness-and-completeness-of-the-type-system/" rel="bookmark" title="Permalink to Soundness and Completeness of the Type System">Soundness and Completeness of the Type System</a></h1>
 			</header>
 			<footer class="post-info">

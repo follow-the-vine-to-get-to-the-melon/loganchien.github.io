@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sun, 24 Jan 2016 20:04:00 +0800</lastBuildDate><item><title>NPM Package Manager</title><link>http://logan.tw/posts/2016/01/24/npm-package-manager/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://npmjs.org/"&gt;NPM&lt;/a&gt; package manager plays an important role in &lt;a class="reference external" href="https://nodejs.org"&gt;Node.js&lt;/a&gt; ecosystem.  Every
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 30 Jan 2016 21:01:00 +0800</lastBuildDate><item><title>JavaScript Object.defineProperty()</title><link>http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/</link><description>&lt;p&gt;In Javascript, we can add a property to an object with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;property&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, sometimes we would like to have fine-grained control over properties.
+With &lt;code&gt;Object.defineProperty()&lt;/code&gt;, we can decide:&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="16%" /&gt;
+&lt;col width="62%" /&gt;
+&lt;col width="22%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Descriptor&lt;/th&gt;
+&lt;th class="head"&gt;Purpose&lt;/th&gt;
+&lt;th class="head"&gt;Default&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;value&lt;/td&gt;
+&lt;td&gt;Property value&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;undefined&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;writable&lt;/td&gt;
+&lt;td&gt;Whether the property can be assigned&lt;/td&gt;
+&lt;td&gt;&lt;code&gt;false&lt;/code&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;get&lt;/td&gt;
+&lt;td&gt;Getter of the …&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 30 Jan 2016 21:01:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2016-01-30:/posts/2016/01/30/javascript-objectdefineproperty/</guid><category>javascript</category></item><item><title>NPM Package Manager</title><link>http://logan.tw/posts/2016/01/24/npm-package-manager/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://npmjs.org/"&gt;NPM&lt;/a&gt; package manager plays an important role in &lt;a class="reference external" href="https://nodejs.org"&gt;Node.js&lt;/a&gt; ecosystem.  Every
 serious Javascript developers should learn how to create a package with
 &lt;code&gt;npm&lt;/code&gt;.  In this post, I am going to cover several important &lt;code&gt;npm&lt;/code&gt;
 commands.&lt;/p&gt;

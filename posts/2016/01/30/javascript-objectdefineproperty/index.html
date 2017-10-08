@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>JavaScript Object.defineProperty() | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="javascript" />
+
+	<meta property="og:title" content="JavaScript Object.defineProperty()" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/" rel="bookmark" title="Permalink to JavaScript Object.defineProperty()">JavaScript Object.defineProperty()</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-01-30T21:01:00+08:00">
+		Sat 30 January 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/javascript/">javascript</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>In Javascript, we can add a property to an object with:</p>
+<div class="highlight"><pre><span></span><span class="nx">obj</span><span class="p">.</span><span class="nx">property</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+</pre></div>
+<p>However, sometimes we would like to have fine-grained control over properties.
+With <code>Object.defineProperty()</code>, we can decide:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="62%" />
+<col width="22%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Descriptor</th>
+<th class="head">Purpose</th>
+<th class="head">Default</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>value</td>
+<td>Property value</td>
+<td><code>undefined</code></td>
+</tr>
+<tr><td>writable</td>
+<td>Whether the property can be assigned</td>
+<td><code>false</code></td>
+</tr>
+<tr><td>get</td>
+<td>Getter of the property</td>
+<td><code>undefined</code></td>
+</tr>
+<tr><td>set</td>
+<td>Setter of the property</td>
+<td><code>undefined</code></td>
+</tr>
+<tr><td>enumerable</td>
+<td>Whether the property is visible to for-each loop</td>
+<td><code>false</code></td>
+</tr>
+<tr><td>configurable</td>
+<td>Whether the property can be redefined</td>
+<td><code>false</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Object.defineProperty(obj, name, desc)</code> expects three arguments:</p>
+<ol class="arabic simple">
+<li>The <code>obj</code> argument is the object to which we would like to add a new
+property.</li>
+<li>The <code>name</code> argument is the name of the new property.</li>
+<li>The <code>desc</code> argument is the descriptor object of the new property.
+If <code>enumerable</code>, <code>configurable</code>, or <code>writable</code> are not
+defined in the descriptor object, then the default value <code>false</code> will
+be assumed.</li>
+</ol>
+<div class="section" id="value-and-writable">
+<h2>Value and Writable</h2>
+<p>The simplest usage is to define a property with a <code>value</code>.  By default,
+it will become a read-only property.  Every assignment to the property will be
+silently ignored.</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span> <span class="p">});</span>
+
+<span class="c1">// Get the value.</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Prints 32.</span>
+
+<span class="c1">// Set the value.</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1">// Ignored silently.</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Continue to print 32.</span>
+</pre></div>
+<p>Under the <strong>strict mode</strong>, assigning to a non-writable property will raise a
+<code>TypeError</code> instead:</p>
+<div class="highlight"><pre><span></span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>  <span class="c1">// CHANGED</span>
+
+<span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span> <span class="p">});</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Set the value.</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>  <span class="c1">// Raise a TypeError exception.</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ex</span> <span class="k">instanceof</span> <span class="nx">TypeError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;CAUGHT EXPECTED EXCEPTION.&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">trace</span><span class="p">(</span><span class="nx">ex</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>To define a property that can be assigned, we have to set <code>writable</code> to
+<code>true</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span><span class="p">,</span>
+    <span class="nx">writable</span><span class="o">:</span> <span class="kc">true</span>  <span class="c1">// CHANGED</span>
+<span class="p">});</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Prints 41</span>
+</pre></div>
+<p>From some perspective, the code snippet above is similar to the following simple
+assignment:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>  <span class="c1">// Similar</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Prints 41</span>
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The difference between two code snippets is the enumerability of the defined
+property.  Read <a class="reference internal" href="#enumerable">Enumerable</a> section for more information.</p>
+</div>
+</div>
+<div class="section" id="get-and-set">
+<h2>Get and Set</h2>
+<p>Imagine a senario: we would like to create an object to represent a
+temperature in both celsius and fahrenheit.  Besides, we would like to maintain
+the correspondence between them.  What can we do?  Getters and setters are the
+answers.</p>
+<p>We can define a <code>get</code> or <code>set</code> function with
+<code>Object.defineProperty()</code>.  The <code>get</code> function can read values from
+other properties or compute the result on-the-fly.  Similarly, the <code>set</code>
+function can write values to other properties.   For example:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;get&#39;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span><span class="p">);</span>
+    <span class="p">},</span>
+    <span class="s1">&#39;set&#39;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">+</span> <span class="s1">&#39; F&#39;</span><span class="p">);</span>  <span class="c1">// Prints: &quot;32 F&quot;</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">+</span> <span class="s1">&#39; F&#39;</span><span class="p">);</span>  <span class="c1">// Prints &quot;122 F&quot;</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">+</span> <span class="s1">&#39; F&#39;</span><span class="p">);</span>  <span class="c1">// Prints &quot;77 F&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">+</span> <span class="s1">&#39; C&#39;</span><span class="p">);</span>  <span class="c1">// Prints &quot;25 C&quot;</span>
+</pre></div>
+<p>Similar to <code>writable: false</code>, if the <code>set</code> descriptor is not
+specified, then the assignment operations to the property will be ignored
+silently:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;get&#39;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">t</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>  <span class="c1">// Silently ignored.</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">+</span> <span class="s1">&#39; F&#39;</span><span class="p">);</span>  <span class="c1">// Prints &quot;32 F&quot;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">+</span> <span class="s1">&#39; C&#39;</span><span class="p">);</span>  <span class="c1">// Prints &quot;0 C&quot;</span>
+</pre></div>
+<p>Under the <strong>strict mode</strong>, a <code>TypeError</code> will be raised instead:</p>
+<div class="highlight"><pre><span></span><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>  <span class="c1">// CHANGED</span>
+
+<span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;get&#39;</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">celsius</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ex</span> <span class="k">instanceof</span> <span class="nx">TypeError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;CAUGHT EXPECTED EXCEPTION.&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">trace</span><span class="p">(</span><span class="nx">ex</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code>get</code> and <code>set</code> can not be mixed with <code>value</code> and
+<code>writable</code>.</p>
+</div>
+</div>
+<div class="section" id="enumerable">
+<h2>Enumerable</h2>
+<p>By default, when <code>Object.defineProperty()</code> defines a new property, the
+newly defined property won't be enumerable, i.e. the newly defined property
+won't be enumerated in the for-each loop:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span> <span class="p">});</span>
+
+<span class="c1">// Enumerate the keys.</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// This loop won&#39;t print anything because the `fahrenheit` property is</span>
+    <span class="c1">// NOT enumerable.</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Found: &#39;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>If we wish to enumerate the newly defined property, then we can set
+<code>enumerable</code> to <code>true</code>:</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">enumerable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>  <span class="c1">// CHANGED</span>
+    <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span>
+<span class="p">});</span>
+
+<span class="c1">// Enumerate the keys.</span>
+<span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">t</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Found: &#39;</span> <span class="o">+</span> <span class="nx">key</span><span class="p">);</span>  <span class="c1">// Prints: &quot;Found: fahrenheit&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="section" id="configurable">
+<h2>Configurable</h2>
+<p>By default, the property defined by <code>Object.defineProperty()</code> can not be
+redefined or reconfigured.  A <code>TypeError</code> will be raised if you try to do
+so.</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span> <span class="p">});</span>
+
+<span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// Redefine the property.</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">50</span> <span class="p">});</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">ex</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">ex</span> <span class="k">instanceof</span> <span class="nx">TypeError</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;CAUGHT EXPECTED EXCEPTION.&#39;</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">trace</span><span class="p">(</span><span class="nx">ex</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>If you really wish to redefine the property afterwards, then you should
+set <code>configurable</code> to <code>true</code>.</p>
+<div class="highlight"><pre><span></span><span class="kd">var</span> <span class="nx">t</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">configurable</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>  <span class="c1">// CHANGED</span>
+    <span class="nx">value</span><span class="o">:</span> <span class="mi">32</span>
+<span class="p">});</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Prints: 32</span>
+
+<span class="c1">// Redefine the property.</span>
+<span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">t</span><span class="p">,</span> <span class="s1">&#39;fahrenheit&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="nx">value</span><span class="o">:</span> <span class="mi">50</span> <span class="p">});</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">t</span><span class="p">.</span><span class="nx">fahrenheit</span><span class="p">);</span>  <span class="c1">// Prints: 50</span>
+</pre></div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we have learned several usages of <code>Object.defineProperty()</code>:</p>
+<ul class="simple">
+<li>One can define a property with <code>value</code> and control its immutability with
+<code>writable</code>.</li>
+<li>One can define a property with getter and setter functions.  The getter and
+setter functions are specified by <code>get</code> and <code>set</code> descriptors
+respectively.</li>
+<li>To enumerate a property in a for-each loop, specify <code>enumerable</code>.</li>
+<li>To allow the reconfiguration of a property, specify <code>configurable</code>.</li>
+</ul>
+<p>I hope you enjoy this post.  Feel free to let me know if you have any comments.</p>
+</div>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li>MDN, JavaScript Reference, <a class="reference external" href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty">Object.defineProperty()</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

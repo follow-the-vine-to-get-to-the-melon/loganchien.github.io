@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2016-01-24</lastmod>
+<lastmod>2016-01-30</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/</loc>
+<lastmod>2016-01-30</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2016/01/24/npm-package-manager/</loc>
 <lastmod>2016-01-24</lastmod>
@@ -282,7 +287,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/programming/</loc>
-<lastmod>2016-01-24</lastmod>
+<lastmod>2016-01-30</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -422,7 +427,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/javascript/</loc>
-<lastmod>2016-01-24</lastmod>
+<lastmod>2016-01-30</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -547,7 +552,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan/</loc>
-<lastmod>2016-01-24</lastmod>
+<lastmod>2016-01-30</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>
