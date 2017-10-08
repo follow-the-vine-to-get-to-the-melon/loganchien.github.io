@@ -1,5 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-16T15:03:00+08:00</updated><entry><title>Flask and Socket.IO</title><link href="http://logan.tw/posts/2016/01/16/flask-and-socketio/" rel="alternate"></link><published>2016-01-16T15:03:00+08:00</published><updated>2016-01-16T15:03:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-16:/posts/2016/01/16/flask-and-socketio/</id><summary type="html">&lt;p&gt;Under some scenarios, we would like to push a message from an HTTP server to
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-24T20:04:00+08:00</updated><entry><title>NPM Package Manager</title><link href="http://logan.tw/posts/2016/01/24/npm-package-manager/" rel="alternate"></link><published>2016-01-24T20:04:00+08:00</published><updated>2016-01-24T20:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-24:/posts/2016/01/24/npm-package-manager/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://npmjs.org/"&gt;NPM&lt;/a&gt; package manager plays an important role in &lt;a class="reference external" href="https://nodejs.org"&gt;Node.js&lt;/a&gt; ecosystem.  Every
+serious Javascript developers should learn how to create a package with
+&lt;code&gt;npm&lt;/code&gt;.  In this post, I am going to cover several important &lt;code&gt;npm&lt;/code&gt;
+commands.&lt;/p&gt;
+&lt;div class="section" id="initialize-a-npm-package"&gt;
+&lt;h2&gt;Initialize a NPM Package&lt;/h2&gt;
+&lt;p&gt;To start a project, we have to create &lt;code&gt;package.json …&lt;/code&gt;&lt;/p&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="https://npmjs.org/"&gt;NPM&lt;/a&gt; package manager plays an important role in &lt;a class="reference external" href="https://nodejs.org"&gt;Node.js&lt;/a&gt; ecosystem.  Every
+serious Javascript developers should learn how to create a package with
+&lt;code&gt;npm&lt;/code&gt;.  In this post, I am going to cover several important &lt;code&gt;npm&lt;/code&gt;
+commands.&lt;/p&gt;
+&lt;div class="section" id="initialize-a-npm-package"&gt;
+&lt;h2&gt;Initialize a NPM Package&lt;/h2&gt;
+&lt;p&gt;To start a project, we have to create &lt;code&gt;package.json&lt;/code&gt; to describe the
+package and its dependencies.  We can do so by running &lt;code&gt;npm init&lt;/code&gt;.  Here
+are the instructions:&lt;/p&gt;
+&lt;p&gt;First, create a directory to hold the package:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ mkdir hello_express
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; hello_express
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, run &lt;code&gt;npm init&lt;/code&gt; to create &lt;code&gt;package.json&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm init
+name: &lt;span class="o"&gt;(&lt;/span&gt;hello_express&lt;span class="o"&gt;)&lt;/span&gt;
+version: &lt;span class="o"&gt;(&lt;/span&gt;&lt;span class="m"&gt;1&lt;/span&gt;.0.0&lt;span class="o"&gt;)&lt;/span&gt;
+description: Express.js example project
+entry point: &lt;span class="o"&gt;(&lt;/span&gt;app.js&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;test&lt;/span&gt; command:
+git repository:
+keywords:
+author: John Smith &amp;lt;john.smith@example.com&amp;gt;
+license: &lt;span class="o"&gt;(&lt;/span&gt;ISC&lt;span class="o"&gt;)&lt;/span&gt; MIT
+About to write to /path/to/your/project/hello/package.json:
+&lt;span class="c1"&gt;# ... output skipped ...&lt;/span&gt;
+Is this ok? &lt;span class="o"&gt;(&lt;/span&gt;yes&lt;span class="o"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This command will ask several questions.  After filling the answers, it will
+create &lt;code&gt;package.json&lt;/code&gt; with the package information.&lt;/p&gt;
+&lt;p&gt;Now, we can continue to add dependencies with &lt;code&gt;npm install&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="add-dependencies"&gt;
+&lt;h2&gt;Add Dependencies&lt;/h2&gt;
+&lt;p&gt;Before adding dependencies to the package, we have to know the classification
+of the dependencies.  NPM classifies the dependencies in three categories:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;Production&lt;/strong&gt; -- Production dependencies should be installed in the
+&lt;em&gt;production environment&lt;/em&gt;.  These are essential to a package.  A package
+won't work without these dependencies.  For example, most web application
+will list &lt;code&gt;express&lt;/code&gt; as a production dependency, which should be
+installed on the web server.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Optional&lt;/strong&gt; -- Like production dependencies, optional dependencies will be
+installed in the &lt;em&gt;production environment&lt;/em&gt;.  However, a package should be able
+to work without optional dependencies or at least degrade gracefully.  For
+example, &lt;code&gt;chokidar&lt;/code&gt;, a popular file monitoring package, is listing
+&lt;code&gt;fsevent&lt;/code&gt; as an optional dependency, which provides better support on
+Mac OS X.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Development&lt;/strong&gt; -- Development dependencies are for developers only.  This
+includes tools to compile assets, run unit tests, etc.  For example,
+&lt;code&gt;nodemon&lt;/code&gt; is a file monitor daemon which will automatically reload
+Express applications when source files are modified.  It is clear that
+&lt;code&gt;nodemon&lt;/code&gt; is only meaningful to developers, thus &lt;code&gt;nodemon&lt;/code&gt; should
+be listed as a development dependency.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After knowing the classification, we can continue on the command line usages.&lt;/p&gt;
+&lt;p&gt;First, use &lt;code&gt;--save&lt;/code&gt; option to add a dependency for production environment.
+For example, we can install &lt;a class="reference external" href="http://expressjs.com"&gt;Express&lt;/a&gt; web framework with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save express
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, use &lt;code&gt;--save-optional&lt;/code&gt; option to add an &lt;em&gt;optional&lt;/em&gt; dependency for
+production environment.  For example, we can install &lt;a class="reference external" href="https://github.com/expressjs/cookie-parser"&gt;cookie-parser&lt;/a&gt; as an
+optional dependency.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-optional cookie-parser
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, use &lt;code&gt;--save-dev&lt;/code&gt; option to add a dependency for development
+environment.  For example, we can install &lt;a class="reference external" href="http://nodemon.io"&gt;nodemon&lt;/a&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --save-dev nodemon
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="write-code"&gt;
+&lt;h2&gt;Write Code&lt;/h2&gt;
+&lt;p&gt;To complete the picture, let's write some code for our example package.  The
+following code snippet is extracted from &lt;code&gt;app.js&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;use strict&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;express&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;express&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="nx"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;express&lt;/span&gt;&lt;span class="p"&gt;(),&lt;/span&gt;
+    &lt;span class="nx"&gt;cookieParser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kc"&gt;null&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+
+&lt;span class="k"&gt;try&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;cookieParser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;cookie-parser&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;catch&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;e&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="cm"&gt;/* Ignore exception thrown by require(). */&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;cookieParser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;use&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;cookieParser&lt;/span&gt;&lt;span class="p"&gt;());&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;visited&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;!&lt;/span&gt;&lt;span class="nx"&gt;cookieParser&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello world!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;req&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cookies&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;visited&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello, nice to meet you again!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;cookie&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;visited&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;1&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+    &lt;span class="nx"&gt;res&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;send&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello, new visitor!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;server&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;listen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt; &lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;addr&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;server&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;address&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+  &lt;span class="nx"&gt;console&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;log&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Listening at %s:%s&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;addr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;address&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;addr&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;port&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As you can see, we are importing &lt;code&gt;express&lt;/code&gt; as a mandatory dependency.  On
+the other hand, &lt;code&gt;cookie-parser&lt;/code&gt; is treated as an optional dependency.
+&lt;code&gt;app.js&lt;/code&gt; will degrade gracefully without &lt;code&gt;cookie-parser&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Finally, we can run &lt;code&gt;nodemon&lt;/code&gt; to test our application:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ nodemon app.js
+&lt;span class="o"&gt;[&lt;/span&gt;nodemon&lt;span class="o"&gt;]&lt;/span&gt; &lt;span class="m"&gt;1&lt;/span&gt;.9.1
+&lt;span class="o"&gt;[&lt;/span&gt;nodemon&lt;span class="o"&gt;]&lt;/span&gt; to restart at any time, enter &lt;span class="sb"&gt;`&lt;/span&gt;rs&lt;span class="sb"&gt;`&lt;/span&gt;
+&lt;span class="o"&gt;[&lt;/span&gt;nodemon&lt;span class="o"&gt;]&lt;/span&gt; watching: *.*
+&lt;span class="o"&gt;[&lt;/span&gt;nodemon&lt;span class="o"&gt;]&lt;/span&gt; starting &lt;span class="sb"&gt;`&lt;/span&gt;node app.js&lt;span class="sb"&gt;`&lt;/span&gt;
+Listening at :::3000
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Let's open the browser and say hello to our example application!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-packages"&gt;
+&lt;h2&gt;Install Packages&lt;/h2&gt;
+&lt;p&gt;So far, we have only discussed the situation that we are creating a new NPM
+package.  How do we install the dependencies when have the source code of an
+existing package?  Imagine that we have cloned the Git repository of a package
+and we would like to install the dependencies specified in &lt;code&gt;package.json&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;The answer is simple: run &lt;code&gt;npm install&lt;/code&gt; to get every dependencies.  These
+includes production, optional, and development dependencies.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you don't want the development dependencies, then specify
+&lt;code&gt;--only=prod&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --only&lt;span class="o"&gt;=&lt;/span&gt;prod
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you don't want the optional dependencies, then specify
+&lt;code&gt;--no-optional&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --no-optional
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you want neither production nor optional dependencies, then specify
+&lt;code&gt;--only=dev&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ npm install --only&lt;span class="o"&gt;=&lt;/span&gt;dev
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="epilogue"&gt;
+&lt;h2&gt;Epilogue&lt;/h2&gt;
+&lt;p&gt;We have gone through the essential steps to create &lt;code&gt;package.json&lt;/code&gt; and
+specify the dependencies for a package.  In addition, we have explained the
+classification of dependencies.  Hope you enjoy this post.  Let's create NPM
+packages together!&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://docs.npmjs.com/cli/install"&gt;npm-install Documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="javascript"></category><category term="node"></category></entry><entry><title>Flask and Socket.IO</title><link href="http://logan.tw/posts/2016/01/16/flask-and-socketio/" rel="alternate"></link><published>2016-01-16T15:03:00+08:00</published><updated>2016-01-16T15:03:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-16:/posts/2016/01/16/flask-and-socketio/</id><summary type="html">&lt;p&gt;Under some scenarios, we would like to push a message from an HTTP server to
 clients.  For example, in a group messaging application, whenever a user sends a
 message to the server, the server has to push such message to everyone.  Since
 2001, several techniques have been proposed.  Eventually, &lt;a class="reference external" href="https://en.wikipedia.org/wiki/WebSocket"&gt;WebSocket …&lt;/a&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;Under some scenarios, we would like to push a message from an HTTP server to
