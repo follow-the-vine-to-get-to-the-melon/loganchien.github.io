@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Colon Built-in in Bash | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="bash" />
+	<meta name="tags" content="shell" />
+
+	<meta property="og:title" content="Colon Built-in in Bash" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/02/27/colon-built-in-in-bash/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/02/27/colon-built-in-in-bash/" rel="bookmark" title="Permalink to Colon Built-in in Bash">Colon Built-in in Bash</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-02-27T15:17:00+08:00">
+		Sat 27 February 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/bash/">bash</a>
+		<a class="tags" href="/tag/shell/">shell</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>I came across a weird line in a shell script:</p>
+<div class="highlight"><pre><span></span>: <span class="si">${</span><span class="nv">parameter</span><span class="p">:=word</span><span class="si">}</span>
+</pre></div>
+<p>It is so weird that I don't even know how to search for further information.
+Fortunately, I found a <a class="reference external" href="http://stackoverflow.com/questions/3224878/">post</a> after searching <strong>bash colon</strong>.  It is a
+built-in utility which simply exits with 0.  In the other words, it is <em>almost</em>
+equivalent to the <code>true</code> command.  For example, we can write a spin loop
+with:</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> :<span class="p">;</span> <span class="k">do</span>
+    date -R
+    sleep <span class="m">1</span>
+<span class="k">done</span>
+</pre></div>
+<p>It is <em>almost</em> equivalent to:</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> true<span class="p">;</span> <span class="k">do</span>
+    date -R
+    sleep <span class="m">1</span>
+<span class="k">done</span>
+</pre></div>
+<p>Now, we know that the weird line is <em>almost</em> equivalent to:</p>
+<div class="highlight"><pre><span></span><span class="nb">true</span> <span class="si">${</span><span class="nv">parameter</span><span class="p">:=word</span><span class="si">}</span>
+</pre></div>
+<p>But, what does this mean?  Isn't this a no-op?</p>
+<p>To answer the question, we have to take a look on the <strong>parameter expansion</strong>.
+In this line, there is a parameter expansion <code>${parameter:=word}</code>.  It is
+slightly different from the normal parameter expansion <code>${parameter}</code>.
+It comes with an extra modifier <code>:=</code>.  The extra modifier means that
+shell script interpreters should assign <code>word</code> to <code>parameter</code> if
+<code>parameter</code> was unset or null.  In summary, the line at the beginning of
+this post is equivalent to:</p>
+<div class="highlight"><pre><span></span><span class="k">if</span> <span class="o">[</span> -z <span class="s2">&quot;</span><span class="si">${</span><span class="nv">parameter</span><span class="si">}</span><span class="s2">&quot;</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+    <span class="nv">parameter</span><span class="o">=</span><span class="s2">&quot;word&quot;</span>
+<span class="k">fi</span>
+</pre></div>
+<div class="section" id="more-on-colon-built-in">
+<h2>More on Colon Built-in</h2>
+<p>Previously, we mentioned that the colon built-in is <em>almost</em> equivalent to the
+<code>true</code> command.  But, what are differences between them?</p>
+<ol class="arabic simple">
+<li>It will be slightly faster because shell script interpreters don't have to
+spawn a new process for the built-in utility.</li>
+<li>It can't be a command for <code>exec</code> built-in.  In other words,
+<code>exec :</code> will fail, but <code>exec true</code> will succeed.</li>
+<li>There is a subtle difference when environment variables are passed to the
+colon built-in utility.  However, this is not portable between different
+shell script interpreters.  Check <a class="reference external" href="http://stackoverflow.com/questions/3224878/">this post</a> for more details.</li>
+</ol>
+<p>IMO, it will be better to use colon built-in whenever possible.</p>
+</div>
+<div class="section" id="more-on-parameter-expansion">
+<h2>More on Parameter Expansion</h2>
+<p>In addition to the <code>:=</code> parameter expansion modifier we have mentioned
+earlier, there are four modifiers that we can choose: <code>-</code>, <code>=</code>,
+<code>?</code>, and <code>+</code>.  Their meanings are:</p>
+<ul class="simple">
+<li><code>-</code>: Use the word as the default value if the parameter is not set.</li>
+<li><code>=</code>: Use the word and assign the parameter if the parameter is not set.</li>
+<li><code>?</code>: Print error and exit if the parameter is not set.</li>
+<li><code>+</code>: Use the word if the parameter is set.  This is the opposite of
+<code>-</code>.</li>
+</ul>
+<p>To make it clear, this is a table of the behaviors:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="33%" />
+<col width="32%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Modifier</th>
+<th class="head">Parameter Set</th>
+<th class="head">Parameter Unset</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><code>${parameter-word}</code></td>
+<td>Substitute <em>parameter</em></td>
+<td>Substitute <em>word</em></td>
+</tr>
+<tr><td><code>${parameter=word}</code></td>
+<td>Substitute <em>parameter</em></td>
+<td>Assign <em>word</em> to
+<em>parameter</em> and substitute
+<em>word</em></td>
+</tr>
+<tr><td><code>${parameter?msg}</code></td>
+<td>Substitute <em>parameter</em></td>
+<td>Print error and exit</td>
+</tr>
+<tr><td><code>${parameter+word}</code></td>
+<td>Substitute <em>word</em></td>
+<td>Substitute <em>parameter</em></td>
+</tr>
+</tbody>
+</table>
+<p>Besides, the <code>:</code> (colon) qualifier brings another dimension to these
+qualifiers.  We can add the colon before the aforementioned modifiers.  The
+result will be slightly different when the parameter is set to null (empty
+string.)</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="15%" />
+<col width="39%" />
+<col width="46%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">&nbsp;</th>
+<th class="head">&nbsp;</th>
+<th class="head">&nbsp;</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>w/o colon</td>
+<td>Treat as parameter set</td>
+<td>Treat as parameter set</td>
+</tr>
+<tr><td>w/ colon</td>
+<td>Treat as parameter set</td>
+<td>Treat as parameter <strong>unset</strong></td>
+</tr>
+</tbody>
+</table>
+<p>For example:</p>
+<div class="highlight"><pre><span></span><span class="nb">unset</span> x
+<span class="nv">y</span><span class="o">=</span>
+<span class="nv">z</span><span class="o">=</span><span class="m">123</span>
+<span class="nb">echo</span> <span class="s2">&quot;x:\t&#39;</span><span class="si">${</span><span class="nv">x</span><span class="p">-word</span><span class="si">}</span><span class="s2">&#39;\t&#39;</span><span class="si">${</span><span class="nv">x</span><span class="k">:-</span><span class="nv">word</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;y:\t&#39;</span><span class="si">${</span><span class="nv">y</span><span class="p">-word</span><span class="si">}</span><span class="s2">&#39;\t&#39;</span><span class="si">${</span><span class="nv">y</span><span class="k">:-</span><span class="nv">word</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+<span class="nb">echo</span> <span class="s2">&quot;z:\t&#39;</span><span class="si">${</span><span class="nv">z</span><span class="p">-word</span><span class="si">}</span><span class="s2">&#39;\t&#39;</span><span class="si">${</span><span class="nv">z</span><span class="k">:-</span><span class="nv">word</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+</pre></div>
+<p>This shell script will print:</p>
+<div class="highlight"><pre><span></span>x:      &#39;word&#39;  &#39;word&#39;
+y:      &#39;&#39;      &#39;word&#39;
+z:      &#39;123&#39;   &#39;123&#39;
+</pre></div>
+<p>Although we have gone through many parameter expansion modifiers, IMO,
+<code>${parameter:-word}</code> and <code>${parameter:=word}</code> are usually what
+you need.</p>
+</div>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li>Stack Overflow, <a class="reference external" href="http://stackoverflow.com/questions/3224878/">What is the purpose of the : (colon) GNU Bash builtin?</a></li>
+<li>TLDP, <a class="reference external" href="http://www.tldp.org/LDP/abs/html/index.html">Advanced Bash-Scripting Guide</a>, <a class="reference external" href="http://www.tldp.org/LDP/abs/html/parameter-substitution.html">10.2 Parameter Substitution</a></li>
+<li>POSIX, The Open Group Base Specifications Issue 7, Shell &amp; Utilities,
+<a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">Shell Command Language</a>, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02">2.6.2 Parameter Expansion</a></li>
+<li>POSIX, The Open Group Base Specifications Issue 7, Shell &amp; Utilities,
+<a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">Shell Command Language</a>, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#colon">14 Special Builtin Utilities: Colon</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

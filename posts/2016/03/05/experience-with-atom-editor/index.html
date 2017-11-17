@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Experience with Atom Editor | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="atom" />
+
+	<meta property="og:title" content="Experience with Atom Editor" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/03/05/experience-with-atom-editor/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/03/05/experience-with-atom-editor/" rel="bookmark" title="Permalink to Experience with Atom Editor">Experience with Atom Editor</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-03-05T11:02:00+08:00">
+		Sat 05 March 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/atom/">atom</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>I have been a <a class="reference external" href="http://vim.org">Vim</a> user for a long time.  However, I found that Vim is not good
+enough for me to write blog with Pelican.  I need a good <a class="reference external" href="http://docutils.sourceforge.net/rst.html">reStructuredText</a>
+previewer, but I am not very satisfied with <a class="reference external" href="https://github.com/Rykka/InstantRst">InstantRst</a>.  I wish to have a
+two-panel editor that I can edit the document and see the preview side-by-side.</p>
+<p><a class="reference external" href="https://atom.io">Atom</a>, an open-source editor developed by GitHub, comes into my mind.</p>
+<div class="section" id="installation">
+<h2>Installation</h2>
+<div class="highlight"><pre><span></span>$ wget https://atom.io/download/deb -O atom.deb
+$ sudo dpkg -i atom.deb
+</pre></div>
+</div>
+<div class="section" id="install-packages">
+<h2>Install Packages</h2>
+<div class="highlight"><pre><span></span>$ apm install advanced-open-file git-plus highlight-selected <span class="se">\</span>
+              language-restructuredtext rst-preview-pandoc
+</pre></div>
+<p>Package descriptions:</p>
+<ul class="simple">
+<li><code>advanced-open-file</code> makes it easy to open or create files.</li>
+<li><code>git-plus</code> allows us to commit changes to Git repositories.</li>
+<li><code>highlight-selected</code> will highlight the double-clicked words.</li>
+<li><code>language-restructuredtext</code> enables the syntax highlight for
+reStructuredText.</li>
+<li><code>rst-preview-pandoc</code> provides preview panels for reStructuredText.</li>
+</ul>
+</div>
+<div class="section" id="keyboard-shortcuts">
+<h2>Keyboard Shortcuts</h2>
+<ul class="simple">
+<li><strong>Open Files</strong><ul>
+<li>Press <code>Ctrl-T</code> to open files with fuzzy finder.</li>
+<li>Press <code>Ctrl-Alt-O</code> to open the <strong>advanced open file</strong> dialog.</li>
+</ul>
+</li>
+<li><strong>Search</strong><ul>
+<li>Press <code>Ctrl-F3</code> to highlight the occurrence of word under the cursor.</li>
+<li>Press <code>Ctrl-F</code> to search in the current buffer.</li>
+<li>Press <code>Ctrl-Shift-F</code> to search in the project.</li>
+</ul>
+</li>
+<li><strong>Edit</strong><ul>
+<li>Press <code>Ctrl-Alt-Q</code> to re-flow or wrap the selected text.</li>
+<li>Press <code>Ctrl-[</code> to indent selected lines.</li>
+<li>Press <code>Ctrl-]</code> to outdent selected lines.</li>
+</ul>
+</li>
+<li><strong>Git Commands</strong><ul>
+<li>Press <code>Shift-Ctrl-A</code> (and <code>Right</code>) to add current file
+(staging.)</li>
+<li>Press <code>Shift-Ctrl-X</code> to commit staged changes.</li>
+<li>Press <code>Shift-Ctrl-H</code> to show all commands supported by <strong>Git-Plus</strong>.</li>
+</ul>
+</li>
+<li><strong>reStructuredText</strong><ul>
+<li>Press <code>Ctrl-Shift-E</code> to open the preview panel for reStructuredText.</li>
+</ul>
+</li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

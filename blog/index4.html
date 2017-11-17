@@ -33,6 +33,77 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2015/01/01/python-package-manager-pip/" rel="bookmark" title="Permalink to Python Package Manager: PIP">Python Package Manager: PIP</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-01-01T00:14:00+08:00">Thu 01 January 2015</time>
+			</footer>
+			<div class="entry-content"><p>The Python package manager <a class="reference external" href="https://pip.pypa.io">pip</a> is a tool to manage the installed site
+packages.  With <a class="reference external" href="https://pip.pypa.io">pip</a>, we don't have to be worried about the package
+dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">pip</a> will download the required packages from
+<a class="reference external" href="https://pypi.python.org">Python Package Index</a> automatically.</p>
+<div class="section" id="install-packages">
+<h2>Install Packages</h2>
+<p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index …</a></p></div></div>
+                        <p><a class="normal-btn" href="/posts/2015/01/01/python-package-manager-pip/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2014/12/31/2014-year-end-review/" rel="bookmark" title="Permalink to 2014 Year End Review">2014 Year End Review</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2014-12-31T23:54:00+08:00">Wed 31 December 2014</time>
+			</footer>
+			<div class="entry-content"><p>It's the end of 2014.  It has been an amazing year with a lot of astonishing
+moments!</p>
+<ul class="simple">
+<li>This is my first year to work as a <em>full-time software engineer</em>.  I have
+learned a lot from the real world software development, including the PMD,
+annaul planning, software schedule estimation, and etc …</li></ul></div>
+                        <p><a class="normal-btn" href="/posts/2014/12/31/2014-year-end-review/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2014/12/20/debian-backports/" rel="bookmark" title="Permalink to Debian Backports">Debian Backports</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2014-12-20T22:04:00+08:00">Sat 20 December 2014</time>
+			</footer>
+			<div class="entry-content"><p>It is well-known that <a class="reference external" href="http://www.debian.org/">Debian</a> stable release is very <em>stable</em>, i.e. the
+packages are very old and well-tested.  However, this become a problem to me.</p>
+<p>Since <a class="reference external" href="http://www.git-scm.org/">Git</a> 1.9, we have to run the following command to silence a warning
+when we are running <code>git push</code>.</p>
+<div class="highlight"><pre><span></span>$ git config --global …</pre></div></div>
+                        <p><a class="normal-btn" href="/posts/2014/12/20/debian-backports/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2014/12/17/count-trailing-zeros/" rel="bookmark" title="Permalink to Count Trailing Zeros">Count Trailing Zeros</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2014-12-17T23:34:00+08:00">Wed 17 December 2014</time>
+			</footer>
+			<div class="entry-content"><p>How to count the number of trailing zeros of an integer?  The simplest way is
+to use the built-in function <code>__builtin_ctz()</code>:</p>
+<div class="highlight"><pre><span></span><span class="kt">uint64_t</span> <span class="nf">count</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="n">__builtin_ctz</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+<p>What will happen if we don't have <code>__builtin_ctz()</code>?  If we have another
+built-in function <code>__popcount()</code>, which can compute the <a class="reference external" href="http://en.wikipedia.org/wiki/Hamming_weight">Hamming weight</a>
+(the …</p></div>
+                        <p><a class="normal-btn" href="/posts/2014/12/17/count-trailing-zeros/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2014/12/16/risc-v-microprocessor/" rel="bookmark" title="Permalink to RISC-V Microprocessor">RISC-V Microprocessor</a></h1>
 			</header>
 			<footer class="post-info">
@@ -122,68 +193,6 @@ which makes it difficult to uninstall a plug-in.</p>
 <p>Recently, I have come across with <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vim Vundle</a>.  It is a vim plug-in manager
 which …</p></div>
                         <p><a class="normal-btn" href="/posts/2014/11/25/vim-vundle/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/24/lets-encrypt/" rel="bookmark" title="Permalink to Let's Encrypt">Let's Encrypt</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-24T23:32:00+08:00">Mon 24 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>According to the <a class="reference external" href="http://andreasgal.com/2014/11/18/lets-encrypt-one-more-step-on-the-road-to-tls-everywhere/">post</a> by <a class="reference external" href="http://andreasgal.com">Andreas Gal</a>, <a class="reference external" href="https://www.eff.org/">EFF</a>, <a class="reference external" href="https://mozilla.com/">Mozilla</a>, Cisco, Akamai,
-and IdenTrust are going to form Internet Security Research Group which will
-start the <a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> ceritificate authority service in 2015 Q2.</p>
-<p><a class="reference external" href="https://letsencrypt.org/">Let's Encrypt</a> is expected to become a free, automated, and open SSL
-sertificate authority which aims to …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/24/lets-encrypt/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/24/ubuntu-bluetooth-headset/" rel="bookmark" title="Permalink to Ubuntu Bluetooth Headset">Ubuntu Bluetooth Headset</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-24T23:04:00+08:00">Mon 24 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>I have bought a Bluetooth headset recently.  After connecting the device, I
-was quite disappointed with the sound quality.  Fortunately, after searching on
-the web, it seems that I am using the &quot;Telphony Duplex&quot; mode, which has low
-quality.</p>
-<p>Here are the steps to switch to the mode with better …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/24/ubuntu-bluetooth-headset/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/23/install-gcin-on-ubuntu-1404/" rel="bookmark" title="Permalink to Install GCIN on Ubuntu 14.04">Install GCIN on Ubuntu 14.04</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-23T14:36:00+08:00">Sun 23 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>I decided to look for some alternatives to <a class="reference external" href="https://code.google.com/p/ibus/">IBus</a> input method after tolerating
-its long latency to switch between input methods for a long time.  As a
-Taiwanese, both <a class="reference external" href="http://hyperrate.com/dir.php?eid=67">gcin</a> and <a class="reference external" href="http://hime.luna.com.tw/">hime</a> came up to my mind.  Unfortunately, both of
-them need extra configuration after <code>apt-get</code>.  Here's my note to …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/23/install-gcin-on-ubuntu-1404/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/" rel="bookmark" title="Permalink to Pre-compile the OpenCL Kernel Program - Part 2">Pre-compile the OpenCL Kernel Program - Part 2</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-22T12:22:00+08:00">Sat 22 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>In the <a class="reference external" href="http://logan.tw/posts/2014/11/21/pre-compile-the-opencl-kernel-program-part-1/">part 1</a> of this article, we have mentioned how to pre-compile the
-OpenCL kernel program and load the pre-compiled binaries with the OpenCL API.</p>
-<p>However, I was using the <code>ioc64</code> command from the <a class="reference external" href="https://software.intel.com/en-us/intel-opencl">Intel OpenCL SDK</a> to
-pre-compile the kernel program.  This command might be unavailable in the …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/22/pre-compile-the-opencl-kernel-program-part-2/">More</a></p>
 		</article>
 	</li>
 </ol>

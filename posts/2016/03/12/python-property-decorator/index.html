@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Python Property Decorator | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="python" />
+
+	<meta property="og:title" content="Python Property Decorator" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/03/12/python-property-decorator/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/03/12/python-property-decorator/" rel="bookmark" title="Permalink to Python Property Decorator">Python Property Decorator</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-03-12T20:09:00+08:00">
+		Sat 12 March 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/python/">python</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Recently, I was tracing the source code of <a class="reference external" href="http://pypy.org">PyPy</a>, and a special decorator named
+<code>&#64;property</code> caught my attention.  It seems to be a mechanism for <a class="reference external" href="http://python.org">Python</a>
+programmers to create a getter, a setter, and a deleter for an instance variable.
+For example, how could we intercept the access to <code>a.f</code> in the following
+code snippet?</p>
+<div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Temperature</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="mi">122</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Here are the instructions:</p>
+<ol class="arabic simple">
+<li>Define a <code>Temperature</code> class.</li>
+<li>Decorate the <strong>getter</strong> function <code>f()</code> (the first one) with the
+<code>&#64;property</code> decorator.</li>
+<li>If you would like to intercept the setter, decorate the <strong>setter</strong>
+function <code>f()</code> (the second one) with the <code>&#64;f.setter</code> decorator.</li>
+<li>If you would like to intercept the deleter, decorate the <strong>deleter</strong>
+function <code>f()</code> (the third one) with the <code>&#64;f.deleter</code> decorator.</li>
+</ol>
+<p>This is the code snippet for our <code>Temperature</code> class:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Temperature</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Gets:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+
+    <span class="nd">@f.setter</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Sets:&#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="s1">&#39;F / Prev:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span>
+
+    <span class="nd">@f.deleter</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Dels:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+<p>Now, we can test the <code>Temperature</code> class with:</p>
+<div class="highlight"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">Temperature</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="n">a</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="mi">122</span>
+<span class="k">print</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">f</span><span class="p">,</span> <span class="s1">&#39;F&#39;</span><span class="p">)</span>
+<span class="k">del</span> <span class="n">a</span><span class="o">.</span><span class="n">f</span>
+</pre></div>
+<p>Here's the output:</p>
+<div class="highlight"><pre><span></span>Gets: 5 C
+41.0 F
+Sets: 122 F / Prev: 5 C
+Gets: 50.0 C
+122.0 F
+Dels: 50.0 C
+</pre></div>
+<div class="section" id="enhancement">
+<h2>Enhancement</h2>
+<p>Notice that three <code>property</code> objects will be created by the decorators.
+We can avoid two of them by initializing the <code>property</code> object at once:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Temperature</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c</span>
+
+    <span class="k">def</span> <span class="nf">_get_f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Gets:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">/</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">32</span>
+
+    <span class="k">def</span> <span class="nf">_set_f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Sets:&#39;</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="s1">&#39;F / Prev:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">val</span> <span class="o">-</span> <span class="mi">32</span><span class="p">)</span> <span class="o">*</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">9</span>
+
+    <span class="k">def</span> <span class="nf">_del_f</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Dels:&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">property</span><span class="p">(</span><span class="n">_get_f</span><span class="p">,</span> <span class="n">_set_f</span><span class="p">,</span> <span class="n">_del_f</span><span class="p">)</span>
+</pre></div>
+<p>This version is functionally-equivalent to the one shown above.</p>
+</div>
+<div class="section" id="remarks">
+<h2>Remarks</h2>
+<p>The decorator syntax in the <a class="reference external" href="http://python.org">Python</a> programming language is a syntax sugar.
+Thus, the following code:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="nd">@decorator</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+        <span class="k">pass</span>
+</pre></div>
+<p>is equivalent to:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">A</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">():</span>
+        <span class="k">pass</span>
+    <span class="n">func</span> <span class="o">=</span> <span class="n">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+</pre></div>
+<p>In addition, a decorator function is a function that takes a function and
+returns a decorated function.</p>
+<p>The <code>&#64;property</code> decorator, which we are talking about in this post, is in
+fact a built-in class which takes 0-4 actual arguments.  Furthermore,
+every instance of <code>property</code> class contains 3 instance methods:
+<code>getter</code>, <code>setter</code>, and <code>deleter</code> which will return new
+<code>property</code> instances with the updated accessors.  You can find a
+<a class="reference external" href="https://docs.python.org/3/howto/descriptor.html#properties">pure Python implementation</a> from the <a class="reference external" href="https://docs.python.org/3/howto/descriptor.html">Descriptor HowTo Guide</a>.</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.python.org/3/howto/descriptor.html">Descriptor HowTo Guide</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

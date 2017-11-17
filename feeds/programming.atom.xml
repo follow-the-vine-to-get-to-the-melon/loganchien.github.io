@@ -1,5 +1,504 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-01-30T21:01:00+08:00</updated><entry><title>JavaScript Object.defineProperty()</title><link href="http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/" rel="alternate"></link><published>2016-01-30T21:01:00+08:00</published><updated>2016-01-30T21:01:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-30:/posts/2016/01/30/javascript-objectdefineproperty/</id><summary type="html">&lt;p&gt;In Javascript, we can add a property to an object with:&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2016-03-19T16:47:00+08:00</updated><entry><title>Connect to Freenode with Irssi through SSL and SASL</title><link href="http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/" rel="alternate"></link><published>2016-03-19T16:47:00+08:00</published><updated>2016-03-19T16:47:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-19:/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</id><summary type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
+&lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; (because it is easy for us to get another IP.)  According to the error
+message, I should connect and login with &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer"&gt;SASL&lt;/a&gt;.  It took me a while to figure
+out a solution, thus I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
+&lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; (because it is easy for us to get another IP.)  According to the error
+message, I should connect and login with &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer"&gt;SASL&lt;/a&gt;.  It took me a while to figure
+out a solution, thus I believe that it worths writing my attempts in a blog
+post.&lt;/p&gt;
+&lt;p&gt;This post will cover two topics:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;How to enable SASL support in &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; 0.8.17?&lt;/li&gt;
+&lt;li&gt;How to exchange public keys manually?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="add-sasl-support-to-irssi"&gt;
+&lt;h2&gt;Add SASL Support to Irssi&lt;/h2&gt;
+&lt;p&gt;As of writing, &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; 0.8.17 is the version which we can installed with
+&lt;code&gt;apt&lt;/code&gt; on &lt;em&gt;Ubuntu 15.10&lt;/em&gt;.  But, unfortunately, it does not include SASL
+support.  Although the latest &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; 0.8.18 adds the SASL support, it will take
+some time to propagate through different Linux distributions.  Thus, we have to
+manually install SASL plug-in to our &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; 0.8.17 installation.&lt;/p&gt;
+&lt;p&gt;Yet another concern is that SASL plug-in requires &lt;code&gt;Crypt::PK::ECC&lt;/code&gt; module
+from CPAN.  However, there is no prebuilt Debian packages for this Perl module.
+We have to build it by ourselves.&lt;/p&gt;
+&lt;p&gt;In summary, there are three steps to do:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Configure &lt;code&gt;CPAN&lt;/code&gt;, the Perl module repository and installation
+manager.&lt;/li&gt;
+&lt;li&gt;Build and install &lt;code&gt;Crypt::PK::ECC&lt;/code&gt; Perl module.&lt;/li&gt;
+&lt;li&gt;Install SASL plug-in.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Let's start!&lt;/p&gt;
+&lt;div class="section" id="configure-cpan"&gt;
+&lt;h3&gt;Configure CPAN&lt;/h3&gt;
+&lt;p&gt;If you are a Linux end-user, it is unlikely for you to install a Perl module
+via &lt;code&gt;cpan&lt;/code&gt;.  As a result, &lt;code&gt;~/.cpan&lt;/code&gt; doesn't exist and you have to
+configure &lt;code&gt;cpan&lt;/code&gt; first.&lt;/p&gt;
+&lt;p&gt;To configure &lt;code&gt;cpan&lt;/code&gt;, simply run &lt;code&gt;cpan -v&lt;/code&gt;, and answer several
+questions:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ cpan -v
+Sorry, we have to rerun the configuration dialog for CPAN.pm due to
+some missing parameters. Configuration will be written to
+ &amp;lt;&amp;lt;/home/logan/.cpan/CPAN/MyConfig.pm&amp;gt;&amp;gt;
+
+CPAN.pm requires configuration, but most of it can be done automatically.
+If you answer &amp;#39;no&amp;#39; below, you will enter an interactive dialog for each
+configuration option instead.
+
+Would you like to configure as much as possible automatically? [yes]
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;First, you will be asked whether to create the configuration file with default
+options or not.  We can choose &lt;strong&gt;yes&lt;/strong&gt; and press enter.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;lt;install_help&amp;gt;
+
+Warning: You do not have write permission for Perl library directories.
+
+To install modules, you need to configure a local Perl library directory or
+escalate your privileges.  CPAN can help you by bootstrapping the local::lib
+module or by configuring itself to use &amp;#39;sudo&amp;#39; (if available).  You may also
+resolve this problem manually if you need to customize your setup.
+
+What approach do you want?  (Choose &amp;#39;local::lib&amp;#39;, &amp;#39;sudo&amp;#39; or &amp;#39;manual&amp;#39;)
+ [local::lib] manual
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, you will be asked about the installation destination.  Choose
+&lt;strong&gt;manual&lt;/strong&gt; so that we can resolve the problem by ourselves.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="build-a-debian-package-of-a-perl-module"&gt;
+&lt;h3&gt;Build a Debian Package of a Perl Module&lt;/h3&gt;
+&lt;p&gt;Although we can install Perl packages with &lt;code&gt;cpan&lt;/code&gt;, packing it as a Debian
+package makes it easier to uninstall them in the future.  Fortunately, it is
+easy to pack one with &lt;code&gt;dh-make-perl&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;First, we have to install &lt;code&gt;dh-make-perl&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install dh-make-perl
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Second, we can create a Debian package with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ dh-make-perl --build --cpan Crypt::PK::ECC
+&lt;span class="o"&gt;==&lt;/span&gt; dh-make-perl &lt;span class="m"&gt;0&lt;/span&gt;.87 &lt;span class="o"&gt;==&lt;/span&gt;
+&lt;span class="c1"&gt;# ... output skipped ...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Third, we can install the Debian package with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo dpkg -i libcryptx-perl_*.deb
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;OPTIONAL&lt;/em&gt;: You can remove &lt;code&gt;~/.cpan&lt;/code&gt; directory and &lt;code&gt;dh-make-perl&lt;/code&gt;
+package now (if you wish.)  We don't need them anymore.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-sasl-plug-in"&gt;
+&lt;h3&gt;Install SASL Plug-in&lt;/h3&gt;
+&lt;p&gt;Finally, we can install SASL plug-in for Irssi:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c1"&gt;# Create a scripts directory&lt;/span&gt;
+$ mkdir -p ~/.irssi/scripts/autorun
+
+&lt;span class="c1"&gt;# Download the SASL plug-in for Irssi&lt;/span&gt;
+$ wget -O ~/.irssi/scripts/cal_sasl.pl &lt;span class="se"&gt;\&lt;/span&gt;
+    https://raw.githubusercontent.com/atheme/atheme/master/contrib/cap_sasl.pl
+
+&lt;span class="c1"&gt;# Create a soft link so that it will be loaded automatically&lt;/span&gt;
+$ ln -s ../cal_sasl.pl ~/.irssi/scripts/autorun
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="setup-sasl-for-freenode"&gt;
+&lt;h2&gt;Setup SASL for Freenode&lt;/h2&gt;
+&lt;p&gt;If you can connect to &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt;, you can enable SASL simply by doing:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/sasl keygen
+/sasl save
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, unfortunately, if you can't connect to Freenode without SASL, then you
+have to set up the settings by yourself.&lt;/p&gt;
+&lt;p&gt;First, generate a pair of public and private keys with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/sasl keygen [NETWORK-NAME]
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: Please replace &lt;code&gt;[NETWORK-NAME]&lt;/code&gt; with the network name you would
+like to use.  In my example, it is &lt;code&gt;freenode&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;A message will be printed:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;15:29 -!- Irssi: /sasl set freenode &amp;lt;nick&amp;gt; sasl-ecdsa-freenode.key
+          ECDSA-NIST256P-CHALLENGE
+15:29 -!- Irssi: SASL: submit your pubkey to freenode:
+15:29 -!- Irssi: /msg NickServ SET PUBKEY
+          Anp3i5dEPsFsV9zI00b5YN/c8/JNEwwlo7TLdsMdaL7O
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;From this message, we know that:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;The private key is available at &lt;code&gt;$HOME/.irssi/sasl-ecdsa-freenode.key&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;The public key is &lt;code&gt;Anp3i5dEPsFsV9zI00b5YN/c8/JNEwwlo7TLdsMdaL7O&lt;/code&gt;.
+You will need the public key in the upcoming step.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Second, ask &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; to loaded the private key with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/sasl set [NETWORK-NAME] [NICK] [PRIVATE-KEY-PATH] ECDSA-NIST256P-CHALLENGE
+/sasl save
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Note: Please replace &lt;code&gt;[NETWORK-NAME]&lt;/code&gt; with the network name,
+&lt;code&gt;[NICK]&lt;/code&gt; with your nick name on the network, and
+&lt;code&gt;[PRIVATE-KEY-PATH]&lt;/code&gt; with your private key file path printed above.&lt;/p&gt;
+&lt;p&gt;Third, log in &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; via &lt;a class="reference external" href="https://webchat.freenode.net/"&gt;Freenode Web IRC&lt;/a&gt;.  Authenticate for the nick
+name with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/msg NickServ identify [PASSWORD]
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, set the public key with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/msg NickServ SET PUBKEY [KEY]
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Logout from the &lt;a class="reference external" href="https://webchat.freenode.net/"&gt;Freenode Web IRC&lt;/a&gt; with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;/quit
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally, you should be able to connect to &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; with &lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ irssi
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="remarks"&gt;
+&lt;h2&gt;Remarks&lt;/h2&gt;
+&lt;p&gt;Although this might be off-topic, I am connecting to &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; with
+&lt;strong&gt;SSL encryption&lt;/strong&gt; as well.  If you do care about your privacy and/or data
+integrity, it will be a good idea to enable SSL encryption.  This is my
+&lt;a class="reference external" href="https://irssi.org/"&gt;Irssi&lt;/a&gt; server configuration:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;{
+  address = &amp;quot;irc.freenode.net&amp;quot;;
+  chatnet = &amp;quot;freenode&amp;quot;;
+  port = &amp;quot;6697&amp;quot;;
+  password = &amp;quot;[PASSWORD]&amp;quot;;
+  use_ssl = &amp;quot;yes&amp;quot;;
+  ssl_verify = &amp;quot;yes&amp;quot;;
+},
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="references"&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="http://wdtz.org/freenode-sasl-upgrade-irssi-howto.html"&gt;Freenode SASL Upgrade: Irssi HOWTO&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://wiki.debian.org/PerlFAQ"&gt;Debian Perl FAQ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="irc"></category><category term="irssi"></category></entry><entry><title>Python Property Decorator</title><link href="http://logan.tw/posts/2016/03/12/python-property-decorator/" rel="alternate"></link><published>2016-03-12T20:09:00+08:00</published><updated>2016-03-12T20:09:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-12:/posts/2016/03/12/python-property-decorator/</id><summary type="html">&lt;p&gt;Recently, I was tracing the source code of &lt;a class="reference external" href="http://pypy.org"&gt;PyPy&lt;/a&gt;, and a special decorator named
+&lt;code&gt;&amp;#64;property&lt;/code&gt; caught my attention.  It seems to be a mechanism for &lt;a class="reference external" href="http://python.org"&gt;Python&lt;/a&gt;
+programmers to create a getter, a setter, and a deleter for an instance variable.
+For example, how could we intercept the access to &lt;code&gt;a …&lt;/code&gt;&lt;/p&gt;</summary><content type="html">&lt;p&gt;Recently, I was tracing the source code of &lt;a class="reference external" href="http://pypy.org"&gt;PyPy&lt;/a&gt;, and a special decorator named
+&lt;code&gt;&amp;#64;property&lt;/code&gt; caught my attention.  It seems to be a mechanism for &lt;a class="reference external" href="http://python.org"&gt;Python&lt;/a&gt;
+programmers to create a getter, a setter, and a deleter for an instance variable.
+For example, how could we intercept the access to &lt;code&gt;a.f&lt;/code&gt; in the following
+code snippet?&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Temperature&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;122&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here are the instructions:&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Define a &lt;code&gt;Temperature&lt;/code&gt; class.&lt;/li&gt;
+&lt;li&gt;Decorate the &lt;strong&gt;getter&lt;/strong&gt; function &lt;code&gt;f()&lt;/code&gt; (the first one) with the
+&lt;code&gt;&amp;#64;property&lt;/code&gt; decorator.&lt;/li&gt;
+&lt;li&gt;If you would like to intercept the setter, decorate the &lt;strong&gt;setter&lt;/strong&gt;
+function &lt;code&gt;f()&lt;/code&gt; (the second one) with the &lt;code&gt;&amp;#64;f.setter&lt;/code&gt; decorator.&lt;/li&gt;
+&lt;li&gt;If you would like to intercept the deleter, decorate the &lt;strong&gt;deleter&lt;/strong&gt;
+function &lt;code&gt;f()&lt;/code&gt; (the third one) with the &lt;code&gt;&amp;#64;f.deleter&lt;/code&gt; decorator.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;This is the code snippet for our &lt;code&gt;Temperature&lt;/code&gt; class:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Temperature&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@property&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Gets:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@f.setter&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sets:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F / Prev:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@f.deleter&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Dels:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we can test the &lt;code&gt;Temperature&lt;/code&gt; class with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Temperature&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;122&lt;/span&gt;
+&lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="k"&gt;del&lt;/span&gt; &lt;span class="n"&gt;a&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;f&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Here's the output:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;Gets: 5 C
+41.0 F
+Sets: 122 F / Prev: 5 C
+Gets: 50.0 C
+122.0 F
+Dels: 50.0 C
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="enhancement"&gt;
+&lt;h2&gt;Enhancement&lt;/h2&gt;
+&lt;p&gt;Notice that three &lt;code&gt;property&lt;/code&gt; objects will be created by the decorators.
+We can avoid two of them by initializing the &lt;code&gt;property&lt;/code&gt; object at once:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Temperature&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;c&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_get_f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Gets:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_set_f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Sets:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;val&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;F / Prev:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;val&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;9&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;_del_f&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Dels:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;C&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;c&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+
+    &lt;span class="n"&gt;f&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;property&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;_get_f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_set_f&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;_del_f&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This version is functionally-equivalent to the one shown above.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="remarks"&gt;
+&lt;h2&gt;Remarks&lt;/h2&gt;
+&lt;p&gt;The decorator syntax in the &lt;a class="reference external" href="http://python.org"&gt;Python&lt;/a&gt; programming language is a syntax sugar.
+Thus, the following code:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="nd"&gt;@decorator&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;func&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;is equivalent to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;A&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;object&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;func&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+    &lt;span class="n"&gt;func&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;decorator&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;func&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In addition, a decorator function is a function that takes a function and
+returns a decorated function.&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;&amp;#64;property&lt;/code&gt; decorator, which we are talking about in this post, is in
+fact a built-in class which takes 0-4 actual arguments.  Furthermore,
+every instance of &lt;code&gt;property&lt;/code&gt; class contains 3 instance methods:
+&lt;code&gt;getter&lt;/code&gt;, &lt;code&gt;setter&lt;/code&gt;, and &lt;code&gt;deleter&lt;/code&gt; which will return new
+&lt;code&gt;property&lt;/code&gt; instances with the updated accessors.  You can find a
+&lt;a class="reference external" href="https://docs.python.org/3/howto/descriptor.html#properties"&gt;pure Python implementation&lt;/a&gt; from the &lt;a class="reference external" href="https://docs.python.org/3/howto/descriptor.html"&gt;Descriptor HowTo Guide&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="reference"&gt;
+&lt;h2&gt;Reference&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://docs.python.org/3/howto/descriptor.html"&gt;Descriptor HowTo Guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="python"></category></entry><entry><title>Experience with Atom Editor</title><link href="http://logan.tw/posts/2016/03/05/experience-with-atom-editor/" rel="alternate"></link><published>2016-03-05T11:02:00+08:00</published><updated>2016-03-05T11:02:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-05:/posts/2016/03/05/experience-with-atom-editor/</id><summary type="html">&lt;p&gt;I have been a &lt;a class="reference external" href="http://vim.org"&gt;Vim&lt;/a&gt; user for a long time.  However, I found that Vim is not good
+enough for me to write blog with Pelican.  I need a good &lt;a class="reference external" href="http://docutils.sourceforge.net/rst.html"&gt;reStructuredText&lt;/a&gt;
+previewer, but I am not very satisfied with &lt;a class="reference external" href="https://github.com/Rykka/InstantRst"&gt;InstantRst&lt;/a&gt;.  I wish to have a
+two-panel editor that I can …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I have been a &lt;a class="reference external" href="http://vim.org"&gt;Vim&lt;/a&gt; user for a long time.  However, I found that Vim is not good
+enough for me to write blog with Pelican.  I need a good &lt;a class="reference external" href="http://docutils.sourceforge.net/rst.html"&gt;reStructuredText&lt;/a&gt;
+previewer, but I am not very satisfied with &lt;a class="reference external" href="https://github.com/Rykka/InstantRst"&gt;InstantRst&lt;/a&gt;.  I wish to have a
+two-panel editor that I can edit the document and see the preview side-by-side.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://atom.io"&gt;Atom&lt;/a&gt;, an open-source editor developed by GitHub, comes into my mind.&lt;/p&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ wget https://atom.io/download/deb -O atom.deb
+$ sudo dpkg -i atom.deb
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-packages"&gt;
+&lt;h2&gt;Install Packages&lt;/h2&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ apm install advanced-open-file git-plus highlight-selected &lt;span class="se"&gt;\&lt;/span&gt;
+              language-restructuredtext rst-preview-pandoc
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Package descriptions:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;advanced-open-file&lt;/code&gt; makes it easy to open or create files.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;git-plus&lt;/code&gt; allows us to commit changes to Git repositories.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;highlight-selected&lt;/code&gt; will highlight the double-clicked words.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;language-restructuredtext&lt;/code&gt; enables the syntax highlight for
+reStructuredText.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;rst-preview-pandoc&lt;/code&gt; provides preview panels for reStructuredText.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="keyboard-shortcuts"&gt;
+&lt;h2&gt;Keyboard Shortcuts&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;Open Files&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-T&lt;/code&gt; to open files with fuzzy finder.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-Alt-O&lt;/code&gt; to open the &lt;strong&gt;advanced open file&lt;/strong&gt; dialog.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Search&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-F3&lt;/code&gt; to highlight the occurrence of word under the cursor.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-F&lt;/code&gt; to search in the current buffer.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-Shift-F&lt;/code&gt; to search in the project.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Edit&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-Alt-Q&lt;/code&gt; to re-flow or wrap the selected text.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-[&lt;/code&gt; to indent selected lines.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-]&lt;/code&gt; to outdent selected lines.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Git Commands&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Press &lt;code&gt;Shift-Ctrl-A&lt;/code&gt; (and &lt;code&gt;Right&lt;/code&gt;) to add current file
+(staging.)&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Shift-Ctrl-X&lt;/code&gt; to commit staged changes.&lt;/li&gt;
+&lt;li&gt;Press &lt;code&gt;Shift-Ctrl-H&lt;/code&gt; to show all commands supported by &lt;strong&gt;Git-Plus&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;reStructuredText&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Press &lt;code&gt;Ctrl-Shift-E&lt;/code&gt; to open the preview panel for reStructuredText.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="atom"></category></entry><entry><title>Colon Built-in in Bash</title><link href="http://logan.tw/posts/2016/02/27/colon-built-in-in-bash/" rel="alternate"></link><published>2016-02-27T15:17:00+08:00</published><updated>2016-02-27T15:17:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-02-27:/posts/2016/02/27/colon-built-in-in-bash/</id><summary type="html">&lt;p&gt;I came across a weird line in a shell script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;: &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;parameter&lt;/span&gt;&lt;span class="p"&gt;:=word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is so weird that I don't even know how to search for further information.
+Fortunately, I found a &lt;a class="reference external" href="http://stackoverflow.com/questions/3224878/"&gt;post&lt;/a&gt; after searching &lt;strong&gt;bash colon&lt;/strong&gt;.  It is a
+built-in utility which simply exits with 0.  In the other words …&lt;/p&gt;</summary><content type="html">&lt;p&gt;I came across a weird line in a shell script:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;: &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;parameter&lt;/span&gt;&lt;span class="p"&gt;:=word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is so weird that I don't even know how to search for further information.
+Fortunately, I found a &lt;a class="reference external" href="http://stackoverflow.com/questions/3224878/"&gt;post&lt;/a&gt; after searching &lt;strong&gt;bash colon&lt;/strong&gt;.  It is a
+built-in utility which simply exits with 0.  In the other words, it is &lt;em&gt;almost&lt;/em&gt;
+equivalent to the &lt;code&gt;true&lt;/code&gt; command.  For example, we can write a spin loop
+with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;while&lt;/span&gt; :&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    date -R
+    sleep &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is &lt;em&gt;almost&lt;/em&gt; equivalent to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;while&lt;/span&gt; true&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt;
+    date -R
+    sleep &lt;span class="m"&gt;1&lt;/span&gt;
+&lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we know that the weird line is &lt;em&gt;almost&lt;/em&gt; equivalent to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;true&lt;/span&gt; &lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;parameter&lt;/span&gt;&lt;span class="p"&gt;:=word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;But, what does this mean?  Isn't this a no-op?&lt;/p&gt;
+&lt;p&gt;To answer the question, we have to take a look on the &lt;strong&gt;parameter expansion&lt;/strong&gt;.
+In this line, there is a parameter expansion &lt;code&gt;${parameter:=word}&lt;/code&gt;.  It is
+slightly different from the normal parameter expansion &lt;code&gt;${parameter}&lt;/code&gt;.
+It comes with an extra modifier &lt;code&gt;:=&lt;/code&gt;.  The extra modifier means that
+shell script interpreters should assign &lt;code&gt;word&lt;/code&gt; to &lt;code&gt;parameter&lt;/code&gt; if
+&lt;code&gt;parameter&lt;/code&gt; was unset or null.  In summary, the line at the beginning of
+this post is equivalent to:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="o"&gt;[&lt;/span&gt; -z &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;parameter&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt; &lt;span class="o"&gt;]&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;then&lt;/span&gt;
+    &lt;span class="nv"&gt;parameter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;word&amp;quot;&lt;/span&gt;
+&lt;span class="k"&gt;fi&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="section" id="more-on-colon-built-in"&gt;
+&lt;h2&gt;More on Colon Built-in&lt;/h2&gt;
+&lt;p&gt;Previously, we mentioned that the colon built-in is &lt;em&gt;almost&lt;/em&gt; equivalent to the
+&lt;code&gt;true&lt;/code&gt; command.  But, what are differences between them?&lt;/p&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;It will be slightly faster because shell script interpreters don't have to
+spawn a new process for the built-in utility.&lt;/li&gt;
+&lt;li&gt;It can't be a command for &lt;code&gt;exec&lt;/code&gt; built-in.  In other words,
+&lt;code&gt;exec :&lt;/code&gt; will fail, but &lt;code&gt;exec true&lt;/code&gt; will succeed.&lt;/li&gt;
+&lt;li&gt;There is a subtle difference when environment variables are passed to the
+colon built-in utility.  However, this is not portable between different
+shell script interpreters.  Check &lt;a class="reference external" href="http://stackoverflow.com/questions/3224878/"&gt;this post&lt;/a&gt; for more details.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;IMO, it will be better to use colon built-in whenever possible.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="more-on-parameter-expansion"&gt;
+&lt;h2&gt;More on Parameter Expansion&lt;/h2&gt;
+&lt;p&gt;In addition to the &lt;code&gt;:=&lt;/code&gt; parameter expansion modifier we have mentioned
+earlier, there are four modifiers that we can choose: &lt;code&gt;-&lt;/code&gt;, &lt;code&gt;=&lt;/code&gt;,
+&lt;code&gt;?&lt;/code&gt;, and &lt;code&gt;+&lt;/code&gt;.  Their meanings are:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;code&gt;-&lt;/code&gt;: Use the word as the default value if the parameter is not set.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;=&lt;/code&gt;: Use the word and assign the parameter if the parameter is not set.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;?&lt;/code&gt;: Print error and exit if the parameter is not set.&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;+&lt;/code&gt;: Use the word if the parameter is set.  This is the opposite of
+&lt;code&gt;-&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;To make it clear, this is a table of the behaviors:&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="33%" /&gt;
+&lt;col width="32%" /&gt;
+&lt;col width="36%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Modifier&lt;/th&gt;
+&lt;th class="head"&gt;Parameter Set&lt;/th&gt;
+&lt;th class="head"&gt;Parameter Unset&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;${parameter-word}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;parameter&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;word&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;${parameter=word}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;parameter&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;Assign &lt;em&gt;word&lt;/em&gt; to
+&lt;em&gt;parameter&lt;/em&gt; and substitute
+&lt;em&gt;word&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;${parameter?msg}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;parameter&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;Print error and exit&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;${parameter+word}&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;word&lt;/em&gt;&lt;/td&gt;
+&lt;td&gt;Substitute &lt;em&gt;parameter&lt;/em&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;Besides, the &lt;code&gt;:&lt;/code&gt; (colon) qualifier brings another dimension to these
+qualifiers.  We can add the colon before the aforementioned modifiers.  The
+result will be slightly different when the parameter is set to null (empty
+string.)&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="15%" /&gt;
+&lt;col width="39%" /&gt;
+&lt;col width="46%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;&amp;nbsp;&lt;/th&gt;
+&lt;th class="head"&gt;&amp;nbsp;&lt;/th&gt;
+&lt;th class="head"&gt;&amp;nbsp;&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;w/o colon&lt;/td&gt;
+&lt;td&gt;Treat as parameter set&lt;/td&gt;
+&lt;td&gt;Treat as parameter set&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;&lt;td&gt;w/ colon&lt;/td&gt;
+&lt;td&gt;Treat as parameter set&lt;/td&gt;
+&lt;td&gt;Treat as parameter &lt;strong&gt;unset&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nb"&gt;unset&lt;/span&gt; x
+&lt;span class="nv"&gt;y&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;
+&lt;span class="nv"&gt;z&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;123&lt;/span&gt;
+&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;x:\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;x&lt;/span&gt;&lt;span class="p"&gt;-word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;x&lt;/span&gt;&lt;span class="k"&gt;:-&lt;/span&gt;&lt;span class="nv"&gt;word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;&amp;quot;&lt;/span&gt;
+&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;y:\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;y&lt;/span&gt;&lt;span class="p"&gt;-word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;y&lt;/span&gt;&lt;span class="k"&gt;:-&lt;/span&gt;&lt;span class="nv"&gt;word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;&amp;quot;&lt;/span&gt;
+&lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;z:\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;z&lt;/span&gt;&lt;span class="p"&gt;-word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;\t&amp;#39;&lt;/span&gt;&lt;span class="si"&gt;${&lt;/span&gt;&lt;span class="nv"&gt;z&lt;/span&gt;&lt;span class="k"&gt;:-&lt;/span&gt;&lt;span class="nv"&gt;word&lt;/span&gt;&lt;span class="si"&gt;}&lt;/span&gt;&lt;span class="s2"&gt;&amp;#39;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This shell script will print:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;x:      &amp;#39;word&amp;#39;  &amp;#39;word&amp;#39;
+y:      &amp;#39;&amp;#39;      &amp;#39;word&amp;#39;
+z:      &amp;#39;123&amp;#39;   &amp;#39;123&amp;#39;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Although we have gone through many parameter expansion modifiers, IMO,
+&lt;code&gt;${parameter:-word}&lt;/code&gt; and &lt;code&gt;${parameter:=word}&lt;/code&gt; are usually what
+you need.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="references"&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Stack Overflow, &lt;a class="reference external" href="http://stackoverflow.com/questions/3224878/"&gt;What is the purpose of the : (colon) GNU Bash builtin?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;TLDP, &lt;a class="reference external" href="http://www.tldp.org/LDP/abs/html/index.html"&gt;Advanced Bash-Scripting Guide&lt;/a&gt;, &lt;a class="reference external" href="http://www.tldp.org/LDP/abs/html/parameter-substitution.html"&gt;10.2 Parameter Substitution&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;POSIX, The Open Group Base Specifications Issue 7, Shell &amp;amp; Utilities,
+&lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html"&gt;Shell Command Language&lt;/a&gt;, &lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_06_02"&gt;2.6.2 Parameter Expansion&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;POSIX, The Open Group Base Specifications Issue 7, Shell &amp;amp; Utilities,
+&lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html"&gt;Shell Command Language&lt;/a&gt;, &lt;a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#colon"&gt;14 Special Builtin Utilities: Colon&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="bash"></category><category term="shell"></category></entry><entry><title>JavaScript Object.defineProperty()</title><link href="http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/" rel="alternate"></link><published>2016-01-30T21:01:00+08:00</published><updated>2016-01-30T21:01:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-01-30:/posts/2016/01/30/javascript-objectdefineproperty/</id><summary type="html">&lt;p&gt;In Javascript, we can add a property to an object with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;property&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, sometimes we would like to have fine-grained control over properties.

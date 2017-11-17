@@ -35,6 +35,74 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2015/12/19/javascript-prototype-and-object-oriented/" rel="bookmark" title="Permalink to JavaScript Prototype and Object Oriented">JavaScript Prototype and Object Oriented</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-12-19T23:21:00+08:00">Sat 19 December 2015</time>
+			</footer>
+			<div class="entry-content"><p>Javascript is a prototype-based object-oriented programming language.  Unlike
+the conventional class-based object-oriented programming languages (e.g. C++ or
+Java), which ask programmers to write a class and then instantiate several
+similar objects from the class, Javascript adopts a different approach.  In the
+world of Javascript, we have to craft a …</p></div>
+                        <p><a class="normal-btn" href="/posts/2015/12/19/javascript-prototype-and-object-oriented/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2015/12/12/read-lines-from-stdin-in-nodejs/" rel="bookmark" title="Permalink to Read Lines from stdin in Node.js">Read Lines from stdin in Node.js</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-12-12T22:13:00+08:00">Sat 12 December 2015</time>
+			</footer>
+			<div class="entry-content"><p>It is easy to write a hello world program in Node.js:</p>
+<div class="highlight"><pre><span></span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+</pre></div>
+<p>However, due to the asynchronous nature of Javascript, reading inputs and
+writing outputs are less straight-forward.  We have to pass the callback
+functions or register event listeners.</p>
+<div class="section" id="first-attempt">
+<h2>First Attempt</h2>
+<p>For example, to read some …</p></div></div>
+                        <p><a class="normal-btn" href="/posts/2015/12/12/read-lines-from-stdin-in-nodejs/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2015/12/05/browserify/" rel="bookmark" title="Permalink to Browserify">Browserify</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-12-05T19:30:00+08:00">Sat 05 December 2015</time>
+			</footer>
+			<div class="entry-content"><p>It is common to organize the code in several modules when we are developing
+Javascript applications.  In <a class="reference external" href="https://nodejs.org">Node.js</a> ecosystem, we can import a module with
+the <code>require()</code> function and export symbols by adding them to the
+<code>module.exports</code> object.  On the other hand, ES2015 adds <code>import</code>
+statements and <code>export …</code></p></div>
+                        <p><a class="normal-btn" href="/posts/2015/12/05/browserify/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2015/11/29/run-es2015-with-babel-6/" rel="bookmark" title="Permalink to Run ES2015 with Babel 6">Run ES2015 with Babel 6</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2015-11-29T18:45:00+08:00">Sun 29 November 2015</time>
+			</footer>
+			<div class="entry-content"><p><a class="reference external" href="http://www.ecma-international.org/ecma-262/6.0/">ECMAScript 2015</a> (also known as ES2015 or informally ES6) is the latest
+standard for JavaScript.  It has been released for a while.  However, <a class="reference external" href="https://developers.google.com/v8/">V8</a>, the
+JavaScript engine for <a class="reference external" href="https://nodejs.org">Node.js</a>, has only limited <a class="reference external" href="http://www.ecma-international.org/ecma-262/6.0/">ES2015</a> support.  As of
+writing, according to <a class="reference external" href="https://kangax.github.io/compat-table/es6/">ECMAScript 6 compatibility table</a>, the feature coverage
+of each Javascript …</p></div>
+                        <p><a class="normal-btn" href="/posts/2015/11/29/run-es2015-with-babel-6/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/11/16/bash-signal-handler-and-traps/" rel="bookmark" title="Permalink to Bash Signal Handler and Traps">Bash Signal Handler and Traps</a></h1>
 			</header>
 			<footer class="post-info">
@@ -122,80 +190,6 @@ definitions of the classes, functions, and variables.  According to my
 experiences, <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> can significantly reduce the time to browse the source
 code.  In this post, I would like to give a brief introduction to <a class="reference external" href="http://ctags.sourceforge.net/">ctags</a> and …</p></div>
                         <p><a class="normal-btn" href="/posts/2015/03/10/trace-source-code-with-vim-and-ctags/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2015/02/28/git-ignore-file/" rel="bookmark" title="Permalink to Git Ignore File">Git Ignore File</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2015-02-28T14:19:00+08:00">Sat 28 February 2015</time>
-			</footer>
-			<div class="entry-content"><p>In some circumstances, we would like to ignore the files (or directories) under
-the Git repository base directory.  How could we do this?  For example, assume
-that we have a Git repository with following files:</p>
-<div class="highlight"><pre><span></span>out/bin/conv
-preprocessed/out/gen-case1.h
-preprocessed/out/gen-case2.h
-preprocessed/input.txt
-conv …</pre></div></div>
-                        <p><a class="normal-btn" href="/posts/2015/02/28/git-ignore-file/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2015/01/31/c11-unique-pointer/" rel="bookmark" title="Permalink to C++11 Unique Pointer">C++11 Unique Pointer</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2015-01-31T23:04:00+08:00">Sat 31 January 2015</time>
-			</footer>
-			<div class="entry-content"><p>C++11 introduced three new <a class="reference external" href="http://en.cppreference.com/w/cpp/memory">smart pointer class templates</a>:
-<code>std::unique_ptr</code>, <code>std::shared_ptr</code>, and <code>std::weak_ptr</code>.
-These smart pointer class templates are designed to replace the old
-<a class="reference external" href="http://en.cppreference.com/w/cpp/memory/auto_ptr">std::auto_ptr</a> smart pointer, which is known to have some defect and
-deprecated now.  In this post, I would like to give a …</p></div>
-                        <p><a class="normal-btn" href="/posts/2015/01/31/c11-unique-pointer/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2015/01/20/c-stdmultimap-and-equal-range/" rel="bookmark" title="Permalink to C++ std::multimap and Equal Range">C++ std::multimap and Equal Range</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2015-01-20T23:17:00+08:00">Tue 20 January 2015</time>
-			</footer>
-			<div class="entry-content"><p>Today I have encountered a problem: Given that there are multiple equivalent
-keys in an instance of <code>std::multimap</code>, how could we list all of the
-corresponding values?  For example:</p>
-<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;map&gt;</span><span class="cp"></span>
-<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
-
-<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
-  <span class="n">std</span><span class="o">::</span><span class="n">multimap</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="o">&gt;</span> <span class="n">xs</span><span class="p">;</span>
-  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">make_pair</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">));</span>
-  <span class="n">xs</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">std …</span></pre></div></div>
-                        <p><a class="normal-btn" href="/posts/2015/01/20/c-stdmultimap-and-equal-range/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2015/01/01/python-package-manager-pip/" rel="bookmark" title="Permalink to Python Package Manager: PIP">Python Package Manager: PIP</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2015-01-01T00:14:00+08:00">Thu 01 January 2015</time>
-			</footer>
-			<div class="entry-content"><p>The Python package manager <a class="reference external" href="https://pip.pypa.io">pip</a> is a tool to manage the installed site
-packages.  With <a class="reference external" href="https://pip.pypa.io">pip</a>, we don't have to be worried about the package
-dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">pip</a> will download the required packages from
-<a class="reference external" href="https://pypi.python.org">Python Package Index</a> automatically.</p>
-<div class="section" id="install-packages">
-<h2>Install Packages</h2>
-<p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index …</a></p></div></div>
-                        <p><a class="normal-btn" href="/posts/2015/01/01/python-package-manager-pip/">More</a></p>
 		</article>
 	</li>
 </ol>
