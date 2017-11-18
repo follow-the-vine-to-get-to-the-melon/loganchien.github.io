@@ -51,6 +51,34 @@ built-in utility which simply exits with 0.  In the other words …</p></div>
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2016/02/20/open-and-close-files-in-bash/" rel="bookmark" title="Permalink to Open and Close Files in Bash">Open and Close Files in Bash</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2016-02-20T16:05:00+08:00">Sat 20 February 2016</time>
+			</footer>
+			<div class="entry-content"><p>In a shell script, file descriptor 0 stands for <em>stdin</em>, file descriptor 1
+stands for <em>stdout</em>, and file descriptor 2 stands for <em>stderr</em>.  In addition,
+programmers can <strong>open</strong>, <strong>close</strong>, or <strong>duplicate</strong> file descriptors with the
+<code>exec</code> built-in command and the I/O redirection operator:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Syntax</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><code>exec $fd&lt; &quot;${filepath}&quot;</code></td>
+<td>Open …</td></tr></tbody></table></div>
+                        <p><a class="normal-btn" href="/posts/2016/02/20/open-and-close-files-in-bash/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/11/16/bash-signal-handler-and-traps/" rel="bookmark" title="Permalink to Bash Signal Handler and Traps">Bash Signal Handler and Traps</a></h1>
 			</header>
 			<footer class="post-info">

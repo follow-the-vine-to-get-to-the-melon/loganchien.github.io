@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Open and Close Files in Bash | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="bash" />
+	<meta name="tags" content="shell" />
+
+	<meta property="og:title" content="Open and Close Files in Bash" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/02/20/open-and-close-files-in-bash/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/02/20/open-and-close-files-in-bash/" rel="bookmark" title="Permalink to Open and Close Files in Bash">Open and Close Files in Bash</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-02-20T16:05:00+08:00">
+		Sat 20 February 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/bash/">bash</a>
+		<a class="tags" href="/tag/shell/">shell</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>In a shell script, file descriptor 0 stands for <em>stdin</em>, file descriptor 1
+stands for <em>stdout</em>, and file descriptor 2 stands for <em>stderr</em>.  In addition,
+programmers can <strong>open</strong>, <strong>close</strong>, or <strong>duplicate</strong> file descriptors with the
+<code>exec</code> built-in command and the I/O redirection operator:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="39%" />
+<col width="61%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Syntax</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td><code>exec $fd&lt; &quot;${filepath}&quot;</code></td>
+<td>Open an <em>input</em> file at the given file
+descriptor <code>$fd</code></td>
+</tr>
+<tr><td><code>exec $fd&lt;&amp;-</code></td>
+<td>Close the <em>input</em> file descriptor <code>$fd</code></td>
+</tr>
+<tr><td><code>exec $fd&gt; &quot;${filepath}&quot;</code></td>
+<td>Open an <em>output</em> file at the given file
+descriptor <code>$fd</code></td>
+</tr>
+<tr><td><code>exec $fd&gt;&amp;-</code></td>
+<td>Close the <em>output</em> file descriptor <code>$fd</code></td>
+</tr>
+<tr><td><code>exec $dst&gt;&amp;src</code></td>
+<td>Duplicate the file descriptor from <code>$src</code>
+to <code>$dst</code>.  Both <code>$dst</code> and
+<code>$src</code> will refer to the file which was
+referred by <code>$src</code>.</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="example-1-write-some-message-to-another-output-file">
+<h2>Example 1: Write some message to another output file</h2>
+<p>First, open <code>output_file.txt</code> at file descriptor 3:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">3</span>&gt; output_file.txt
+</pre></div>
+<p>Second, redirect <em>the stdout of the command</em> with <code>1&gt;&amp;3</code> to print some
+messages:</p>
+<div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">3</span> <span class="s2">&quot;some messages&quot;</span>
+</pre></div>
+<p>Third, close file descriptor 3 with:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">3</span>&gt;<span class="p">&amp;</span>-
+</pre></div>
+</div>
+<div class="section" id="example-2-redirect-stdout-stderr-temporarily">
+<h2>Example 2: Redirect stdout/stderr temporarily</h2>
+<p>Under some circumstances, one would like to redirect the <em>stdout</em> or <em>stderr</em> of
+the subsequent commands.  The file descriptor duplication command will be handy
+in this case.</p>
+<p>First, backup <em>stdout</em> and <em>stderr</em> with file descriptor duplication command.</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">3</span>&gt;<span class="p">&amp;</span><span class="m">1</span>  <span class="c1"># Duplicate stdout to file descriptor 3</span>
+<span class="nb">exec</span> <span class="m">4</span>&gt;<span class="p">&amp;</span><span class="m">2</span>  <span class="c1"># Duplicate stderr to file descriptor 4</span>
+</pre></div>
+<p>Second, open files for redirection:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">1</span>&gt; stdout.log
+<span class="nb">exec</span> <span class="m">2</span>&gt; stderr.log
+</pre></div>
+<p>Third, run the commands as usual:</p>
+<div class="highlight"><pre><span></span><span class="nb">echo</span> <span class="s2">&quot;some output to stdout&quot;</span>
+<span class="nb">echo</span> <span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">2</span> <span class="s2">&quot;some output to stderr&quot;</span>
+</pre></div>
+<p>Fourth, restore the file descriptors if the shell script still needs them:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">1</span>&gt;<span class="p">&amp;</span><span class="m">3</span>  <span class="c1"># Duplicate file descriptor 3 to stdout</span>
+<span class="nb">exec</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">4</span>  <span class="c1"># Duplicate file descriptor 4 to stderr</span>
+<span class="nb">exec</span> <span class="m">3</span>&gt;<span class="p">&amp;</span>-  <span class="c1"># Close file descriptor 3 (free the resources)</span>
+<span class="nb">exec</span> <span class="m">4</span>&gt;<span class="p">&amp;</span>-  <span class="c1"># Close file descriptor 4 (free the resources)</span>
+</pre></div>
+<p>In this step, first two lines copy the stashed file descriptors back to stdout
+and stderr.  Last two lines close the file descriptors.</p>
+<p>Note: Closing a file descriptor does not necessary close a file.  If two file
+descriptors refer to the same file, then the file will not be closed until both
+file descriptors are closed.  In the fourth step, it is important to close file
+descriptor 3 and 4 to avoid resource leaks.</p>
+</div>
+<div class="section" id="example-3-read-lines-from-a-file">
+<h2>Example 3: Read lines from a file</h2>
+<p>First, open an input file with <code>exec</code>:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">3</span>&lt; input_file.txt
+</pre></div>
+<p>Second, read the file with I/O redirection <code>0&lt;&amp;3</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> <span class="nb">read</span> <span class="m">0</span>&lt;<span class="p">&amp;</span><span class="m">3</span> line<span class="p">;</span> <span class="k">do</span>
+  <span class="nb">echo</span> <span class="s2">&quot;GOT: </span><span class="si">${</span><span class="nv">line</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">done</span>
+</pre></div>
+<p>Third, close the file with:</p>
+<div class="highlight"><pre><span></span><span class="nb">exec</span> <span class="m">3</span>&lt;<span class="p">&amp;</span>-
+</pre></div>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li>TLDP, <a class="reference external" href="http://www.tldp.org/LDP/abs/html/index.html">Advanced Bash-Scripting Guide</a>, <a class="reference external" href="http://www.tldp.org/LDP/abs/html/io-redirection.html">Chapter 20. I/O Redirection</a></li>
+<li>The Open Group Base Specifications Issue 7, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html">Shell Command Language</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

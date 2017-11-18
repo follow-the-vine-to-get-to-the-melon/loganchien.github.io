@@ -13,7 +13,23 @@ two-panel editor that I can …&lt;/p&gt;</description><dc:creator xmlns:dc="htt
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;It is so weird that I don't even know how to search for further information.
 Fortunately, I found a &lt;a class="reference external" href="http://stackoverflow.com/questions/3224878/"&gt;post&lt;/a&gt; after searching &lt;strong&gt;bash colon&lt;/strong&gt;.  It is a
-built-in utility which simply exits with 0.  In the other words …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 27 Feb 2016 15:17:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2016-02-27:/posts/2016/02/27/colon-built-in-in-bash/</guid><category>bash</category><category>shell</category></item><item><title>JavaScript Object.defineProperty()</title><link>http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/</link><description>&lt;p&gt;In Javascript, we can add a property to an object with:&lt;/p&gt;
+built-in utility which simply exits with 0.  In the other words …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 27 Feb 2016 15:17:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2016-02-27:/posts/2016/02/27/colon-built-in-in-bash/</guid><category>bash</category><category>shell</category></item><item><title>Open and Close Files in Bash</title><link>http://logan.tw/posts/2016/02/20/open-and-close-files-in-bash/</link><description>&lt;p&gt;In a shell script, file descriptor 0 stands for &lt;em&gt;stdin&lt;/em&gt;, file descriptor 1
+stands for &lt;em&gt;stdout&lt;/em&gt;, and file descriptor 2 stands for &lt;em&gt;stderr&lt;/em&gt;.  In addition,
+programmers can &lt;strong&gt;open&lt;/strong&gt;, &lt;strong&gt;close&lt;/strong&gt;, or &lt;strong&gt;duplicate&lt;/strong&gt; file descriptors with the
+&lt;code&gt;exec&lt;/code&gt; built-in command and the I/O redirection operator:&lt;/p&gt;
+&lt;table border="1" class="docutils"&gt;
+&lt;colgroup&gt;
+&lt;col width="39%" /&gt;
+&lt;col width="61%" /&gt;
+&lt;/colgroup&gt;
+&lt;thead valign="bottom"&gt;
+&lt;tr&gt;&lt;th class="head"&gt;Syntax&lt;/th&gt;
+&lt;th class="head"&gt;Description&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td&gt;&lt;code&gt;exec $fd&amp;lt; &amp;quot;${filepath}&amp;quot;&lt;/code&gt;&lt;/td&gt;
+&lt;td&gt;Open …&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 20 Feb 2016 16:05:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2016-02-20:/posts/2016/02/20/open-and-close-files-in-bash/</guid><category>bash</category><category>shell</category></item><item><title>JavaScript Object.defineProperty()</title><link>http://logan.tw/posts/2016/01/30/javascript-objectdefineproperty/</link><description>&lt;p&gt;In Javascript, we can add a property to an object with:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nx"&gt;obj&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;property&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;However, sometimes we would like to have fine-grained control over properties.
