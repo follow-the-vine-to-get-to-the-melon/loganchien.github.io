@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Full-text Search with Django and PostgreSQL | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/drafts.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="django" />
+	<meta name="tags" content="sql" />
+	<meta name="tags" content="postgresql" />
+	<meta name="tags" content="python" />
+	<meta name="tags" content="drafts" />
+
+	<meta property="og:title" content="Full-text Search with Django and PostgreSQL" />
+	<meta property="og:url" content="http://logan.tw/posts/2017/12/30/full-text-search-with-django-and-postgresql/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2017/12/30/full-text-search-with-django-and-postgresql/" rel="bookmark" title="Permalink to Full-text Search with Django and PostgreSQL">Full-text Search with Django and PostgreSQL</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2017-12-30T19:50:00+08:00">
+		Sat 30 December 2017
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/django/">django</a>
+		<a class="tags" href="/tag/sql/">sql</a>
+		<a class="tags" href="/tag/postgresql/">postgresql</a>
+		<a class="tags" href="/tag/python/">python</a>
+		<a class="tags" href="/tag/drafts/">drafts</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Django has several PostgreSQL database functions to support full-text search.
+If you are using PostgreSQL as the database backend, then it is easy to add
+full-text search to your Django app.</p>
+<p>In this post, I would like to build an demo app with full-text search.  This
+post covers several PostgreSQL-specific features, such as <a class="reference internal" href="#searchvectorfield-and-ginindex">SearchVectorField</a>,
+<a class="reference internal" href="#update-search-vectors">SearchVector</a>, <a class="reference internal" href="#full-text-search-queries">SearchQuery</a>, and <a class="reference internal" href="#rank-and-order">SearchRank</a>.  In addition, this post uses
+PostgreSQL triggers to <a class="reference internal" href="#update-search-vectors-with-a-trigger">update SearchVectorField automatically</a> and explains
+how to <a class="reference internal" href="#manage-triggers-with-django-migrations">manage triggers with Django migrations</a>.</p>
+<p>This post is organized as follows:</p>
+<ol class="arabic simple">
+<li><a class="reference internal" href="#setup-environment">Setup environment</a></li>
+<li><a class="reference internal" href="#searchvectorfield-and-ginindex">SearchVectorField and GinIndex</a></li>
+<li><a class="reference internal" href="#update-search-vectors">Update search vectors</a></li>
+<li><a class="reference internal" href="#full-text-search-queries">Full-text search queries</a></li>
+<li><a class="reference internal" href="#update-search-vectors-with-a-trigger">Update search vectors with a trigger</a></li>
+<li><a class="reference internal" href="#rank-and-order">Rank and order</a></li>
+<li><a class="reference internal" href="#add-weights-to-search-vectors">Add weights to search vectors</a></li>
+<li><a class="reference internal" href="#derive-search-vectors-from-related-objects">Derive search vectors from related objects</a></li>
+<li><a class="reference internal" href="#epilogue">Epilogue</a></li>
+</ol>
+<p>The source code of the demo app is in the GitHub repository
+<a class="reference external" href="https://github.com/loganchien/django-fts-demo">loganchien/django-fts-demo</a>.</p>
+<div class="section" id="setup-environment">
+<h2>Setup Environment</h2>
+<p>To build the demo app, PostgreSQL and Django are required.  This section
+includes the instructions to set up the environment.</p>
+<div class="section" id="postgresql">
+<h3>PostgreSQL</h3>
+<p>Install PostgreSQL on Ubuntu with:</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install postgresql
+</pre></div>
+<p>To create users and databases, enter <em>PostgreSQL interactive shell</em> with:</p>
+<div class="highlight"><pre><span></span>$ sudo -u postgres psql
+</pre></div>
+<p>In the PostgreSQL interactive shell, create a user with:</p>
+<div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span> <span class="k">CREATE</span> <span class="k">USER</span> <span class="p">[</span><span class="n">username</span><span class="p">]</span> <span class="n">PASSWORD</span> <span class="s1">&#39;[password]&#39;</span> <span class="k">CREATEDB</span><span class="p">;</span>
+</pre></div>
+<p>And then, create a database with:</p>
+<div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span> <span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="p">[</span><span class="n">db_name</span><span class="p">]</span> <span class="k">OWNER</span> <span class="p">[</span><span class="n">username</span><span class="p">]</span> <span class="k">ENCODING</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">;</span>
+</pre></div>
+<p>Leave the interactive shell with <code>\q</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">postgres</span><span class="o">=#</span> <span class="err">\</span><span class="n">q</span>
+</pre></div>
+<p>Test whether it works or not:</p>
+<div class="highlight"><pre><span></span>$ psql -h localhost -U <span class="o">[</span>username<span class="o">]</span> <span class="o">[</span>db_name<span class="o">]</span>
+Password <span class="k">for</span> user <span class="o">[</span>username<span class="o">]</span>: <span class="o">[</span>password<span class="o">]</span>
+<span class="nv">postgres</span><span class="o">=</span><span class="c1"># \q</span>
+</pre></div>
+</div>
+<div class="section" id="django">
+<h3>Django</h3>
+<p>Create and enter a Python virtual environment with:</p>
+<div class="highlight"><pre><span></span>$ mkvirtualenv fts_demo -p /usr/bin/python3
+</pre></div>
+<p>Install <code>django</code> and <code>psycopg2</code> package with <code>pip install</code>:</p>
+<div class="highlight"><pre><span></span>$ pip install <span class="nv">django</span><span class="o">==</span><span class="m">2</span>.0 <span class="nv">psycopg2</span><span class="o">==</span><span class="m">2</span>.7.3.2
+</pre></div>
+<p>Create a project named <code>fts_demo</code> and an app named <code>fts</code>:</p>
+<div class="highlight"><pre><span></span>$ django-admin startproject fts_demo
+$ <span class="nb">cd</span> fts_demo
+$ ./manage.py startapp fts
+</pre></div>
+<p>Open <code>fts_demo/settings.py</code> and edit the settings:</p>
+<div class="highlight"><pre><span></span>$ vim fts_demo/settings.py
+</pre></div>
+<p>Add <code>fts</code> to the end of <code>INSTALLED_APPS</code>:</p>
+<div class="highlight"><pre><span></span><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;django.contrib.admin&#39;</span><span class="p">,</span>
+    <span class="c1"># ...</span>
+    <span class="s1">&#39;django.contrib.staticfiles&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;fts&#39;</span><span class="p">,</span>  <span class="c1"># ADDED</span>
+<span class="p">]</span>
+</pre></div>
+<p>Change the default database settings in the <code>DATABASES</code> variable:</p>
+<div class="highlight"><pre><span></span><span class="nv">DATABASES</span> <span class="o">=</span> <span class="o">{</span>
+    <span class="s1">&#39;default&#39;</span>: <span class="o">{</span>
+        <span class="s1">&#39;ENGINE&#39;</span>: <span class="s1">&#39;django.db.backends.postgresql&#39;</span>,
+        <span class="s1">&#39;NAME&#39;</span>: <span class="s1">&#39;[db_name]&#39;</span>,
+        <span class="s1">&#39;USER&#39;</span>: <span class="s1">&#39;[username]&#39;</span>,
+        <span class="s1">&#39;PASSWORD&#39;</span>: <span class="s1">&#39;[password]&#39;</span>,
+        <span class="s1">&#39;HOST&#39;</span>: <span class="s1">&#39;127.0.0.1&#39;</span>,
+        <span class="s1">&#39;PORT&#39;</span>: <span class="s1">&#39;5432&#39;</span>,
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="searchvectorfield-and-ginindex">
+<h2>SearchVectorField and GinIndex</h2>
+<p>To perform full-text searches efficiently, a database has to preprocess the data
+and summerize them as <strong>search vectors</strong>.  Different search techniques may have
+different search vector structures.  In PostgreSQL, a search vector consists of
+several vocabularies and their locations.  For example, in the table below, the
+inputs on the left column are converted to search vectors on the right column:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="3%" />
+<col width="43%" />
+<col width="53%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Id</th>
+<th class="head">Input</th>
+<th class="head">Search Vector</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>1</td>
+<td>John is reading a book.</td>
+<td>'book':5 'john':1 'read':3</td>
+</tr>
+<tr><td>2</td>
+<td>Johnson reads an article.</td>
+<td>'articl':4 'johnson':1 'read':2</td>
+</tr>
+</tbody>
+</table>
+<p>Because it takes time to convert strings into search vectors, it would be better
+to save these search vectors in the database as well.  Since Django 1.10, you
+may add <code>SearchVectorField</code> to a model and save the search vector to this
+column.  It will be converted to <code>tsvector</code>, which is a PostgreSQL
+built-in text search type.</p>
+<p>A search vector column summerizes a row.  However, there are many rows in a
+database table, thus <strong>indexes</strong> should be created so that the database can
+select matching rows efficiently.  For example, a naive index implementation may
+map words to row IDs, so that the database can easily answer <code>1</code> and
+<code>2</code> when a user searches for <code>read</code>:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="64%" />
+<col width="36%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th class="head">Words</th>
+<th class="head">Rows</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>articl</td>
+<td>2</td>
+</tr>
+<tr><td>book</td>
+<td>1</td>
+</tr>
+<tr><td>john</td>
+<td>1</td>
+</tr>
+<tr><td>johnson</td>
+<td>2</td>
+</tr>
+<tr><td>read</td>
+<td>1, 2</td>
+</tr>
+</tbody>
+</table>
+<p>In the real world, the structures of database indexes are much more complex.
+PostgreSQL provides GinIndex and GistIndex.  <strong>GinIndex</strong> is based on
+<em>Generalized Inverted Index (GIN)</em> and <strong>GistIndex</strong> is based on
+<em>Generalized Search Tree (GiST)</em>.  They have
+<a class="reference external" href="https://www.postgresql.org/docs/9.6/static/textsearch-indexes.html">different trade-offs and performance characteristics</a>.  Django supports both
+of them and their usages are similar.  For the sake of brevity, <code>GinIndex</code>
+is chosen for our demo app.</p>
+<div class="section" id="define-a-model">
+<h3>Define a Model</h3>
+<p>In our demo app, we would like to save several articles in the database.  Each
+<em>article</em> consists of a <em>headline</em> and some <em>content</em>.  And we would like to
+search these articles by some keywords.</p>
+<p>Let's open <code>fts/models.py</code> and add a <code>Article</code> model:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchVectorField</span>
+<span class="kn">from</span> <span class="nn">django.contrib.postgres.indexes</span> <span class="kn">import</span> <span class="n">GinIndex</span>
+
+<span class="k">class</span> <span class="nc">Article</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">headline</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+    <span class="n">search_vector</span> <span class="o">=</span> <span class="n">SearchVectorField</span><span class="p">(</span><span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+        <span class="n">indexes</span> <span class="o">=</span> <span class="p">[</span><span class="n">GinIndex</span><span class="p">(</span><span class="n">fields</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;search_vector&#39;</span><span class="p">])]</span>
+</pre></div>
+<p>Then create a migration for this model:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py makemigrations fts
+</pre></div>
+<p>And migrate the database with:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts
+</pre></div>
+<p>As described earlier, the <code>search_vector</code> field is created to hold the
+preprocessed search vectors.  The <code>search_vector</code> field has to be nullable
+(<code>null=True</code>) because due to some limitation <code>SearchVectorField</code> has
+to be updated <em>after</em> an object is created.</p>
+<p>In addition, a <code>GinIndex</code> is created for the <code>search_vector</code> field
+to enable efficient search queries.  It specified in the <code>Meta</code> class.</p>
+</div>
+</div>
+<div class="section" id="update-search-vectors">
+<h2>Update Search Vectors</h2>
+<p>Before performing any full-text search, you should update search vectors.  If
+you don't update search vectors, no results will be found.</p>
+<p>For example, if you run the following code in <code>./manage.py shell</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fts.models</span> <span class="kn">import</span> <span class="n">Article</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Progressive tesne&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Present tense&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;Johnson reads an article.&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Article for piano&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;Bob plays a piano.&#39;</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Then, you will see this output (no results):</p>
+<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[]</span><span class="o">&gt;</span>
+</pre></div>
+<p>To <strong>update the search vectors</strong>, run the code below:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchVector</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">SearchVector</span><span class="p">(</span><span class="s1">&#39;headline&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">))</span>
+</pre></div>
+<p>The arguments of <code>SearchVector()</code> are the names of the columns that
+contain the input strings.  The search vectors will be derived from these
+columns.  In our example, we would like to derive search vectors the from
+<em>headline</em> and <em>content</em> columns.</p>
+<p>Now, the full-text search should work:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code>SearchVectorField</code> must be updated <em>after</em> an object is created
+because <code>SearchVector()</code> is an <a class="reference external" href="https://docs.djangoproject.com/en/2.0/ref/models/expressions/#f-expressions">F() expression</a>,
+which refers another column.  It is not available when you are creating a
+new object.</p>
+</div>
+</div>
+<div class="section" id="full-text-search-queries">
+<h2>Full-text Search Queries</h2>
+<p>To search for a keyword, add <code>filter(search_vector=query)</code> to the database
+query.  <code>filter()</code> will select the relevant objects that match with the
+query.</p>
+<p>For example, the example below searches for the objects with <code>book</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>The example below shows that prefixes don't match (i.e. <code>book</code> in the
+<code>content</code> column doesn't match with the query keyword <code>boo</code>):</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;boo&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[]</span><span class="o">&gt;</span>
+</pre></div>
+<p>The example below shows that <code>John</code> and <code>Johnson</code> are different:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;john&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>The example below shows how <a class="reference external" href="https://en.wikipedia.org/wiki/Stemming">stemming</a> works.  A query with the keyword
+<code>read</code> matches both <code>reading</code> and <code>reads</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;read&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,),</span>
+    <span class="p">(</span><span class="s1">&#39;Johnson reads an article.&#39;</span><span class="p">,)</span>
+<span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+<div class="section" id="using-searchquery">
+<h3>Using SearchQuery</h3>
+<p>More advanced queries can be built with <a class="reference external" href="https://docs.djangoproject.com/en/2.0/ref/contrib/postgres/search/#searchquery">SearchQuery</a>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchQuery</span>
+</pre></div>
+<p>First of all, wrapping a string with <code>SearchQuery()</code> is equal to the
+queries mentioned earlier:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;book&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>Two <code>SearchQuery()</code> instances can be combined with an OR operator
+(<code>|</code>).  The example below matches all articles with either <code>read</code>
+or <code>piano</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;piano&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,),</span>
+    <span class="p">(</span><span class="s1">&#39;Johnson reads an article.&#39;</span><span class="p">,),</span>
+    <span class="p">(</span><span class="s1">&#39;Bob plays a piano.&#39;</span><span class="p">,)</span>
+<span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+<p>Two <code>SearchQuery()</code> instances can be combined with an AND operator
+(<code>&amp;</code>).  The example below matches all articles with both <code>read</code>
+and <code>article</code>):</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;Johnson reads an article.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>A <code>SearchQuery()</code> instance can be qualified by a NOT operator
+(<code>~</code>).  The example below matches all articles <em>without</em> <code>johnson</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="o">~</span><span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;johnson&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;Bob plays a piano.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>Of course, operators can be combined together.  For example, the example below
+matches all articles with <code>read</code> but without <code>johnson</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;read&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;johnson&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>Finally, after testing, you may clear the database by rolling back the
+migrations:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts zero
+</pre></div>
+</div>
+</div>
+<div class="section" id="update-search-vectors-with-a-trigger">
+<h2>Update Search Vectors with a Trigger</h2>
+<p>A trigger is a database hook that calls the registered procedure when the
+specified events occur.  An application of triggers is to keep the database in a
+consistent state.  For example, one may create a trigger to restore the
+invariant when a query invalidates the database invariant.  If the trigger fails
+to restore the invariant, the query will fail and the database will remain
+unchanged.  In our demo app, we would like to create a trigger which always
+keeps <code>search_vector</code> in sync with <code>title</code> and <code>content</code>.</p>
+<p>This is the SQL syntax to create a trigger:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="p">[</span><span class="k">trigger_name</span><span class="p">]</span>
+<span class="p">[</span><span class="k">BEFORE</span> <span class="o">|</span> <span class="k">AFTER</span><span class="p">]</span> <span class="p">[</span><span class="k">INSERT</span> <span class="o">|</span> <span class="k">UPDATE</span> <span class="o">|</span> <span class="k">UPDATE</span> <span class="k">OF</span> <span class="k">column</span><span class="o">|</span> <span class="k">DELETE</span><span class="p">]</span>
+<span class="k">ON</span> <span class="p">[</span><span class="k">table_name</span><span class="p">]</span>
+<span class="k">FOR</span> <span class="k">EACH</span> <span class="p">[</span><span class="k">ROW</span> <span class="o">|</span> <span class="k">STATEMENT</span><span class="p">]</span>
+<span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="p">[</span><span class="k">procedure</span><span class="p">];</span>
+</pre></div>
+<p>A trigger may listen to following events:</p>
+<ul class="simple">
+<li><code>INSERT</code> -- A new row is inserted into the table.</li>
+<li><code>UPDATE</code> -- A row in the table is updated.</li>
+<li><code>UPDATE OF column1, column2</code> -- The value of <code>column1</code> or
+<code>column2</code> of a row in the table is updated.</li>
+<li><code>DELETE</code> -- A row is deleted from a table.</li>
+</ul>
+<p>A trigger may listen to multiple events.  To listen to multiple events, combine
+the events with <code>OR</code> operators.  For example, a trigger with
+<code>INSERT OR UPDATE</code> listens to both <code>INSERT</code> and <code>UPDATE</code>
+events.</p>
+<p>A trigger may call the procedure <code>BEFORE</code> or <code>AFTER</code> the
+event is <em>effective</em>.  A trigger that runs <em>before</em> the insert event won't find
+the to-be-inserted row in the table.  Similarly, a trigger that runs
+<em>after</em> the delete event will not find the deleted row in the table.</p>
+<p>A SQL statement may insert, update, or delete multiple rows.  If a trigger
+specifies <code>FOR EACH STATEMENT</code>, then the callback procedure is called only
+once per query.  If a trigger specifies <code>FOR EACH ROW</code>, then the callback
+procedure is called for each rows.</p>
+<p><code>tsvector_update_trigger()</code> is a PostgreSQL built-in function that reads
+the strings from the specified columns and write the computed search vector to
+the destination search vector column:</p>
+<div class="highlight"><pre><span></span><span class="n">tsvector_update_trigger</span><span class="p">(</span><span class="n">tsvector</span><span class="p">,</span> <span class="n">lang_config</span><span class="p">,</span> <span class="k">column</span><span class="p">[,</span> <span class="p">...])</span>
+</pre></div>
+<p>The first argument is the destination column to save the computed search
+vector.  The second argument is the language of the input strings.  The rest of
+the arguments are the source columns from which the search vector is derived.</p>
+<p>For example, the code below collects the strings from the <code>headline</code> and
+<code>content</code>, treat them as English, convert them into a search vector, and
+save the result to the <code>search_vector</code> column:</p>
+<div class="highlight"><pre><span></span><span class="n">tsvector_update_trigger</span><span class="p">(</span>
+    <span class="n">search_vector</span><span class="p">,</span> <span class="s1">&#39;pg_catalog.english&#39;</span><span class="p">,</span> <span class="n">headline</span><span class="p">,</span> <span class="n">content</span><span class="p">)</span>
+</pre></div>
+<p>Combining the knowledge above, the SQL statement below will create a trigger
+that updates the search vector:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">article_update_trigger</span>
+<span class="k">BEFORE</span> <span class="k">INSERT</span> <span class="k">OR</span> <span class="k">UPDATE</span> <span class="k">OF</span> <span class="n">headline</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">search_vector</span>
+<span class="k">ON</span> <span class="n">fts_article</span>
+<span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span> <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span>
+<span class="n">tsvector_update_trigger</span><span class="p">(</span>
+    <span class="n">search_vector</span><span class="p">,</span> <span class="s1">&#39;pg_catalog.english&#39;</span><span class="p">,</span> <span class="n">headline</span><span class="p">,</span> <span class="n">content</span><span class="p">);</span>
+</pre></div>
+<p>This trigger will run <code>tsvector_update_trigger()</code> when a row is inserted
+into <code>fts_article</code> or when the <code>headline</code>, <code>content</code>, or
+<code>search_vector</code> column of a row is updated.</p>
+<div class="section" id="manage-triggers-with-django-migrations">
+<h3>Manage Triggers with Django Migrations</h3>
+<p>To integrate the SQL statement into our Django app, let's create an empty
+migration:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py makemigrations fts -n create_trigger --empty
+</pre></div>
+<p>And then, open <code>fts/migrations/0002_create_trigger.py</code> and add a
+<code>RunSQL</code> operation:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">migrations</span><span class="p">,</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">migrations</span><span class="o">.</span><span class="n">Migration</span><span class="p">):</span>
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;fts&#39;</span><span class="p">,</span> <span class="s1">&#39;0001_initial&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">operations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="n">sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            CREATE TRIGGER article_update_trigger</span>
+<span class="s1">            BEFORE INSERT OR UPDATE OF headline, content, search_vector</span>
+<span class="s1">            ON fts_article</span>
+<span class="s1">            FOR EACH ROW EXECUTE PROCEDURE</span>
+<span class="s1">            tsvector_update_trigger(</span>
+<span class="s1">              search_vector, &#39;pg_catalog.english&#39;, headline, content);</span>
+
+<span class="s1">            UPDATE fts_article SET search_vector = NULL;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">,</span>
+
+            <span class="n">reverse_sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            DROP TRIGGER IF EXISTS article_update_trigger</span>
+<span class="s1">            ON fts_article;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+</pre></div>
+<p>The forward migration SQL statement (<code>sql</code>) creates a trigger named
+<code>article_update_trigger</code> and updates all existing search vectors by
+triggering the <code>article_update_trigger</code>.</p>
+<p>The backward migration SQL statement simply drops the
+<code>article_update_trigger</code>.</p>
+<p>Run the command below to test the forward migration:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts 0002_create_trigger
+Operations to perform:
+  Target specific migration: 0002_create_trigger, from fts
+Running migrations:
+  Applying fts.0002_create_trigger... OK
+</pre></div>
+<p>And run the command below to test the rollback migration:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts 0001_initial
+Operations to perform:
+  Target specific migration: 0001_initial, from fts
+Running migrations:
+  Rendering model states... DONE
+  Unapplying fts.0002_create_trigger... OK
+</pre></div>
+<p>Finally, run the forward migration again so that you can run some test code
+later:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts
+</pre></div>
+<p>Now, run the following code in <code>./manage.py shell</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fts.models</span> <span class="kn">import</span> <span class="n">Article</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Progressive tesne&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Present tense&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;Johnson reads an article.&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Article for piano&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;Bob plays a piano.&#39;</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;book&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The output will be:</p>
+<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[(</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">,)]</span><span class="o">&gt;</span>
+</pre></div>
+<p>The trigger will update the search vector column whenever a row is inserted or
+updated, thus you don't have to update the search vector manually anymore.
+Comparing to the search results in the previous section, the search results
+shall remain unchanged.  You may run the search queries in the <a class="reference internal" href="#full-text-search-queries">Full-text Search
+Queries</a> section and verify it.</p>
+</div>
+</div>
+<div class="section" id="rank-and-order">
+<h2>Rank and Order</h2>
+<p>The <code>filter()</code> function mentioned above only selects the matching objects.
+It would be helpful to sort the matching objects by <strong>relevance</strong>.  For example,
+objects with more matching terms should be displayed before objects with less
+matching terms.</p>
+<p>In Django, you can annotate a query with <code>SearchRank()</code> and then sort the
+matching objects by the value in the annotated field:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchQuery</span><span class="p">,</span> <span class="n">SearchRank</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>To compute the rank of each objects, the <code>SearchRank</code> class takes three
+arguments:</p>
+<ul class="simple">
+<li>The first argument should be a search vector field.  It can be either a
+<em>SearchVector</em> instance or an <em>F() expression</em>.  A <em>SearchVector</em> instance
+computes search vectors from other columns on-the-fly.  On the other hand, an
+<em>F() expression</em> refers an existing search vector field in a model.</li>
+<li>The second argument should be a search query.</li>
+</ul>
+<p>After creating a <code>SearchRank</code> instance, the function
+<code>annotate(rank=rank)</code> is called to create a temporary field named
+<code>rank</code> which contains the ranks computed by <code>SearchRank</code>.  It can
+be further sorted by the <code>order_by('-rank')</code> function.</p>
+<p>To test the code above, let's create some test data in
+<code>./manage.py shell</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fts.models</span> <span class="kn">import</span> <span class="n">Article</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">&#39;x4&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;hello hello hello hello&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">&#39;x3&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;hello hello hello&#39;</span><span class="p">)</span>
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">headline</span><span class="o">=</span><span class="s1">&#39;x2&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;hello hello&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The code below shows how to sort matching objects by relevance:</p>
+<div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;hello&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The output looks like:</p>
+<div class="highlight"><pre><span></span><span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;hello hello hello hello&#39;</span><span class="p">,</span> <span class="mf">0.0865452</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;hello hello hello&#39;</span><span class="p">,</span> <span class="mf">0.0827456</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;hello hello&#39;</span><span class="p">,</span> <span class="mf">0.0759909</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="mf">0.0607927</span><span class="p">)</span>
+<span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+<p>That's all.  In the next section, we will add weights to different columns.</p>
+</div>
+<div class="section" id="add-weights-to-search-vectors">
+<h2>Add Weights to Search Vectors</h2>
+<p>So far, all columns are equal.  An occurrance in one column is equal to an
+occurrance from another column.  However, in the real world, the importance of
+columns are unequal.  An occurrance in one column may outweigh occurrances
+from other columns.  In our demo app, <em>headline</em> is much more important than
+<em>content</em>, thus a heavier weight should be given to <em>headline</em>.</p>
+<div class="section" id="add-weights-in-django">
+<h3>Add Weights in Django</h3>
+<p>To update the search vector manually, rollback the migration which adds the
+trigger:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts 0001_initial
+</pre></div>
+<p>Run the code below in <code>./manage.py shell</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchVector</span>
+
+<span class="n">sv</span> <span class="o">=</span> <span class="n">SearchVector</span><span class="p">(</span><span class="s1">&#39;headline&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">+</span> \
+     <span class="n">SearchVector</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;B&#39;</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">sv</span><span class="p">)</span>
+</pre></div>
+<p>And then, list the updated search vectors with:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;search_vector&#39;</span><span class="p">)</span>
+<span class="o">&lt;</span><span class="n">QuerySet</span> <span class="p">[</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;&#39;book&#39;:7B &#39;john&#39;:3B &#39;progress&#39;:1A &#39;read&#39;:5B &#39;tesn&#39;:2A&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;&#39;articl&#39;:6B &#39;johnson&#39;:3B &#39;present&#39;:1A &#39;read&#39;:4B &#39;tens&#39;:2A&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;&#39;articl&#39;:1A &#39;bob&#39;:4B &#39;piano&#39;:3A,7B &#39;play&#39;:5B&quot;</span><span class="p">)</span>
+<span class="p">]</span><span class="o">&gt;</span>
+</pre></div>
+<p>The biggest difference is that the weights are appended to each locations.  For
+example, <code>articl</code> in the second row is <code>6B</code> and <code>articl</code> in
+the third row is <code>1A</code>.  Similarly, <code>piano</code> in the third row includes
+both <code>3A</code> and <code>7B</code>.</p>
+<p>With these weights, the third row will have higher rank in the following query:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchQuery</span><span class="p">,</span> <span class="n">SearchRank</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The output becomes:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [(3, 0.607927), (2, 0.243171)]&gt;
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Before adding weights, both rows have the same rank <code>0.0607927</code>.</p>
+</div>
+</div>
+<div class="section" id="add-weights-in-triggers">
+<h3>Add Weights in Triggers</h3>
+<p>It is much more difficult to add weights in triggers because
+<code>tsvector_update_trigger()</code> does not support weights.  To build search
+vectors with weights, you have to write a PostgreSQL function.  Writing
+functions for triggers is not an easy task.  We will only cover some topics as
+needed.  Please read the <a class="reference external" href="https://www.postgresql.org/docs/current/static/plpgsql-trigger.html">PostgreSQL manual</a> for further information.</p>
+<p>First of all, this is the SQL syntax to create a PostgreSQL trigger function:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="p">[</span><span class="k">OR</span> <span class="k">REPLACE</span><span class="p">]</span> <span class="k">FUNCTION</span> <span class="n">function_name</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span>
+<span class="k">LANGUAGE</span> <span class="n">plpgsql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="c1">-- ... code ...</span>
+  <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+</pre></div>
+<p>This SQL statement creates a function named <code>function_name</code>, without
+arguments, and returns a trigger.  The <code>LANGUAGE</code> clause specifies that
+the code in the quotation <code>$$</code> is <a class="reference external" href="https://www.postgresql.org/docs/current/static/plpgsql.html">PL/pgSQL</a>, which is a SQL extension
+defined by PostgreSQL.</p>
+<p><code>NEW</code> and <code>OLD</code> are special global variables if a trigger has the
+<code>FOR EACH ROW</code> clause.  <code>NEW</code> refers the row which will be inserted
+into the table by an insert query or the new row which will replace the old row
+in an update query.  On the other hand, <code>OLD</code> refers the old row which
+will be replaced by an update query or the row which will be deleted from the
+table by a delete query.</p>
+<p>If the procedure is triggered by an <em>insert</em> query or an <em>update</em> query, then
+the procedure should return <code>NEW</code>.  If the procedure is triggered by a
+<em>delete</em> query, then the procedure should return <code>OLD</code>.  It is fine to
+return <code>NULL</code> but you will get different results.  In our demo app, we
+don't want such behavior, thus we won't return <code>NULL</code>.</p>
+<p>To compute search vectors, three functions are required:</p>
+<ul class="simple">
+<li><code>to_tsvector([lang_config, ]string)</code> -- This function converts a string
+into a search vector.  An optional language configuration may be given.  The
+search vector can be concatenated with <code>||</code> operators.</li>
+<li><code>setweight(tsvector, weight)</code> -- This function adds weights to a search
+vector.  The weight may be <code>A</code>, <code>B</code>, <code>C</code>, or <code>D</code>.</li>
+<li><code>coalesce(value, alt)</code> -- This function returns <code>alt</code> if
+<code>value</code> is <code>NULL</code>.  This function is important because
+<code>to_tsvector()</code> will return <code>NULL</code> if the input string is
+<code>NULL</code>.</li>
+</ul>
+<p>To save the computed search vector into a column, <code>SELECT ... INTO ...</code>
+statement may be used.  It computes the expression after <code>SELECT</code> and save
+the result to the column specified after <code>INTO</code>.</p>
+<p>Combining the knowledge above, <code>update_article_search_vector()</code> can be
+created with the SQL statement below:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">update_article_search_vector</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span>
+<span class="k">LANGUAGE</span> <span class="n">plpgsql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">SELECT</span>
+    <span class="n">setweight</span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span><span class="n">coalesce</span><span class="p">(</span><span class="k">NEW</span><span class="p">.</span><span class="n">headline</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">||</span>
+    <span class="n">setweight</span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span><span class="n">coalesce</span><span class="p">(</span><span class="k">NEW</span><span class="p">.</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span>
+  <span class="k">INTO</span> <span class="k">NEW</span><span class="p">.</span><span class="n">search_vector</span><span class="p">;</span>
+  <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+</pre></div>
+<p>And the <code>article_update_trigger</code> should call
+<code>update_article_search_vector()</code> instead:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">article_update_trigger</span>
+<span class="k">BEFORE</span> <span class="k">INSERT</span> <span class="k">OR</span> <span class="k">UPDATE</span> <span class="k">OF</span> <span class="n">headline</span><span class="p">,</span> <span class="n">content</span><span class="p">,</span> <span class="n">search_vector</span>
+<span class="k">ON</span> <span class="n">fts_article</span>
+<span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span> <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">update_article_search_vector</span><span class="p">();</span>
+</pre></div>
+<p>To integrate these SQL statements into our demo app, create an empty migration
+with:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py makemigrations fts -n add_weights --empty
+</pre></div>
+<p>Then open <code>fts/migrations/0003_add_weights.py</code> and add the code below:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">migrations</span>
+
+
+<span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">migrations</span><span class="o">.</span><span class="n">Migration</span><span class="p">):</span>
+
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;fts&#39;</span><span class="p">,</span> <span class="s1">&#39;0002_create_trigger&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">operations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="n">sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            DROP TRIGGER article_update_trigger ON fts_article;</span>
+
+<span class="s1">            CREATE OR REPLACE FUNCTION update_article_search_vector()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              SELECT</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.headline, &#39;&#39;)), &#39;A&#39;) ||</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.content, &#39;&#39;)), &#39;B&#39;)</span>
+<span class="s1">              INTO NEW.search_vector;</span>
+<span class="s1">              RETURN NEW;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            CREATE TRIGGER article_update_trigger</span>
+<span class="s1">            BEFORE INSERT OR UPDATE OF headline, content, search_vector</span>
+<span class="s1">            ON fts_article</span>
+<span class="s1">            FOR EACH ROW</span>
+<span class="s1">            EXECUTE PROCEDURE update_article_search_vector();</span>
+
+<span class="s1">            UPDATE fts_article SET search_vector = NULL;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="n">reverse_sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            DROP TRIGGER article_update_trigger ON fts_article;</span>
+
+<span class="s1">            DROP FUNCTION update_article_search_vector();</span>
+
+<span class="s1">            CREATE TRIGGER article_update_trigger</span>
+<span class="s1">            BEFORE INSERT OR UPDATE OF headline, content, search_vector</span>
+<span class="s1">            ON fts_article</span>
+<span class="s1">            FOR EACH ROW EXECUTE PROCEDURE</span>
+<span class="s1">            tsvector_update_trigger(</span>
+<span class="s1">              search_vector, &#39;pg_catalog.english&#39;, headline, content);</span>
+
+<span class="s1">            UPDATE fts_article SET search_vector = NULL;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+</pre></div>
+<p>The forward migration drops the existing <code>article_update_trigger</code>, creates
+a new function named <code>update_article_search_vector()</code>, create a new
+<code>article_update_trigger</code> which calls
+<code>update_article_search_vector()</code>, and then update all search vectors.</p>
+<p>Finally, you may migrate the database:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py migrate fts
+</pre></div>
+<p>And run the following code in <code>./manage.py shell</code> to test whether the
+trigger works:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchQuery</span><span class="p">,</span> <span class="n">SearchRank</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The output must be:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [(3, 0.607927), (2, 0.243171)]&gt;
+</pre></div>
+</div>
+<div class="section" id="map-to-numeric-weights">
+<h3>Map to Numeric Weights</h3>
+<p>Weights in search vectors are represented by alphabets <code>A</code>, <code>B</code>,
+<code>C</code>, and <code>D</code>.  This representation gives the flexibility to map them
+into different numeric weights.  For example, some users may think <em>headlines</em>
+are more important than <em>contents</em> but other users may think conversely.  An
+option may be provided to users so that users can pick their preferences.</p>
+<p>A <code>weights</code> argument may be passed to <code>SearchRank()</code>.  The
+<code>weights</code> argument should be a list with 4 floating point numbers ranging
+from 0.0 to 1.0.  The floating point numbers stand for the numeric weight for
+<code>D</code>, <code>C</code>, <code>B</code>, and <code>A</code> respectively.  If the
+<code>weights</code> is not specified, then the default values are <code>0.1</code>,
+<code>0.2</code>, <code>0.4</code>, and <code>1.0</code> respectively.</p>
+<p>For example, if <em>headlines</em> are more important than <em>contents</em>, then you may
+use the default weights:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.contrib.postgres.search</span> <span class="kn">import</span> <span class="n">SearchQuery</span><span class="p">,</span> <span class="n">SearchRank</span>
+<span class="kn">from</span> <span class="nn">django.db.models</span> <span class="kn">import</span> <span class="n">F</span>
+
+<span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">,</span>
+                  <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>And the output will show that row <code>3</code> comes before row <code>2</code>:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [(3, 0.607927), (2, 0.243171)]&gt;
+</pre></div>
+<p>Conversely, if <em>contents</em> are more important than <em>headlines</em>, then you may swap
+the third and fourth weight:</p>
+<div class="highlight"><pre><span></span><span class="n">query</span> <span class="o">=</span> <span class="n">SearchQuery</span><span class="p">(</span><span class="s1">&#39;article&#39;</span><span class="p">)</span>
+<span class="n">rank</span> <span class="o">=</span> <span class="n">SearchRank</span><span class="p">(</span><span class="n">F</span><span class="p">(</span><span class="s1">&#39;search_vector&#39;</span><span class="p">),</span> <span class="n">query</span><span class="p">,</span>
+                  <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">])</span>  <span class="c1"># SWAPPED</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="n">rank</span><span class="o">=</span><span class="n">rank</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="n">query</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s1">&#39;-rank&#39;</span><span class="p">)</span>\
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;rank&#39;</span><span class="p">)</span>
+</pre></div>
+<p>And the output will show that row <code>2</code> comes before row <code>3</code>:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [(2, 0.607927), (3, 0.243171)]&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="derive-search-vectors-from-related-objects">
+<h2>Derive Search Vectors from Related Objects</h2>
+<p>Sometimes, a page is generated from an object of a model and several related
+objects of another model.  For example, in our demo app, several <em>comments</em> may
+be associated with an <em>article</em>.  How to include those comments in search
+vectors?  This is different from the aforementioned examples because search
+vectors must be derived from the rows from other tables.</p>
+<p>To address this challenge, two changes are necessary.  First, you should collect
+the comments from <code>fts_comment</code> with a <strong>sub-query</strong>, which is denoted by
+<em>the parentheses</em> in the third <code>to_tsvector()</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">update_article_search_vector</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span>
+<span class="k">LANGUAGE</span> <span class="n">plpgsql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">SELECT</span>
+    <span class="n">setweight</span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span><span class="n">coalesce</span><span class="p">(</span><span class="k">NEW</span><span class="p">.</span><span class="n">headline</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span> <span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="o">||</span>
+    <span class="n">setweight</span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span><span class="n">coalesce</span><span class="p">(</span><span class="k">NEW</span><span class="p">.</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)),</span> <span class="s1">&#39;B&#39;</span><span class="p">)</span> <span class="o">||</span>
+    <span class="n">setweight</span><span class="p">(</span><span class="n">to_tsvector</span><span class="p">(</span>
+      <span class="p">(</span><span class="k">SELECT</span> <span class="n">coalesce</span><span class="p">(</span><span class="n">string_agg</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+       <span class="k">FROM</span> <span class="n">fts_comment</span> <span class="k">WHERE</span> <span class="n">article_id</span> <span class="o">=</span> <span class="k">NEW</span><span class="p">.</span><span class="n">id</span><span class="p">)),</span> <span class="s1">&#39;C&#39;</span><span class="p">)</span>
+  <span class="k">INTO</span> <span class="k">NEW</span><span class="p">.</span><span class="n">search_vector</span><span class="p">;</span>
+  <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+</pre></div>
+<p>The <strong>sub-query</strong> collects all comments that associate with this article and
+concatenate them with <code>string_agg()</code> function.  If there are no matching
+rows, then <code>string_agg()</code> will return <code>NULL</code>.  Thus,
+<code>coalesce()</code> function is called to provide a default.</p>
+<p>Second, the sub-query must see the changes to the <code>fts_comment</code> table,
+thus <code>update_article_search_vector()</code> must be triggered by another trigger
+which is called <strong>after</strong> the changes are effective.  For example:</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span> <span class="k">OR</span> <span class="k">REPLACE</span> <span class="k">FUNCTION</span> <span class="n">insert_comment</span><span class="p">()</span>
+<span class="k">RETURNS</span> <span class="k">TRIGGER</span>
+<span class="k">LANGUAGE</span> <span class="n">plpgsql</span> <span class="k">AS</span> <span class="err">$$</span>
+<span class="k">BEGIN</span>
+  <span class="k">UPDATE</span> <span class="n">fts_article</span> <span class="k">SET</span> <span class="n">search_vector</span> <span class="o">=</span> <span class="k">NULL</span>
+  <span class="k">WHERE</span> <span class="n">id</span> <span class="o">=</span> <span class="k">NEW</span><span class="p">.</span><span class="n">article_id</span><span class="p">;</span>
+  <span class="k">RETURN</span> <span class="k">NEW</span><span class="p">;</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="err">$$</span><span class="p">;</span>
+
+<span class="k">CREATE</span> <span class="k">TRIGGER</span> <span class="n">comment_insert_trigger</span>
+<span class="k">AFTER</span> <span class="k">INSERT</span> <span class="k">ON</span> <span class="n">fts_comment</span>  <span class="c1">-- Use AFRER instead of BEFORE</span>
+<span class="k">FOR</span> <span class="k">EACH</span> <span class="k">ROW</span> <span class="k">EXECUTE</span> <span class="k">PROCEDURE</span> <span class="n">insert_comment</span><span class="p">();</span>
+</pre></div>
+<p>There are other concerns.  For example, if an update query changes the foreign
+key, then both the article referenced by the <em>old foreign key</em> and the article
+referenced by the <em>new foreign key</em> must be updated.  For the sake of brevity,
+we will not dicuss them in detail.  The complete code listing can be found in
+the migration operation below.</p>
+<div class="section" id="define-a-model-for-comments-and-create-triggers">
+<h3>Define a Model for Comments and Create Triggers</h3>
+<p>First, open <code>fts/models.py</code> and add a <code>Comment</code> model:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Comment</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">article</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;Article&#39;</span><span class="p">,</span> <span class="n">on_delete</span><span class="o">=</span><span class="n">models</span><span class="o">.</span><span class="n">CASCADE</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">TextField</span><span class="p">()</span>
+</pre></div>
+<p>Make a migration for the <code>Comment</code> model:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py makemigrations fts
+</pre></div>
+<p>Create an empty migration for the trigger:</p>
+<div class="highlight"><pre><span></span>$ ./manage.py makemigrations fts -n index_comment --empty
+</pre></div>
+<p>Edit <code>fts/migrations/0004_index_comment.py</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">migrations</span>
+
+
+<span class="k">class</span> <span class="nc">Migration</span><span class="p">(</span><span class="n">migrations</span><span class="o">.</span><span class="n">Migration</span><span class="p">):</span>
+
+    <span class="n">dependencies</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s1">&#39;fts&#39;</span><span class="p">,</span> <span class="s1">&#39;0004_comment&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">operations</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">migrations</span><span class="o">.</span><span class="n">RunSQL</span><span class="p">(</span>
+            <span class="n">sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            CREATE OR REPLACE FUNCTION update_article_search_vector()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              SELECT</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.headline, &#39;&#39;)), &#39;A&#39;) ||</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.content, &#39;&#39;)), &#39;B&#39;) ||</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  (SELECT coalesce(string_agg(content, &#39; &#39;), &#39;&#39;)</span>
+<span class="s1">                   FROM fts_comment WHERE article_id = NEW.id)), &#39;C&#39;)</span>
+<span class="s1">              INTO NEW.search_vector;</span>
+<span class="s1">              RETURN NEW;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            CREATE OR REPLACE FUNCTION insert_comment()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              UPDATE fts_article SET search_vector = NULL</span>
+<span class="s1">              WHERE id = NEW.article_id;</span>
+<span class="s1">              RETURN NEW;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            CREATE OR REPLACE FUNCTION update_comment()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              UPDATE fts_article SET search_vector = NULL</span>
+<span class="s1">              WHERE id = NEW.article_id;</span>
+<span class="s1">              IF (OLD.article_id &lt;&gt; NEW.article_id) THEN</span>
+<span class="s1">                UPDATE fts_article SET search_vector = NULL</span>
+<span class="s1">                WHERE id = OLD.article_id;</span>
+<span class="s1">              END IF;</span>
+<span class="s1">              RETURN NEW;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            CREATE OR REPLACE FUNCTION delete_comment()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              UPDATE fts_article SET search_vector = NULL</span>
+<span class="s1">              WHERE id = OLD.article_id;</span>
+<span class="s1">              RETURN OLD;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            CREATE TRIGGER comment_insert_trigger</span>
+<span class="s1">            AFTER INSERT ON fts_comment</span>
+<span class="s1">            FOR EACH ROW EXECUTE PROCEDURE insert_comment();</span>
+
+<span class="s1">            CREATE TRIGGER comment_update_trigger</span>
+<span class="s1">            AFTER UPDATE OF article_id, content ON fts_comment</span>
+<span class="s1">            FOR EACH ROW EXECUTE PROCEDURE update_comment();</span>
+
+<span class="s1">            CREATE TRIGGER comment_delete_trigger</span>
+<span class="s1">            AFTER DELETE ON fts_comment</span>
+<span class="s1">            FOR EACH ROW EXECUTE PROCEDURE delete_comment();</span>
+
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">,</span>
+            <span class="n">reverse_sql</span><span class="o">=</span><span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">            DROP TRIGGER IF EXISTS comment_insert_trigger</span>
+<span class="s1">            ON fts_comment;</span>
+
+<span class="s1">            DROP TRIGGER IF EXISTS comment_update_trigger</span>
+<span class="s1">            ON fts_comment;</span>
+
+<span class="s1">            DROP TRIGGER IF EXISTS comment_delete_trigger</span>
+<span class="s1">            ON fts_comment;</span>
+
+<span class="s1">            DROP FUNCTION IF EXISTS insert_comment();</span>
+<span class="s1">            DROP FUNCTION IF EXISTS update_comment();</span>
+<span class="s1">            DROP FUNCTION IF EXISTS delete_comment();</span>
+
+<span class="s1">            CREATE OR REPLACE FUNCTION update_article_search_vector()</span>
+<span class="s1">            RETURNS TRIGGER</span>
+<span class="s1">            LANGUAGE plpgsql AS $$</span>
+<span class="s1">            BEGIN</span>
+<span class="s1">              SELECT</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.headline, &#39;&#39;)), &#39;A&#39;) ||</span>
+<span class="s1">                setweight(to_tsvector(</span>
+<span class="s1">                  coalesce(NEW.content, &#39;&#39;)), &#39;B&#39;)</span>
+<span class="s1">              INTO NEW.search_vector;</span>
+<span class="s1">              RETURN NEW;</span>
+<span class="s1">            END;</span>
+<span class="s1">            $$;</span>
+
+<span class="s1">            UPDATE fts_article SET search_vector = NULL;</span>
+<span class="s1">            &#39;&#39;&#39;</span><span class="p">),</span>
+    <span class="p">]</span>
+</pre></div>
+<p>In the forward migration, the <code>update_article_search_vector()</code> function is
+changed to include comments.  Three functions and triggers are created as well.
+The triggers listen to the <code>INSERT</code>, <code>UPDATE</code>, and <code>DELETE</code>
+event and call <code>insert_comment()</code>, <code>update_comment()</code>, and
+<code>delete_comment()</code> respectively.  The differences between these functions
+are the usages of global variables:</p>
+<ul class="simple">
+<li>The <code>insert_comment()</code> function uses <code>NEW</code> and returns
+<code>NEW</code>.</li>
+<li>The <code>update_comment()</code> functions uses both <code>NEW</code> and <code>OLD</code>
+and returns <code>NEW</code>.</li>
+<li>The <code>delete_comment</code> function uses <code>OLD</code> and returns <code>OLD</code>.</li>
+</ul>
+<p>To test the code above, run the code below in <code>./manage.py shell</code>:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fts.models</span> <span class="kn">import</span> <span class="n">Article</span><span class="p">,</span> <span class="n">Comment</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">headline</span><span class="o">=</span><span class="s1">&#39;Progressive tense&#39;</span><span class="p">,</span> <span class="n">content</span><span class="o">=</span><span class="s1">&#39;John is reading a book.&#39;</span><span class="p">)</span>
+
+<span class="n">c1</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">comment_set</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s1">&#39;The book is Pride and Prejudice.&#39;</span><span class="p">)</span>
+
+<span class="n">c2</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">comment_set</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+    <span class="n">content</span><span class="o">=</span><span class="s1">&#39;John loves The Tragedy of Hamlet as well.&#39;</span><span class="p">)</span>
+
+<span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;Pride&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;search_vector&#39;</span><span class="p">)</span>
+</pre></div>
+<p>The output shows:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [
+    (1, &quot;&#39;book&#39;:7B,9C &#39;hamlet&#39;:19C &#39;john&#39;:3B,14C &#39;love&#39;:15C
+    &#39;prejudic&#39;:13C &#39;pride&#39;:11C &#39;progress&#39;:1A &#39;read&#39;:5B
+    &#39;tens&#39;:2A &#39;tragedi&#39;:17C &#39;well&#39;:21C&quot;)
+]&gt;
+</pre></div>
+<p>The search vector includes some terms from the <code>content</code> field of the
+<code>Comment</code> model.  For example, there are <code>'hamlet':19C</code>,
+<code>'prejudic':13C</code>, <code>'pride':11C</code>, and <code>'tragedi':17C</code>.</p>
+<p>If you remove the comment <code>c2</code> with:</p>
+<div class="highlight"><pre><span></span><span class="n">c2</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</pre></div>
+<p>And query for <code>Pride</code> again:</p>
+<div class="highlight"><pre><span></span><span class="n">Article</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">search_vector</span><span class="o">=</span><span class="s1">&#39;Pride&#39;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">values_list</span><span class="p">(</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;search_vector&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Then you will see:</p>
+<div class="highlight"><pre><span></span>&lt;QuerySet [
+    (1, &quot;&#39;book&#39;:7B,9C &#39;john&#39;:3B &#39;prejudic&#39;:13C &#39;pride&#39;:11C
+    &#39;progress&#39;:1A &#39;read&#39;:5B &#39;tens&#39;:2A&quot;)
+]&gt;
+</pre></div>
+</div>
+</div>
+<div class="section" id="epilogue">
+<h2>Epilogue</h2>
+<p>In this post, I started from explaining the purpose of <a class="reference internal" href="#searchvectorfield-and-ginindex">SearchVectorField and
+GinIndex</a>.  Next, I discussed how to update <a class="reference internal" href="#update-search-vectors">SearchVectorField</a> and make
+queries with <a class="reference internal" href="#full-text-search-queries">SearchQuery</a>.  Then, I went through more advanced topics, such
+as updating search vectors with <a class="reference internal" href="#update-search-vectors-with-a-trigger">PostgreSQL triggers</a>, <a class="reference internal" href="#rank-and-order">sorting objects by
+relevance</a>, and <a class="reference internal" href="#add-weights-to-search-vectors">adding weights</a>.  Finally, I ended up with a technique to
+derive search vectors from related objects.  I believe this article covered all
+common use cases.  All of the code can be found in the GitHub repository
+<a class="reference external" href="https://github.com/loganchien/django-fts-demo">loganchien/django-fts-demo</a>.</p>
+<p>This is a long article.  I hope this article is helpful and enjoyable.  Feel
+free to write me e-mails if you have any comments.</p>
+</div>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://docs.djangoproject.com/en/2.0/topics/migrations/">Django 2.0 Documentation, Migrations</a></li>
+<li><a class="reference external" href="https://docs.djangoproject.com/en/2.0/ref/contrib/postgres/search/">Django 2.0 Documentation, PostgreSQL specific features, Full text search</a></li>
+<li><a class="reference external" href="https://www.postgresql.org/docs/9.6/static/textsearch.html">PostgreSQL 9.6 Manual, Chapter 12. Full Text Search</a></li>
+<li><a class="reference external" href="https://www.postgresql.org/docs/9.6/static/plpgsql.html">PostgreSQL 9.6 Manual, Chapter 41. PL/pgSQL -- SQL Procedural Language</a></li>
+<li><a class="reference external" href="https://www.postgresql.org/docs/9.6/static/sql-createtrigger.html">PostgreSQL 9.6 Manual, Reference, SQL Commands, CREATE TRIGGER</a></li>
+<li><a class="reference external" href="http://blog.lotech.org/postgres-full-text-search-with-django.html">Postgres Full-Text Search With Django</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
