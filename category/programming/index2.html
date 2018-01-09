@@ -35,6 +35,26 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2016/01/02/python-new-style-class/" rel="bookmark" title="Permalink to Python New Style Class">Python New Style Class</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2016-01-02T19:08:00+08:00">Sat 02 January 2016</time>
+			</footer>
+			<div class="entry-content"><p>Recently, I am curious about this code snippet:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">():</span>
+        <span class="k">pass</span>
+</pre></div>
+<p>Why do we have to extend or inherit from <code>object</code> type?</p>
+<p>There are no differences with or without <code>(object)</code> in Python 3.  But
+there are <em>significant</em> differences in Python 2.  If a class inherits (either
+directly …</p></div>
+                        <p><a class="normal-btn" href="/posts/2016/01/02/python-new-style-class/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/12/26/a-quick-guide-to-grunt/" rel="bookmark" title="Permalink to A Quick Guide to Grunt">A Quick Guide to Grunt</a></h1>
 			</header>
 			<footer class="post-info">
@@ -178,21 +198,6 @@ with its idioms.  In particular, I don't quite understand how to compare and
 sort the objects in Python.  That's the reason why I am writing this article.</p>
 <p>The rest of this article consists of following sections …</p></div>
                         <p><a class="normal-btn" href="/posts/2015/06/14/comparison-and-sorting-in-python3/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/" rel="bookmark" title="Permalink to Check Code Coverage with Clang and LCOV">Check Code Coverage with Clang and LCOV</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2015-04-28T01:28:00+08:00">Tue 28 April 2015</time>
-			</footer>
-			<div class="entry-content"><p>Code coverage is a metric to show the code being untested.  It can be considered
-as a hint to add more test cases.  When we are writing C/C++, the most notable
-code coverage testing tool is <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a>, which is a GCC built-in coverage testing
-tool.  Besides, we can collect …</p></div>
-                        <p><a class="normal-btn" href="/posts/2015/04/28/check-code-coverage-with-clang-and-lcov/">More</a></p>
 		</article>
 	</li>
 </ol>
