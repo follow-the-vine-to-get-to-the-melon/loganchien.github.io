@@ -33,6 +33,26 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="bookmark" title="Permalink to Find Undefined Behavior with Clang UBSan">Find Undefined Behavior with Clang UBSan</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2018-01-27T20:01:00+08:00">Sat 27 January 2018</time>
+			</footer>
+			<div class="entry-content"><p>Two weeks ago, I came across an interesting bug.  The <code>convert()</code> function
+below returns <code>0x80000001</code> when <code>p</code> points to <code>0x01</code>,
+<code>0x00</code>, <code>0x00</code>, <code>0x80</code>, but the expected return value is
+<code>0x00000001</code> instead.</p>
+<div class="highlight"><pre><span></span><span class="kt">int32_t</span> <span class="nf">convert</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span>                  <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span>             <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span>       <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256 …</span></pre></div></div>
+                        <p><a class="normal-btn" href="/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2017/12/30/full-text-search-with-django-and-postgresql/" rel="bookmark" title="Permalink to Full-text Search with Django and PostgreSQL">Full-text Search with Django and PostgreSQL</a></h1>
 			</header>
 			<footer class="post-info">
@@ -206,23 +226,6 @@ clients.  For example, in a group messaging application, whenever a user sends a
 message to the server, the server has to push such message to everyone.  Since
 2001, several techniques have been proposed.  Eventually, <a class="reference external" href="https://en.wikipedia.org/wiki/WebSocket">WebSocket …</a></p></div>
                         <p><a class="normal-btn" href="/posts/2016/01/16/flask-and-socketio/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2016/01/09/vim-ctrl-p-plug-in/" rel="bookmark" title="Permalink to Vim Ctrl-P Plug-in">Vim Ctrl-P Plug-in</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2016-01-09T09:21:00+08:00">Sat 09 January 2016</time>
-			</footer>
-			<div class="entry-content"><p><a class="reference external" href="https://github.com/ctrlpvim/ctrlp.vim">Ctrl-P plug-in</a> allows us to open files with fuzzy names or regular expression
-matches.  It boosts my productivity at lot!  I am glad to know about this
-plug-in and I would like to share my experience with you.</p>
-<div class="section" id="installation">
-<h2>Installation</h2>
-<p>If you are managing Vim plug-ins with <a class="reference external" href="https://github.com/VundleVim/Vundle.vim">Vundle</a> <a class="footnote-reference" href="#id2" id="id1">[1]</a>, you can …</p></div></div>
-                        <p><a class="normal-btn" href="/posts/2016/01/09/vim-ctrl-p-plug-in/">More</a></p>
 		</article>
 	</li>
 </ol>

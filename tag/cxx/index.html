@@ -34,6 +34,26 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="bookmark" title="Permalink to Find Undefined Behavior with Clang UBSan">Find Undefined Behavior with Clang UBSan</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2018-01-27T20:01:00+08:00">Sat 27 January 2018</time>
+			</footer>
+			<div class="entry-content"><p>Two weeks ago, I came across an interesting bug.  The <code>convert()</code> function
+below returns <code>0x80000001</code> when <code>p</code> points to <code>0x01</code>,
+<code>0x00</code>, <code>0x00</code>, <code>0x80</code>, but the expected return value is
+<code>0x00000001</code> instead.</p>
+<div class="highlight"><pre><span></span><span class="kt">int32_t</span> <span class="nf">convert</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span>                  <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span>             <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span>       <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256 …</span></pre></div></div>
+                        <p><a class="normal-btn" href="/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/03/10/trace-source-code-with-vim-and-ctags/" rel="bookmark" title="Permalink to Trace Source Code with Vim and Ctags">Trace Source Code with Vim and Ctags</a></h1>
 			</header>
 			<footer class="post-info">

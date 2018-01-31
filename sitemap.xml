@@ -2,9 +2,14 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>http://logan.tw/</loc>
-<lastmod>2017-12-30</lastmod>
+<lastmod>2018-01-27</lastmod>
 <changefreq>daily</changefreq>
 <priority>1.00</priority>
+</url><url>
+<loc>http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</loc>
+<lastmod>2018-01-27</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
 </url><url>
 <loc>http://logan.tw/posts/2017/12/30/full-text-search-with-django-and-postgresql/</loc>
 <lastmod>2017-12-30</lastmod>
@@ -317,7 +322,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/category/programming/</loc>
-<lastmod>2017-12-30</lastmod>
+<lastmod>2018-01-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -367,7 +372,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/clang/</loc>
-<lastmod>2015-04-28</lastmod>
+<lastmod>2018-01-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -382,7 +387,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/tag/cxx/</loc>
-<lastmod>2015-05-19</lastmod>
+<lastmod>2018-01-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
@@ -536,6 +541,11 @@
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url><url>
+<loc>http://logan.tw/tag/sanitizer/</loc>
+<lastmod>2018-01-27</lastmod>
+<changefreq>weekly</changefreq>
+<priority>0.40</priority>
+</url><url>
 <loc>http://logan.tw/tag/shell/</loc>
 <lastmod>2016-02-27</lastmod>
 <changefreq>weekly</changefreq>
@@ -612,7 +622,7 @@
 <priority>0.40</priority>
 </url><url>
 <loc>http://logan.tw/author/logan/</loc>
-<lastmod>2017-12-30</lastmod>
+<lastmod>2018-01-27</lastmod>
 <changefreq>weekly</changefreq>
 <priority>0.40</priority>
 </url>

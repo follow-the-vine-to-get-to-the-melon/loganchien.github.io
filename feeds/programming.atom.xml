@@ -1,5 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2017-12-30T19:50:00+08:00</updated><entry><title>Full-text Search with Django and PostgreSQL</title><link href="http://logan.tw/posts/2017/12/30/full-text-search-with-django-and-postgresql/" rel="alternate"></link><published>2017-12-30T19:50:00+08:00</published><updated>2017-12-30T19:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2017-12-30:/posts/2017/12/30/full-text-search-with-django-and-postgresql/</id><summary type="html">&lt;p&gt;Django has several PostgreSQL database functions to support full-text search.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note - programming</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/programming.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2018-01-27T20:01:00+08:00</updated><entry><title>Find Undefined Behavior with Clang UBSan</title><link href="http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="alternate"></link><published>2018-01-27T20:01:00+08:00</published><updated>2018-01-27T20:01:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-01-27:/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</id><summary type="html">&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
+below returns &lt;code&gt;0x80000001&lt;/code&gt; when &lt;code&gt;p&lt;/code&gt; points to &lt;code&gt;0x01&lt;/code&gt;,
+&lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x80&lt;/code&gt;, but the expected return value is
+&lt;code&gt;0x00000001&lt;/code&gt; instead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt; &lt;span class="nf"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="k"&gt;restrict&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;                  &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;             &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;       &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256 …&lt;/span&gt;&lt;/pre&gt;&lt;/div&gt;</summary><content type="html">&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
+below returns &lt;code&gt;0x80000001&lt;/code&gt; when &lt;code&gt;p&lt;/code&gt; points to &lt;code&gt;0x01&lt;/code&gt;,
+&lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x80&lt;/code&gt;, but the expected return value is
+&lt;code&gt;0x00000001&lt;/code&gt; instead.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt; &lt;span class="nf"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="k"&gt;restrict&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;                  &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;             &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;       &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;According to the bug report, this function was fine in the past but became
+broken after the compiler toolchain was upgraded.  It sounds like an
+&lt;strong&gt;undefined behavior&lt;/strong&gt; in the code, but I cannot spot any integer overflows or
+underflows in the if-else statement (even though it looks suspicious).&lt;/p&gt;
+&lt;p&gt;Although I found the root cause by disassembling the binary, I feel this is a
+great example to showcase the power of Clang
+&lt;a class="reference external" href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html"&gt;Undefined Behavior Sanitizer (UBSan)&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="undefiend-behavior-sanitizer"&gt;
+&lt;h2&gt;Undefiend Behavior Sanitizer&lt;/h2&gt;
+&lt;p&gt;Clang has a built-in Undefined Behavior Sanitizer (UBSan).  UBSan instruments
+the input source code with several run-time checks and print error messages if
+undefined behaviors occur.&lt;/p&gt;
+&lt;p&gt;To instrument a program with UBSan, add &lt;code&gt;-fsanitize=undefined&lt;/code&gt; to the
+compiler options (both &lt;code&gt;CFLAGS&lt;/code&gt; and &lt;code&gt;LDFLAGS&lt;/code&gt;):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ clang input.c -fsanitize&lt;span class="o"&gt;=&lt;/span&gt;undefined
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To test the &lt;code&gt;convert()&lt;/code&gt; function, a &lt;code&gt;main()&lt;/code&gt; function is added to
+&lt;code&gt;input.c&lt;/code&gt;.  It reads the user input and prints the returned value of
+&lt;code&gt;convert()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;inttypes.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdint.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;stdio.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+&lt;span class="cp"&gt;#include&lt;/span&gt; &lt;span class="cpf"&gt;&amp;lt;string.h&amp;gt;&lt;/span&gt;&lt;span class="cp"&gt;&lt;/span&gt;
+
+&lt;span class="kt"&gt;int32_t&lt;/span&gt; &lt;span class="nf"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="k"&gt;const&lt;/span&gt; &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="k"&gt;restrict&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;                  &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;             &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;       &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt;
+                &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;256&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="n"&gt;p&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;]);&lt;/span&gt;
+
+  &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt; &lt;span class="k"&gt;else&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="p"&gt;(((&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;int32_t&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;INT32_MAX&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+
+&lt;span class="kt"&gt;int&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+  &lt;span class="kt"&gt;uint32_t&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+  &lt;span class="kt"&gt;uint8_t&lt;/span&gt; &lt;span class="n"&gt;buf&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kt"&gt;uint32_t&lt;/span&gt;&lt;span class="p"&gt;)];&lt;/span&gt;
+  &lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;scanf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;SCNx32&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="n"&gt;memcpy&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buf&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;&amp;amp;&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="k"&gt;sizeof&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buf&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+    &lt;span class="n"&gt;printf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;%08&amp;quot;&lt;/span&gt; &lt;span class="n"&gt;PRIx32&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;convert&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buf&lt;/span&gt;&lt;span class="p"&gt;));&lt;/span&gt;
+  &lt;span class="p"&gt;}&lt;/span&gt;
+  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="p"&gt;}&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Then, compile the program with &lt;code&gt;clang -fsanitize=undefined&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ clang input.c -fsanitize&lt;span class="o"&gt;=&lt;/span&gt;undefined
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Run the executable and enter &lt;code&gt;00000000&lt;/code&gt; and &lt;code&gt;80000001&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./a.out
+&lt;span class="m"&gt;00000000&lt;/span&gt;
+&lt;span class="m"&gt;80000000&lt;/span&gt;
+&lt;span class="m"&gt;80000001&lt;/span&gt;
+input.c:10:33: runtime error: signed integer overflow: &lt;span class="m"&gt;16777216&lt;/span&gt; * &lt;span class="m"&gt;128&lt;/span&gt; cannot be represented in &lt;span class="nb"&gt;type&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;int&amp;#39;&lt;/span&gt;
+&lt;span class="m"&gt;00000001&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In response to the first input &lt;code&gt;00000000&lt;/code&gt;, the program prints the expected
+&lt;code&gt;80000000&lt;/code&gt;.  However, when &lt;code&gt;80000001&lt;/code&gt; is entered, UBSan detects an
+error and prints an error message.  It points out the signed integer overflow in
+&lt;code&gt;256 * 256 * 256 * p[3]&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;This error message deserves more elaborations.  &lt;code&gt;p[3]&lt;/code&gt; is an
+&lt;code&gt;unsigned char&lt;/code&gt;.  It will be promoted to a &lt;code&gt;signed int&lt;/code&gt; ranging from
+0 to 255.  And then, this &lt;code&gt;signed int&lt;/code&gt; will be multipled by &lt;code&gt;256 *
+256 * 256&lt;/code&gt;.  The multiplication &lt;em&gt;may&lt;/em&gt; result in a signed integer overflow.
+According to the C/C++ specification, a signed integer overflow may lead to
+undefined behaviors.&lt;/p&gt;
+&lt;p&gt;In fact, some Clang optimizations actually exploit this undefined behavior and
+removed the &lt;em&gt;then block&lt;/em&gt; of the if-else statement.  Clang generates following
+assembly for ARM architecture:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="c"&gt;; clang -target armv7-linux-gnueabi -mthumb -S -O2 input.c&lt;/span&gt;
+&lt;span class="nf"&gt;ldr&lt;/span&gt; &lt;span class="no"&gt;r0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="no"&gt;r0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="nf"&gt;orr&lt;/span&gt; &lt;span class="no"&gt;r0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="no"&gt;r0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="c"&gt;#-2147483648&lt;/span&gt;
+&lt;span class="no"&gt;bx&lt;/span&gt;  &lt;span class="no"&gt;lr&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Undefined behaviors are dangerous.  Every C/C++ programmers must avoid them at
+all costs.  However, some undefined behaviors are subtle and difficult to spot.
+Undefined Behavior Sanitizer (UBSan) helps programmers find undefined behaviors
+in their program.  Add &lt;code&gt;-fsanitize=undefined&lt;/code&gt; to the compiler options if
+you are investigating miscompilation or debugging the program which used to
+work.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="cxx"></category><category term="clang"></category><category term="sanitizer"></category></entry><entry><title>Full-text Search with Django and PostgreSQL</title><link href="http://logan.tw/posts/2017/12/30/full-text-search-with-django-and-postgresql/" rel="alternate"></link><published>2017-12-30T19:50:00+08:00</published><updated>2017-12-30T19:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2017-12-30:/posts/2017/12/30/full-text-search-with-django-and-postgresql/</id><summary type="html">&lt;p&gt;Django has several PostgreSQL database functions to support full-text search.
 If you are using PostgreSQL as the database backend, then it is easy to add
 full-text search to your Django app.&lt;/p&gt;
 &lt;p&gt;In this post, I would like to build an demo app with full-text search.  This

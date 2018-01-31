@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Find Undefined Behavior with Clang UBSan | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="cxx" />
+	<meta name="tags" content="clang" />
+	<meta name="tags" content="sanitizer" />
+
+	<meta property="og:title" content="Find Undefined Behavior with Clang UBSan" />
+	<meta property="og:url" content="http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="bookmark" title="Permalink to Find Undefined Behavior with Clang UBSan">Find Undefined Behavior with Clang UBSan</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2018-01-27T20:01:00+08:00">
+		Sat 27 January 2018
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/cxx/">cxx</a>
+		<a class="tags" href="/tag/clang/">clang</a>
+		<a class="tags" href="/tag/sanitizer/">sanitizer</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Two weeks ago, I came across an interesting bug.  The <code>convert()</code> function
+below returns <code>0x80000001</code> when <code>p</code> points to <code>0x01</code>,
+<code>0x00</code>, <code>0x00</code>, <code>0x80</code>, but the expected return value is
+<code>0x00000001</code> instead.</p>
+<div class="highlight"><pre><span></span><span class="kt">int32_t</span> <span class="nf">convert</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span>                  <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span>             <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span>       <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(((</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="o">-</span><span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p>According to the bug report, this function was fine in the past but became
+broken after the compiler toolchain was upgraded.  It sounds like an
+<strong>undefined behavior</strong> in the code, but I cannot spot any integer overflows or
+underflows in the if-else statement (even though it looks suspicious).</p>
+<p>Although I found the root cause by disassembling the binary, I feel this is a
+great example to showcase the power of Clang
+<a class="reference external" href="https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html">Undefined Behavior Sanitizer (UBSan)</a>.</p>
+<div class="section" id="undefiend-behavior-sanitizer">
+<h2>Undefiend Behavior Sanitizer</h2>
+<p>Clang has a built-in Undefined Behavior Sanitizer (UBSan).  UBSan instruments
+the input source code with several run-time checks and print error messages if
+undefined behaviors occur.</p>
+<p>To instrument a program with UBSan, add <code>-fsanitize=undefined</code> to the
+compiler options (both <code>CFLAGS</code> and <code>LDFLAGS</code>):</p>
+<div class="highlight"><pre><span></span>$ clang input.c -fsanitize<span class="o">=</span>undefined
+</pre></div>
+<p>To test the <code>convert()</code> function, a <code>main()</code> function is added to
+<code>input.c</code>.  It reads the user input and prints the returned value of
+<code>convert()</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;inttypes.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int32_t</span> <span class="nf">convert</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(</span>                  <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span>             <span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span>       <span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span>
+                <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="mi">256</span> <span class="o">*</span> <span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(((</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="o">-</span><span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">;</span>
+  <span class="kt">uint8_t</span> <span class="n">buf</span><span class="p">[</span><span class="k">sizeof</span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)];</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">scanf</span><span class="p">(</span><span class="s">&quot;%&quot;</span> <span class="n">SCNx32</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">memcpy</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">value</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%08&quot;</span> <span class="n">PRIx32</span> <span class="s">&quot;</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">convert</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Then, compile the program with <code>clang -fsanitize=undefined</code>:</p>
+<div class="highlight"><pre><span></span>$ clang input.c -fsanitize<span class="o">=</span>undefined
+</pre></div>
+<p>Run the executable and enter <code>00000000</code> and <code>80000001</code>:</p>
+<div class="highlight"><pre><span></span>$ ./a.out
+<span class="m">00000000</span>
+<span class="m">80000000</span>
+<span class="m">80000001</span>
+input.c:10:33: runtime error: signed integer overflow: <span class="m">16777216</span> * <span class="m">128</span> cannot be represented in <span class="nb">type</span> <span class="s1">&#39;int&#39;</span>
+<span class="m">00000001</span>
+</pre></div>
+<p>In response to the first input <code>00000000</code>, the program prints the expected
+<code>80000000</code>.  However, when <code>80000001</code> is entered, UBSan detects an
+error and prints an error message.  It points out the signed integer overflow in
+<code>256 * 256 * 256 * p[3]</code>.</p>
+<p>This error message deserves more elaborations.  <code>p[3]</code> is an
+<code>unsigned char</code>.  It will be promoted to a <code>signed int</code> ranging from
+0 to 255.  And then, this <code>signed int</code> will be multipled by <code>256 *
+256 * 256</code>.  The multiplication <em>may</em> result in a signed integer overflow.
+According to the C/C++ specification, a signed integer overflow may lead to
+undefined behaviors.</p>
+<p>In fact, some Clang optimizations actually exploit this undefined behavior and
+removed the <em>then block</em> of the if-else statement.  Clang generates following
+assembly for ARM architecture:</p>
+<div class="highlight"><pre><span></span><span class="c">; clang -target armv7-linux-gnueabi -mthumb -S -O2 input.c</span>
+<span class="nf">ldr</span> <span class="no">r0</span><span class="p">,</span> <span class="p">[</span><span class="no">r0</span><span class="p">]</span>
+<span class="nf">orr</span> <span class="no">r0</span><span class="p">,</span> <span class="no">r0</span><span class="p">,</span> <span class="c">#-2147483648</span>
+<span class="no">bx</span>  <span class="no">lr</span>
+</pre></div>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>Undefined behaviors are dangerous.  Every C/C++ programmers must avoid them at
+all costs.  However, some undefined behaviors are subtle and difficult to spot.
+Undefined Behavior Sanitizer (UBSan) helps programmers find undefined behaviors
+in their program.  Add <code>-fsanitize=undefined</code> to the compiler options if
+you are investigating miscompilation or debugging the program which used to
+work.</p>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
