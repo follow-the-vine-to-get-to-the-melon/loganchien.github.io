@@ -152,6 +152,22 @@ assembly for ARM architecture:</p>
 <span class="nf">orr</span> <span class="no">r0</span><span class="p">,</span> <span class="no">r0</span><span class="p">,</span> <span class="c">#-2147483648</span>
 <span class="no">bx</span>  <span class="no">lr</span>
 </pre></div>
+<p>There are several ways to avoid this undefined behavior.  The simpliest
+solution is to replace multiplication expressions with more idiomatic shift
+expressions:</p>
+<div class="highlight"><pre><span></span><span class="kt">int32_t</span> <span class="nf">convert</span><span class="p">(</span><span class="k">const</span> <span class="kt">uint8_t</span> <span class="o">*</span><span class="k">restrict</span> <span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kt">uint32_t</span> <span class="n">x</span> <span class="o">=</span> <span class="p">(((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>       <span class="p">)</span> <span class="o">|</span>
+                <span class="p">((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;&lt;</span>  <span class="mi">8u</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">p</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">16u</span><span class="p">)</span> <span class="o">|</span>
+                <span class="p">((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">p</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&lt;&lt;</span> <span class="mi">24u</span><span class="p">));</span>
+
+  <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(((</span><span class="kt">int32_t</span><span class="p">)</span><span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="kt">int32_t</span><span class="p">)</span><span class="o">-</span><span class="n">INT32_MAX</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
 </div>
 <div class="section" id="conclusion">
 <h2>Conclusion</h2>
