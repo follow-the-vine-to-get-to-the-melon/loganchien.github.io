@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>programming | Logan's Note</title>
+	<title>Build qemu-user-static from source code | Logan's Note</title>
 
 	<meta charset="utf-8" />
 	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
@@ -23,56 +23,82 @@
 	<!--[if lte IE 8]>
 	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
 	<![endif]-->
+
+
+	<meta name="tags" content="qemu" />
+
+	<meta property="og:title" content="Build qemu-user-static from source code" />
+	<meta property="og:url" content="http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/" />
 </head>
 
 <body>
 	<div id="container">
 		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/" rel="bookmark" title="Permalink to Build qemu-user-static from source code">Build qemu-user-static from source code</a>
+</h1>
 
-<h1>Category | programming</h1>
 
-<ol id="post-list">
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/13/git-merge-base-and-checkout/" rel="bookmark" title="Permalink to Git Merge Base and Checkout">Git Merge Base and Checkout</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-13T22:04:00+08:00">Thu 13 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>Today I have learned two different usages of <code>git</code> command.  First, to
-list the <strong>least common ancestor</strong> of two refs, we may use following command:</p>
-<div class="highlight"><pre><span></span>$ git merge-base --octopus &lt;commit_1&gt; &lt;commit_2&gt; ... &lt;commit_n&gt;
+
+<div class="post-info">
+	<time class="published" datetime="2018-02-18T15:50:00+08:00">
+		Sun 18 February 2018
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/qemu/">qemu</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><code>qemu-user-static</code> is an important tool for cross-architecture developers.
+It allows developers to create a <em>chroot environment</em> and run the
+<em>cross-compiled</em> programs.  For example, a developer may run an AArch64
+executable without the overhead of system-level emulation.</p>
+<p>I usually install the <code>qemu-user-static</code> binaries from Ubuntu apt
+repository.  However, I encountered some bugs that have been fixed in the QEMU
+upstream but the fixes haven't been back ported to the Ubuntu deb package.
+Thus, I decided to <strong>build qemu-user-static from source code</strong>.</p>
+<div class="section" id="instructions">
+<h2>Instructions</h2>
+<p>Install the QEMU build dependencies with:</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get build-dep qemu
 </pre></div>
-<p>Please notice that <code>--octopus</code> is mandatory; otherwise, <code>git</code>
-will create a hypothetical commit <code>M</code>, which merges <code>commit_2</code> ..
-<code>commit_n</code>, and …</p></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/13/git-merge-base-and-checkout/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/12/soundness-and-completeness-of-the-type-system/" rel="bookmark" title="Permalink to Soundness and Completeness of the Type System">Soundness and Completeness of the Type System</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-12T21:26:00+08:00">Wed 12 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>In the section 6 of  <a class="reference external" href="https://class.coursera.org/proglang-003">Programming Languages</a> course, Dan Grossman discussed
-about the soundness and the completeness of the type system.  He said that:</p>
-<ul class="simple">
-<li>A type-system is <strong>sound</strong> implies that all of type-checked programs are
-correct (in the other words, all of the incorrect program can't be type
-checked), i …</li></ul></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/12/soundness-and-completeness-of-the-type-system/">More</a></p>
-		</article>
-	</li>
-</ol>
+<p>Download QEMU source code with:</p>
+<div class="highlight"><pre><span></span>$ git clone git://git.qemu.org/qemu.git
+$ <span class="nb">cd</span> qemu
+$ git submodule update --init --recursive
+</pre></div>
+<p>Configure QEMU with <code>--static</code>, <code>--disable-system</code>, and
+<code>--enable-linux-user</code>:</p>
+<div class="highlight"><pre><span></span>$ ./configure <span class="se">\</span>
+    --prefix<span class="o">=</span><span class="k">$(</span><span class="nb">cd</span> ..<span class="p">;</span> <span class="nb">pwd</span><span class="k">)</span>/qemu-user-static <span class="se">\</span>
+    --static <span class="se">\</span>
+    --disable-system <span class="se">\</span>
+    --enable-linux-user
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Specifying <code>--disable-system</code> disables softmmu targets.  It is a known
+issue that softmmu targets rely on some shared libraries.  Those softmmu
+targets will cause link error if <code>--static</code> is specified.</p>
+</div>
+<p>Build and install QEMU with:</p>
+<div class="highlight"><pre><span></span>$ make -j8
+$ make install
+</pre></div>
+<p>Add <code>-static</code> suffix to executables so that <code>qemu-debootstrap</code> can
+pick up these executables:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">cd</span> ../qemu-user-static/bin
+$ <span class="k">for</span> i in *<span class="p">;</span> <span class="k">do</span> cp <span class="nv">$i</span> <span class="nv">$i</span>-static<span class="p">;</span> <span class="k">done</span>
+</pre></div>
+</div>
 
-<p class="paginator">
-		<a class="sub-btn" href="/category/programming/index4.html">&laquo; Prev</a>
-	Page 5 / 5
-</p>
+</div>
 
 		</div>
 

@@ -1,5 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2018-01-27T20:01:00+08:00</updated><entry><title>Find Undefined Behavior with Clang UBSan</title><link href="http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="alternate"></link><published>2018-01-27T20:01:00+08:00</published><updated>2018-01-27T20:01:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-01-27:/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</id><summary type="html">&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2018-02-18T15:50:00+08:00</updated><entry><title>Build qemu-user-static from source code</title><link href="http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/" rel="alternate"></link><published>2018-02-18T15:50:00+08:00</published><updated>2018-02-18T15:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-02-18:/posts/2018/02/18/build-qemu-user-static-from-source-code/</id><summary type="html">&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
+It allows developers to create a &lt;em&gt;chroot environment&lt;/em&gt; and run the
+&lt;em&gt;cross-compiled&lt;/em&gt; programs.  For example, a developer may run an AArch64
+executable without the overhead of system-level emulation.&lt;/p&gt;
+&lt;p&gt;I usually install the &lt;code&gt;qemu-user-static&lt;/code&gt; binaries from Ubuntu apt
+repository.  However, I encountered some …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
+It allows developers to create a &lt;em&gt;chroot environment&lt;/em&gt; and run the
+&lt;em&gt;cross-compiled&lt;/em&gt; programs.  For example, a developer may run an AArch64
+executable without the overhead of system-level emulation.&lt;/p&gt;
+&lt;p&gt;I usually install the &lt;code&gt;qemu-user-static&lt;/code&gt; binaries from Ubuntu apt
+repository.  However, I encountered some bugs that have been fixed in the QEMU
+upstream but the fixes haven't been back ported to the Ubuntu deb package.
+Thus, I decided to &lt;strong&gt;build qemu-user-static from source code&lt;/strong&gt;.&lt;/p&gt;
+&lt;div class="section" id="instructions"&gt;
+&lt;h2&gt;Instructions&lt;/h2&gt;
+&lt;p&gt;Install the QEMU build dependencies with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get build-dep qemu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Download QEMU source code with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ git clone git://git.qemu.org/qemu.git
+$ &lt;span class="nb"&gt;cd&lt;/span&gt; qemu
+$ git submodule update --init --recursive
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Configure QEMU with &lt;code&gt;--static&lt;/code&gt;, &lt;code&gt;--disable-system&lt;/code&gt;, and
+&lt;code&gt;--enable-linux-user&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./configure &lt;span class="se"&gt;\&lt;/span&gt;
+    --prefix&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;cd&lt;/span&gt; ..&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;/qemu-user-static &lt;span class="se"&gt;\&lt;/span&gt;
+    --static &lt;span class="se"&gt;\&lt;/span&gt;
+    --disable-system &lt;span class="se"&gt;\&lt;/span&gt;
+    --enable-linux-user
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;Specifying &lt;code&gt;--disable-system&lt;/code&gt; disables softmmu targets.  It is a known
+issue that softmmu targets rely on some shared libraries.  Those softmmu
+targets will cause link error if &lt;code&gt;--static&lt;/code&gt; is specified.&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Build and install QEMU with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ make -j8
+$ make install
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Add &lt;code&gt;-static&lt;/code&gt; suffix to executables so that &lt;code&gt;qemu-debootstrap&lt;/code&gt; can
+pick up these executables:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;cd&lt;/span&gt; ../qemu-user-static/bin
+$ &lt;span class="k"&gt;for&lt;/span&gt; i in *&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;do&lt;/span&gt; cp &lt;span class="nv"&gt;$i&lt;/span&gt; &lt;span class="nv"&gt;$i&lt;/span&gt;-static&lt;span class="p"&gt;;&lt;/span&gt; &lt;span class="k"&gt;done&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="qemu"></category></entry><entry><title>Find Undefined Behavior with Clang UBSan</title><link href="http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/" rel="alternate"></link><published>2018-01-27T20:01:00+08:00</published><updated>2018-01-27T20:01:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-01-27:/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</id><summary type="html">&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
 below returns &lt;code&gt;0x80000001&lt;/code&gt; when &lt;code&gt;p&lt;/code&gt; points to &lt;code&gt;0x01&lt;/code&gt;,
 &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x80&lt;/code&gt;, but the expected return value is
 &lt;code&gt;0x00000001&lt;/code&gt; instead.&lt;/p&gt;

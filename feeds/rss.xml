@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 27 Jan 2018 20:01:00 +0800</lastBuildDate><item><title>Find Undefined Behavior with Clang UBSan</title><link>http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</link><description>&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sun, 18 Feb 2018 15:50:00 +0800</lastBuildDate><item><title>Build qemu-user-static from source code</title><link>http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/</link><description>&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
+It allows developers to create a &lt;em&gt;chroot environment&lt;/em&gt; and run the
+&lt;em&gt;cross-compiled&lt;/em&gt; programs.  For example, a developer may run an AArch64
+executable without the overhead of system-level emulation.&lt;/p&gt;
+&lt;p&gt;I usually install the &lt;code&gt;qemu-user-static&lt;/code&gt; binaries from Ubuntu apt
+repository.  However, I encountered some …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sun, 18 Feb 2018 15:50:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2018-02-18:/posts/2018/02/18/build-qemu-user-static-from-source-code/</guid><category>qemu</category></item><item><title>Find Undefined Behavior with Clang UBSan</title><link>http://logan.tw/posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/</link><description>&lt;p&gt;Two weeks ago, I came across an interesting bug.  The &lt;code&gt;convert()&lt;/code&gt; function
 below returns &lt;code&gt;0x80000001&lt;/code&gt; when &lt;code&gt;p&lt;/code&gt; points to &lt;code&gt;0x01&lt;/code&gt;,
 &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x00&lt;/code&gt;, &lt;code&gt;0x80&lt;/code&gt;, but the expected return value is
 &lt;code&gt;0x00000001&lt;/code&gt; instead.&lt;/p&gt;
