@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Logan's Note - Authors</title>
+	<title>aarch64 | Logan's Note</title>
 
 	<meta charset="utf-8" />
 	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
@@ -27,10 +27,31 @@
 <body>
 	<div id="container">
 		<div id="content">
-    <h1>Authors</h1>
 
-    <ul id="author-list">        <li><a href="/author/logan/">Logan</a> (62)</li>
-    </ul>
+<h1>Tag | aarch64</h1>
+
+<ol id="post-list">
+	<li>
+		<article class="hentry">
+			<header>
+				<h1 class="entry-title"><a href="/posts/2017/01/21/introduction-to-qemu-debootstrap/" rel="bookmark" title="Permalink to Introduction to qemu-debootstrap">Introduction to qemu-debootstrap</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2017-01-21T22:49:00+08:00">Sat 21 January 2017</time>
+			</footer>
+			<div class="entry-content"><p>User-mode <a class="reference external" href="https://www.qemu.org/">QEMU</a> translates the instructions and the system calls. To run a
+<strong>static executable</strong>, you may wrap the command line with <code>qemu-${arch}</code>.
+For example, you may wrap an ARM64 static executable with <code>qemu-aarch64</code>:</p>
+<div class="highlight"><pre><span></span>$ qemu-aarch64 /path/to/static-executable
+</pre></div>
+<p>However, running a <strong>dynamically linked executable</strong> requires more efforts.  To
+run a …</p></div>
+                        <p><a class="normal-btn" href="/posts/2017/01/21/introduction-to-qemu-debootstrap/">More</a></p>
+		</article>
+	</li>
+</ol>
+
+
 		</div>
 
 		<div id="nav">

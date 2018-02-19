@@ -1177,7 +1177,88 @@ free to write me e-mails if you have any comments.&lt;/p&gt;
 &lt;li&gt;&lt;a class="reference external" href="http://blog.lotech.org/postgres-full-text-search-with-django.html"&gt;Postgres Full-Text Search With Django&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
-</content><category term="django"></category><category term="sql"></category><category term="postgresql"></category><category term="python"></category></entry><entry><title>Connect to Freenode with Irssi through SSL and SASL</title><link href="http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/" rel="alternate"></link><published>2016-03-19T16:47:00+08:00</published><updated>2016-03-19T16:47:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-19:/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</id><summary type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
+</content><category term="django"></category><category term="sql"></category><category term="postgresql"></category><category term="python"></category></entry><entry><title>Introduction to qemu-debootstrap</title><link href="http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/" rel="alternate"></link><published>2017-01-21T22:49:00+08:00</published><updated>2017-01-21T22:49:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2017-01-21:/posts/2017/01/21/introduction-to-qemu-debootstrap/</id><summary type="html">&lt;p&gt;User-mode &lt;a class="reference external" href="https://www.qemu.org/"&gt;QEMU&lt;/a&gt; translates the instructions and the system calls. To run a
+&lt;strong&gt;static executable&lt;/strong&gt;, you may wrap the command line with &lt;code&gt;qemu-${arch}&lt;/code&gt;.
+For example, you may wrap an ARM64 static executable with &lt;code&gt;qemu-aarch64&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ qemu-aarch64 /path/to/static-executable
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, running a &lt;strong&gt;dynamically linked executable&lt;/strong&gt; requires more efforts.  To
+run a …&lt;/p&gt;</summary><content type="html">&lt;p&gt;User-mode &lt;a class="reference external" href="https://www.qemu.org/"&gt;QEMU&lt;/a&gt; translates the instructions and the system calls. To run a
+&lt;strong&gt;static executable&lt;/strong&gt;, you may wrap the command line with &lt;code&gt;qemu-${arch}&lt;/code&gt;.
+For example, you may wrap an ARM64 static executable with &lt;code&gt;qemu-aarch64&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ qemu-aarch64 /path/to/static-executable
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, running a &lt;strong&gt;dynamically linked executable&lt;/strong&gt; requires more efforts.  To
+run a dynamically linked executable, a complete user space environment
+(including dynamic linker, shared libraries, etc) must be set up.&lt;/p&gt;
+&lt;p&gt;Fortunately, &lt;code&gt;qemu-debootstrap&lt;/code&gt; can help us set up an Ubuntu (or Debian)
+user space environment.  In this post, the instructions to set up an ARM64
+Ubuntu environment will be presented.&lt;/p&gt;
+&lt;div class="section" id="prerequisites"&gt;
+&lt;h2&gt;Prerequisites&lt;/h2&gt;
+&lt;p&gt;Three packages are required for this post:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;debootstrap&lt;/strong&gt; is a Debian (or Ubuntu) bootstrap tool.  It will download
+several deb packages and set up a minimal Debian (or Ubuntu) user space.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;qemu-user-static&lt;/strong&gt; is the deb package for user-mode QEMU static executables.
+Don't confuse this package with &lt;em&gt;qemu-user&lt;/em&gt;.  The static version must be
+installed because these QEMU executables will be copied into chroot
+environments.  This package also includes &lt;code&gt;qemu-debootstrap&lt;/code&gt;, which is a
+wrapper for cross-architecture debootstrap.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;schroot&lt;/strong&gt; is a &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Chroot"&gt;chroot&lt;/a&gt; wrapper.  Besides changing the root directory,
+schroot will run several hooks before entering and after leaving the chroot so
+that many functionalities, including network, can work without problems.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Run the command below to install these prerequisites:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install debootstrap qemu-user-static schroot
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-an-environment"&gt;
+&lt;h2&gt;Create an Environment&lt;/h2&gt;
+&lt;p&gt;To create an Ubuntu 16.04 (Xenial Xerus) ARM64 user space in the
+&lt;code&gt;arm64-ubuntu&lt;/code&gt; directory, run the following command &lt;a class="footnote-reference" href="#id2" id="id1"&gt;[1]&lt;/a&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo qemu-debootstrap --arch&lt;span class="o"&gt;=&lt;/span&gt;arm64 xenial arm64-ubuntu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, create a schroot configuration at
+&lt;code&gt;/etc/schroot/chroot.d/arm64-ubuntu&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nb"&gt;echo&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;[arm64-ubuntu]&lt;/span&gt;
+&lt;span class="s2"&gt;description=Ubuntu 16.04 Xenial (arm64)&lt;/span&gt;
+&lt;span class="s2"&gt;directory=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;&lt;span class="nb"&gt;pwd&lt;/span&gt;&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;/arm64-ubuntu&lt;/span&gt;
+&lt;span class="s2"&gt;root-users=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;whoami&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&lt;/span&gt;
+&lt;span class="s2"&gt;users=&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;whoami&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&lt;/span&gt;
+&lt;span class="s2"&gt;type=directory&amp;quot;&lt;/span&gt; &lt;span class="p"&gt;|&lt;/span&gt; sudo tee /etc/schroot/chroot.d/arm64-ubuntu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Finally, enter the schroot with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -c arm64-ubuntu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, we are in an environment that can run ARM 64-bit binaries.  For example, we
+can check the architecture with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; uname -m
+aarch64
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;BTW, to be a root user in the chroot, you may pass &lt;code&gt;-u root&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -c arm64-ubuntu -u root
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And then, you may install packages with &lt;code&gt;apt-get&lt;/code&gt;.  For example:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&amp;gt; apt-get install vim
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="epilogue"&gt;
+&lt;h2&gt;Epilogue&lt;/h2&gt;
+&lt;p&gt;In this post, I have covered &lt;code&gt;qemu-user-static&lt;/code&gt;, &lt;code&gt;qemu-debootstrap&lt;/code&gt;
+and &lt;code&gt;schroot&lt;/code&gt;.  These tools significantly boosted my productivity on
+cross-architecture development.  I hope this article is helpful.  Thanks for
+reading.&lt;/p&gt;
+&lt;table class="docutils footnote" frame="void" id="id2" rules="none"&gt;
+&lt;colgroup&gt;&lt;col class="label" /&gt;&lt;col /&gt;&lt;/colgroup&gt;
+&lt;tbody valign="top"&gt;
+&lt;tr&gt;&lt;td class="label"&gt;&lt;a class="fn-backref" href="#id1"&gt;[1]&lt;/a&gt;&lt;/td&gt;&lt;td&gt;By default, &lt;code&gt;qemu-debootstrap&lt;/code&gt; will download deb packages from
+&lt;a class="reference external" href="http://ports.ubuntu.com/ubuntu-ports"&gt;http://ports.ubuntu.com/ubuntu-ports&lt;/a&gt;.  If you would like to change the apt
+repository, specify the URL after the directory name.&lt;/td&gt;&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+</content><category term="qemu"></category><category term="linux"></category><category term="aarch64"></category><category term="arm64"></category></entry><entry><title>Connect to Freenode with Irssi through SSL and SASL</title><link href="http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/" rel="alternate"></link><published>2016-03-19T16:47:00+08:00</published><updated>2016-03-19T16:47:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-19:/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</id><summary type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
 &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; (because it is easy for us to get another IP.)  According to the error
 message, I should connect and login with &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer"&gt;SASL&lt;/a&gt;.  It took me a while to figure
 out a solution, thus I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by

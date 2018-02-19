@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Introduction to qemu-debootstrap | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="qemu" />
+	<meta name="tags" content="linux" />
+	<meta name="tags" content="aarch64" />
+	<meta name="tags" content="arm64" />
+
+	<meta property="og:title" content="Introduction to qemu-debootstrap" />
+	<meta property="og:url" content="http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/" rel="bookmark" title="Permalink to Introduction to qemu-debootstrap">Introduction to qemu-debootstrap</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2017-01-21T22:49:00+08:00">
+		Sat 21 January 2017
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/qemu/">qemu</a>
+		<a class="tags" href="/tag/linux/">linux</a>
+		<a class="tags" href="/tag/aarch64/">aarch64</a>
+		<a class="tags" href="/tag/arm64/">arm64</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>User-mode <a class="reference external" href="https://www.qemu.org/">QEMU</a> translates the instructions and the system calls. To run a
+<strong>static executable</strong>, you may wrap the command line with <code>qemu-${arch}</code>.
+For example, you may wrap an ARM64 static executable with <code>qemu-aarch64</code>:</p>
+<div class="highlight"><pre><span></span>$ qemu-aarch64 /path/to/static-executable
+</pre></div>
+<p>However, running a <strong>dynamically linked executable</strong> requires more efforts.  To
+run a dynamically linked executable, a complete user space environment
+(including dynamic linker, shared libraries, etc) must be set up.</p>
+<p>Fortunately, <code>qemu-debootstrap</code> can help us set up an Ubuntu (or Debian)
+user space environment.  In this post, the instructions to set up an ARM64
+Ubuntu environment will be presented.</p>
+<div class="section" id="prerequisites">
+<h2>Prerequisites</h2>
+<p>Three packages are required for this post:</p>
+<ul class="simple">
+<li><strong>debootstrap</strong> is a Debian (or Ubuntu) bootstrap tool.  It will download
+several deb packages and set up a minimal Debian (or Ubuntu) user space.</li>
+<li><strong>qemu-user-static</strong> is the deb package for user-mode QEMU static executables.
+Don't confuse this package with <em>qemu-user</em>.  The static version must be
+installed because these QEMU executables will be copied into chroot
+environments.  This package also includes <code>qemu-debootstrap</code>, which is a
+wrapper for cross-architecture debootstrap.</li>
+<li><strong>schroot</strong> is a <a class="reference external" href="https://en.wikipedia.org/wiki/Chroot">chroot</a> wrapper.  Besides changing the root directory,
+schroot will run several hooks before entering and after leaving the chroot so
+that many functionalities, including network, can work without problems.</li>
+</ul>
+<p>Run the command below to install these prerequisites:</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install debootstrap qemu-user-static schroot
+</pre></div>
+</div>
+<div class="section" id="create-an-environment">
+<h2>Create an Environment</h2>
+<p>To create an Ubuntu 16.04 (Xenial Xerus) ARM64 user space in the
+<code>arm64-ubuntu</code> directory, run the following command <a class="footnote-reference" href="#id2" id="id1">[1]</a>:</p>
+<div class="highlight"><pre><span></span>$ sudo qemu-debootstrap --arch<span class="o">=</span>arm64 xenial arm64-ubuntu
+</pre></div>
+<p>And then, create a schroot configuration at
+<code>/etc/schroot/chroot.d/arm64-ubuntu</code>:</p>
+<div class="highlight"><pre><span></span>$ <span class="nb">echo</span> <span class="s2">&quot;[arm64-ubuntu]</span>
+<span class="s2">description=Ubuntu 16.04 Xenial (arm64)</span>
+<span class="s2">directory=</span><span class="k">$(</span><span class="nb">pwd</span><span class="k">)</span><span class="s2">/arm64-ubuntu</span>
+<span class="s2">root-users=</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2"></span>
+<span class="s2">users=</span><span class="k">$(</span>whoami<span class="k">)</span><span class="s2"></span>
+<span class="s2">type=directory&quot;</span> <span class="p">|</span> sudo tee /etc/schroot/chroot.d/arm64-ubuntu
+</pre></div>
+<p>Finally, enter the schroot with:</p>
+<div class="highlight"><pre><span></span>$ schroot -c arm64-ubuntu
+</pre></div>
+<p>Now, we are in an environment that can run ARM 64-bit binaries.  For example, we
+can check the architecture with:</p>
+<div class="highlight"><pre><span></span>&gt; uname -m
+aarch64
+</pre></div>
+<p>BTW, to be a root user in the chroot, you may pass <code>-u root</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -c arm64-ubuntu -u root
+</pre></div>
+<p>And then, you may install packages with <code>apt-get</code>.  For example:</p>
+<div class="highlight"><pre><span></span>&gt; apt-get install vim
+</pre></div>
+</div>
+<div class="section" id="epilogue">
+<h2>Epilogue</h2>
+<p>In this post, I have covered <code>qemu-user-static</code>, <code>qemu-debootstrap</code>
+and <code>schroot</code>.  These tools significantly boosted my productivity on
+cross-architecture development.  I hope this article is helpful.  Thanks for
+reading.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>By default, <code>qemu-debootstrap</code> will download deb packages from
+<a class="reference external" href="http://ports.ubuntu.com/ubuntu-ports">http://ports.ubuntu.com/ubuntu-ports</a>.  If you would like to change the apt
+repository, specify the URL after the directory name.</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

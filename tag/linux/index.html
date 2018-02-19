@@ -34,6 +34,24 @@
 	<li>
 		<article class="hentry">
 			<header>
+				<h1 class="entry-title"><a href="/posts/2017/01/21/introduction-to-qemu-debootstrap/" rel="bookmark" title="Permalink to Introduction to qemu-debootstrap">Introduction to qemu-debootstrap</a></h1>
+			</header>
+			<footer class="post-info">
+				<time class="published" datetime="2017-01-21T22:49:00+08:00">Sat 21 January 2017</time>
+			</footer>
+			<div class="entry-content"><p>User-mode <a class="reference external" href="https://www.qemu.org/">QEMU</a> translates the instructions and the system calls. To run a
+<strong>static executable</strong>, you may wrap the command line with <code>qemu-${arch}</code>.
+For example, you may wrap an ARM64 static executable with <code>qemu-aarch64</code>:</p>
+<div class="highlight"><pre><span></span>$ qemu-aarch64 /path/to/static-executable
+</pre></div>
+<p>However, running a <strong>dynamically linked executable</strong> requires more efforts.  To
+run a …</p></div>
+                        <p><a class="normal-btn" href="/posts/2017/01/21/introduction-to-qemu-debootstrap/">More</a></p>
+		</article>
+	</li>
+	<li>
+		<article class="hentry">
+			<header>
 				<h1 class="entry-title"><a href="/posts/2015/11/16/bash-signal-handler-and-traps/" rel="bookmark" title="Permalink to Bash Signal Handler and Traps">Bash Signal Handler and Traps</a></h1>
 			</header>
 			<footer class="post-info">
@@ -177,22 +195,6 @@ dependencies anymore.  <a class="reference external" href="https://pip.pypa.io">
 <h2>Install Packages</h2>
 <p>To download and install the packages from <a class="reference external" href="https://pypi.python.org">Python Package Index …</a></p></div></div>
                         <p><a class="normal-btn" href="/posts/2015/01/01/python-package-manager-pip/">More</a></p>
-		</article>
-	</li>
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/12/20/debian-backports/" rel="bookmark" title="Permalink to Debian Backports">Debian Backports</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-12-20T22:04:00+08:00">Sat 20 December 2014</time>
-			</footer>
-			<div class="entry-content"><p>It is well-known that <a class="reference external" href="http://www.debian.org/">Debian</a> stable release is very <em>stable</em>, i.e. the
-packages are very old and well-tested.  However, this become a problem to me.</p>
-<p>Since <a class="reference external" href="http://www.git-scm.org/">Git</a> 1.9, we have to run the following command to silence a warning
-when we are running <code>git push</code>.</p>
-<div class="highlight"><pre><span></span>$ git config --global …</pre></div></div>
-                        <p><a class="normal-btn" href="/posts/2014/12/20/debian-backports/">More</a></p>
 		</article>
 	</li>
 </ol>
