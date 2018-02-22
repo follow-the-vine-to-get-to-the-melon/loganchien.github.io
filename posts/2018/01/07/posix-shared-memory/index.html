@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>POSIX Shared Memory | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="system" />
+	<meta name="tags" content="linux" />
+
+	<meta property="og:title" content="POSIX Shared Memory" />
+	<meta property="og:url" content="http://logan.tw/posts/2018/01/07/posix-shared-memory/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2018/01/07/posix-shared-memory/" rel="bookmark" title="Permalink to POSIX Shared Memory">POSIX Shared Memory</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2018-01-07T08:23:00+08:00">
+		Sun 07 January 2018
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/system/">system</a>
+		<a class="tags" href="/tag/linux/">linux</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><strong>POSIX shared memory</strong> is an inter-process communication (IPC) mechanism
+defined in POSIX specification.  After setting up the shared memory, two (or
+more) processes may read from and write to the shared memory region.  Compared
+to other IPC mechanisms (e.g. pipe, socket, etc), POSIX shared memory does not
+impose copy overheads, thus it is appealing to some applications.</p>
+<div class="section" id="overview">
+<h2>Overview</h2>
+<p>A program using POSIX shared memory usually consists of these steps:</p>
+<ol class="arabic simple">
+<li>Create or open a <em>shared memory object</em> with <code>shm_open()</code>.  A file
+descriptor will be returned if <code>shm_open()</code> creates a shared memory
+object successfully.</li>
+<li>Set the shared memory object size with <code>ftruncate()</code>.</li>
+<li>Map the shared memory object into the current address space with
+<code>mmap()</code> and <code>MAP_SHARED</code>.</li>
+<li>Read/write the shared memory.</li>
+<li>Unmap the shared memory with <code>munmap()</code>.</li>
+<li>Close the shared memory object with <code>close()</code>.</li>
+<li>Delete the shared memory object with <code>shm_unlink()</code>.</li>
+</ol>
+<p>There are several file-related system calls, such as <code>ftruncate()</code>,
+<code>mmap()</code>, <code>munmap()</code>, and <code>close()</code>.  These system calls have
+similar behaviors on both regular files and shared memory objects.  Your
+experiences on these system calls can be applied to shared memory objects as
+well.  For example, although <code>mmap()</code> succeeds even if the mapped size is
+larger than the file size, a signal <code>SIGBUS</code> is raised if the program
+accesses the region that is larger than the file size.  As a result, you have to
+call <code>ftruncate()</code> before using the shared memory.</p>
+<p><code>shm_open()</code> and <code>shm_unlink()</code> are shared memory specific system
+calls.  We will elaborate them in the next section.</p>
+</div>
+<div class="section" id="api-summary">
+<h2>API Summary</h2>
+<p><code>shm_open()</code> is the shared memory object anology of <code>open()</code>.  It
+creates a shared memory object with the specified name or opens an existing
+shared memory object from the specified name:</p>
+<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">shm_open</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">flag</span><span class="p">,</span> <span class="kt">mode_t</span> <span class="n">mode</span><span class="p">);</span>
+</pre></div>
+<p>The first argument <code>name</code> must start with a slash <code>/</code> character and
+continue with several non-slash characters.  The second argument <code>flag</code>
+can be the combination of <code>O_RDONLY</code>, <code>O_RDWR</code>, <code>O_CREAT</code>,
+and/or <code>O_EXCL</code>.</p>
+<ul class="simple">
+<li><code>O_RDONLY</code> stands for <em>read-only</em>.  If a program opens a shared memory
+object with <code>O_RDONLY</code>, it can only read the shared memory and
+must not write to the shared memory.</li>
+<li><code>O_RDWR</code> stands for <em>read</em> and <em>write</em>.  If a program opens a shared
+memory object with <code>O_RDWR</code>, it can read from or write to the shared
+memory.</li>
+<li><code>O_CREAT</code> stands for <em>create</em>.  If the shared memory object does not
+exist, a new shared memory object will be created.  Conversely, if
+<code>O_CREAT</code> is not set and the shared memory object does not exist, an
+error will be returned.</li>
+<li><code>O_EXCL</code> stands for <em>exclusive</em>.  This must be set with <code>O_CREAT</code>.
+If the shared memory object does not exist, a new shared memory object will
+be created.  If the shared memory object exists, an error will be returned.</li>
+</ul>
+<p>The third argument <code>mode</code> is the file permission of the created shared
+memroy object.  If <code>O_CREAT</code> is not specified or the shared memory object
+exists, then <code>mode</code> is ignored.</p>
+<p>Shared memory objects are kernel persistent.  Unless they are deleted, they are
+kept until the computer reboots.  <code>shm_unlink()</code> is the shared memory
+object anology of <code>unlink()</code>:</p>
+<div class="highlight"><pre><span></span><span class="kt">int</span> <span class="nf">shm_unlink</span><span class="p">(</span><span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">);</span>
+</pre></div>
+<p>The first argument <code>name</code> is the name of the shared memory object which
+you would like to delete.</p>
+</div>
+<div class="section" id="shared-memory-objects-and-linux-kernels">
+<h2>Shared Memory Objects and Linux Kernels</h2>
+<p>On Linux, all shared memory objects can be found in <code>/dev/shm</code>.  You may
+list them with <code>ls -l /dev/shm</code>.  You may also remove a shared memory
+object with <code>rm /dev/shm/[name]</code>.  This is handy when you are debugging
+your program.</p>
+<p>Prior to Linux 3.16, the size of shared memory objects is limited to 32MB.  You
+may check the value in <em>procfs</em>:</p>
+<div class="highlight"><pre><span></span>$ cat /proc/sys/kernel/shmmax
+<span class="m">18446744073692774399</span>
+</pre></div>
+<p>Since Linux 3.16, the kernel supports unlimited shared memory size.  If the
+system administrator did not change the limit, then it is
+<code>ULONG_MAX - (1 &lt;&lt; 24)</code> (i.e. 18014398509465599 on 64-bit machines), which
+stands for <em>unlimited</em>.  Of course, this is the theoretical upper bound.  The
+physical RAM size and SWAP size may impose other limits.</p>
+</div>
+<div class="section" id="sender-and-receiver">
+<h2>Sender and Receiver</h2>
+<p>Let's start from a sender-receiver example.  In this example, the sender will
+create a shared memory object named <code>/shmem-example</code> and write 3 integers
+into the shared memory.  The receiver will open the shared memory object and
+read 3 integers from the shared memory.</p>
+<p>For the sake of brevity, we assume the receiver runs after the sender completes.
+The synchronization problem will be covered in the <a class="reference internal" href="#synchronize-with-c11-atomics">next section</a>.</p>
+<p>This is the source code of <code>protocol.h</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#ifndef PROTOCOL_H</span>
+<span class="cp">#define PROTOCOL_H</span>
+
+<span class="cp">#define NAME &quot;/shmem-example&quot;</span>
+
+<span class="cp">#define NUM 3</span>
+
+<span class="cp">#define SIZE (NUM * sizeof(int))</span>
+
+<span class="cp">#endif  </span><span class="cm">/* PROTOCOL_H */</span><span class="cp"></span>
+</pre></div>
+<p>This is the source code of <code>sender.c</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;protocol.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/mman.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">shm_open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">O_EXCL</span> <span class="o">|</span> <span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0600</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">perror</span><span class="p">(</span><span class="s">&quot;shm_open()&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">ftruncate</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="kt">int</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span>
+      <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">mmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">PROT_READ</span> <span class="o">|</span> <span class="n">PROT_WRITE</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;sender mapped address: %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">munmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>This is the source code of <code>receiver.c</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;protocol.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/mman.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">shm_open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">O_RDONLY</span><span class="p">,</span> <span class="mo">0666</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">perror</span><span class="p">(</span><span class="s">&quot;shm_open()&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kt">int</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span>
+      <span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">)</span><span class="n">mmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">PROT_READ</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;receiver mapped address: %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="n">munmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+  <span class="n">shm_unlink</span><span class="p">(</span><span class="n">NAME</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Compile and link the code with <code>-lrt</code>:</p>
+<div class="highlight"><pre><span></span>$ gcc -o sender sender.c -lrt
+$ gcc -o receiver receiver.c -lrt
+</pre></div>
+<p>Run <code>./sender</code>:</p>
+<div class="highlight"><pre><span></span>$ ./sender
+sender mapped address: 0x7fe68e346000
+</pre></div>
+<p>After running <code>./sender</code>, a shared memory object is created.  On Linux,
+it can be found under <code>/dev/shm</code>:</p>
+<div class="highlight"><pre><span></span>$ ls -l /dev/shm/ <span class="p">|</span> grep shmem-example
+-rw------- <span class="m">1</span> user    user      <span class="m">40</span> Jan <span class="m">7</span> <span class="m">20</span>:59 shmem-example
+</pre></div>
+<p>Now, run <code>./receiver</code>:</p>
+<div class="highlight"><pre><span></span>$ ./receiver
+receiver mapped address: 0x7f02df4cd000
+<span class="m">0</span>
+<span class="m">1</span>
+<span class="m">2</span>
+</pre></div>
+<p>After calling <code>shm_unlink()</code> from <code>receiver.c</code>,
+<code>/dev/shm/shmem-example</code> is removed:</p>
+<div class="highlight"><pre><span></span>$ ls -l /dev/shm/shmem-example
+ls: cannot access <span class="s1">&#39;/dev/shm/shmem-example&#39;</span>: No such file or directory
+</pre></div>
+</div>
+<div class="section" id="synchronize-with-c11-atomics">
+<h2>Synchronize with C11 Atomics</h2>
+<p><a class="reference external" href="https://en.wikipedia.org/wiki/C11_(C_standard_revision)">C11</a>, the C programming language standard released in 2011, provides several
+atomic types and operations that enable programmers to synchronize memory
+accesses between threads.</p>
+<p>All variables that have <strong>atomic types</strong> (e.g. <code>atomic_int</code>,
+<code>atomic_char</code>, etc) are atomic objects.  The function
+<code>atomic_load()</code> can load a value from an atomic object.  The function
+<code>atomic_store()</code> can store a value to an atomic object:</p>
+<div class="highlight"><pre><span></span><span class="n">atomic_int</span> <span class="n">state</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">value</span> <span class="o">=</span> <span class="n">atomic_load</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
+<span class="n">atomic_store</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+</pre></div>
+<p>These two functions are <strong>atomic operations</strong> with <a class="reference external" href="https://en.wikipedia.org/wiki/Sequential_consistency">sequential consistency</a>.
+When we are reasoning the possible executions, we can assume that:</p>
+<ol class="arabic simple">
+<li>There is a total ordering for all atomic operations from all threads.</li>
+<li>Within a thread, all atomic operations obey the program order.</li>
+<li>If a thread loads from an atomic object <code>atomic_load(A)</code> and
+observes an <code>atomic_store(A, x)</code>, all memory operations (including
+non-atomic operations) prior to <code>atomic_store(A, x)</code> will be visible to
+the thread.</li>
+</ol>
+<p>Based on these rules, a <a class="reference external" href="https://en.wikipedia.org/wiki/Spinlock">spinlock</a> can be implemented as:</p>
+<div class="highlight"><pre><span></span><span class="k">while</span> <span class="p">(</span><span class="n">atomic_load</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">)</span> <span class="o">!=</span> <span class="n">x</span><span class="p">)</span> <span class="p">{}</span>
+</pre></div>
+<p>To demonstrate how C11 atomic synchronization works with POSIX shared memory,
+the example below includes a <code>request</code> program and a <code>worker</code>
+program.  They communicate through a shared structure:</p>
+<div class="highlight"><pre><span></span><span class="k">struct</span> <span class="n">Data</span> <span class="p">{</span>
+  <span class="n">atomic_int</span> <span class="n">state</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">[];</span>
+<span class="p">};</span>
+</pre></div>
+<p>Their protocol consists of following steps:</p>
+<ol class="arabic simple">
+<li><code>ftruncate()</code> will fill the structure with zeros.</li>
+<li>The worker program will wait until <code>state</code> becomes 1.</li>
+<li>The request program will fill in the <code>data</code> array and set
+<code>state</code> to 1.</li>
+<li>The request program will wait until <code>state</code> becomes 2.</li>
+<li>The worker program will update the <code>data</code> array, set <code>state</code>
+to 2, and exit.</li>
+<li>The request program will read the <code>data</code> array, which was updated
+by the worker program.</li>
+</ol>
+<p>This is the source code of <code>protocol.h</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#ifndef PROTOCOL_H</span>
+<span class="cp">#define PROTOCOL_H</span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdatomic.h&gt;</span><span class="cp"></span>
+
+<span class="k">struct</span> <span class="n">Data</span> <span class="p">{</span>
+  <span class="n">atomic_int</span> <span class="n">state</span><span class="p">;</span>
+  <span class="kt">int</span> <span class="n">data</span><span class="p">[];</span>
+<span class="p">};</span>
+
+<span class="cp">#define NAME &quot;/shmem-example&quot;</span>
+
+<span class="cp">#define NUM 3</span>
+
+<span class="cp">#define SIZE (sizeof(struct Data) + NUM * sizeof(int))</span>
+
+<span class="cp">#endif  </span><span class="cm">/* PROTOCOL_H */</span><span class="cp"></span>
+</pre></div>
+<p>This is the source code of <code>request.c</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;protocol.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdatomic.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/mman.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">shm_open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">O_CREAT</span> <span class="o">|</span> <span class="n">O_EXCL</span> <span class="o">|</span> <span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0600</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">fd</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">perror</span><span class="p">(</span><span class="s">&quot;shm_open()&quot;</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">ftruncate</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="k">struct</span> <span class="n">Data</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">Data</span> <span class="o">*</span><span class="p">)</span>
+      <span class="n">mmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">PROT_READ</span> <span class="o">|</span> <span class="n">PROT_WRITE</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;request: mapped address: %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;request: release initial data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="n">atomic_store</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;request: waiting updated data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">atomic_load</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;request: acquire updated data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;request: updated data:</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+  <span class="p">}</span>
+
+  <span class="n">munmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+  <span class="n">shm_unlink</span><span class="p">(</span><span class="n">NAME</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>This is the source code of <code>worker.c</code>:</p>
+<div class="highlight"><pre><span></span><span class="cp">#include</span> <span class="cpf">&quot;protocol.h&quot;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdatomic.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdlib.h&gt;</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;errno.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;fcntl.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sys/mman.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;unistd.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">fd</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">fd</span> <span class="o">=</span> <span class="n">shm_open</span><span class="p">(</span><span class="n">NAME</span><span class="p">,</span> <span class="n">O_RDWR</span><span class="p">,</span> <span class="mo">0666</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">fd</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">errno</span> <span class="o">!=</span> <span class="n">ENOENT</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">perror</span><span class="p">(</span><span class="s">&quot;shm_open()&quot;</span><span class="p">);</span>
+      <span class="k">return</span> <span class="n">EXIT_FAILURE</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="n">ftruncate</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="k">struct</span> <span class="n">Data</span> <span class="o">*</span><span class="n">data</span> <span class="o">=</span> <span class="p">(</span><span class="k">struct</span> <span class="n">Data</span> <span class="o">*</span><span class="p">)</span>
+      <span class="n">mmap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">,</span> <span class="n">PROT_READ</span> <span class="o">|</span> <span class="n">PROT_WRITE</span><span class="p">,</span> <span class="n">MAP_SHARED</span><span class="p">,</span> <span class="n">fd</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;worker: mapped address: %p</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;worker: waiting initial data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="k">while</span> <span class="p">(</span><span class="n">atomic_load</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{}</span>
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;worker: acquire initial data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;worker: update data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">NUM</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">42</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="n">printf</span><span class="p">(</span><span class="s">&quot;worker: release updated data</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">);</span>
+  <span class="n">atomic_store</span><span class="p">(</span><span class="o">&amp;</span><span class="n">data</span><span class="o">-&gt;</span><span class="n">state</span><span class="p">,</span> <span class="mi">2</span><span class="p">);</span>
+
+  <span class="n">munmap</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">SIZE</span><span class="p">);</span>
+
+  <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+
+  <span class="k">return</span> <span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+<p>Then, compile the <code>request</code> program with:</p>
+<div class="highlight"><pre><span></span>$ gcc -o request request.c -lrt
+</pre></div>
+<p>And compile the <code>worker</code> program with:</p>
+<div class="highlight"><pre><span></span>$ gcc -o worker worker.c -lrt
+</pre></div>
+<p>To test the code, first run <code>./worker &amp;</code> in the background and then run
+<code>./request</code>:</p>
+<div class="highlight"><pre><span></span>$ ./worker <span class="p">&amp;</span>
+$ ./request
+request: mapped address: 0x7f31c5b0c000
+request: release initial data
+request: waiting updated data
+worker: mapped address: 0x7fcdbcfd8000
+worker: waiting initial data
+worker: acquire initial data
+worker: update data
+worker: release updated data
+request: acquire updated data
+request: updated data:
+<span class="m">0</span>
+<span class="m">42</span>
+<span class="m">84</span>
+</pre></div>
+<p>The output shows that the spinlocks work as expected.  The execution has the
+order:</p>
+<ol class="arabic simple">
+<li>The request program releases the initial data.</li>
+<li>The worker program acquires the initial data.</li>
+<li>The worker program releases the updated data.</li>
+<li>The request program acquires the updated data.</li>
+</ol>
+<p>And the request program get the expected <code>0</code>, <code>42</code>, <code>84</code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The order of <code>waiting</code> is interesting as well.  If you add
+<code>sleep(1)</code> to the line after the <code>shm_open()</code> function call in
+<code>request.c</code>, you will see a different ordering.  But the order of
+acquire and release must remain the same.</p>
+</div>
+</div>
+<div class="section" id="epilogue">
+<h2>Epilogue</h2>
+<p>In this post, we covered two POSIX shared memory APIs <code>shm_open()</code> and
+<code>shm_unlink()</code>.  In addition, we explained how to synchronize shared
+memory with <code>atomic_load()</code>, <code>atomic_store()</code>, and spinlocks.
+Although spinlock is easy to understand, it needlessly wastes CPU cycles.
+POSIX semaphore is an alternative for inter-process synchronization.  We will
+cover POSIX semaphore in the next post.  Stay tuned.</p>
+</div>
+<div class="section" id="a-historical-note">
+<h2>A Historical Note</h2>
+<p>Before POSIX shared memory was standardized, <em>System V shared memory</em> (a part of
+<a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_07">XSI Interprocess Communication</a>) was a common alternative.  To use
+<em>System V shared memory</em>, you have to generate a token with <code>ftok()</code>,
+create a shared memory with <code>shmget()</code>, and then attach or detach the
+shared memory with <code>shmat()</code> or <code>shmdt()</code>. However, I prefer POSIX
+shared memory because <code>shm_open()</code> returns a file descriptor and it can
+incorperate with other file system calls, such as <code>ftruncate()</code>,
+<code>fstat()</code>, <code>fcntl()</code>, and <code>mmap()</code>.</p>
+</div>
+<div class="section" id="reference">
+<h2>Reference</h2>
+<ul class="simple">
+<li>The Open Group Base Specifications Issue 7, System Interfaces, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/shm_open.html">shm_open()</a></li>
+<li>The Open Group Base Specifications Issue 7, System Interfaces, <a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/shm_unlink.html">shm_unlink()</a></li>
+<li>The Open Group Base Specifications Issue 7, System Interfaces,
+<a class="reference external" href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/V2_chap02.html#tag_15_07">XSI Interprocess Communication</a></li>
+<li>LWN, <a class="reference external" href="https://lwn.net/Articles/595638/">Changing the default shared memory limits</a></li>
+<li><a class="reference external" href="https://github.com/torvalds/linux/commit/060028bac94bf60a65415d1d55a359c3a17d5c31">ipc/shm.c: increase the defaults for SHMALL, SHMMAX</a></li>
+<li>Red Hat Enterprise Linux Manual, <a class="reference external" href="https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/5/html/tuning_and_optimizing_red_hat_enterprise_linux_for_oracle_9i_and_10g_databases/chap-oracle_9i_and_10g_tuning_guide-setting_shared_memory">Chapter 7. Setting Shared Memory</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
