@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Django ORM and Updating Counters | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="django" />
+	<meta name="tags" content="python" />
+
+	<meta property="og:title" content="Django ORM and Updating Counters" />
+	<meta property="og:url" content="http://logan.tw/posts/2016/12/03/django-orm-and-updating-counters/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2016/12/03/django-orm-and-updating-counters/" rel="bookmark" title="Permalink to Django ORM and Updating Counters">Django ORM and Updating Counters</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2016-12-03T22:04:00+08:00">
+		Sat 03 December 2016
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/django/">django</a>
+		<a class="tags" href="/tag/python/">python</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p>Counters are common in website development.  Most websites collect the number of
+page views with counters.  E-commerce websites keep track of the quantity of a
+commodity with counters.  However, it is hard to implement a correct counter
+with <a class="reference external" href="https://docs.djangoproject.com/en/1.10/topics/db/models/">Django ORM</a>.</p>
+<p>In this post, I would like to cover three ways to update counters in Django.
+The <a class="reference internal" href="#naive-but-incorrect">first</a> and the <a class="reference internal" href="#using-f-expressions">second</a> have race conditions.  Skip to the <a class="reference internal" href="#using-select-for-update">third</a>
+implementation if you would like to know the correct solution immediately.</p>
+<div class="section" id="case-study-a-ticket-issuing-app">
+<h2>Case Study: A Ticket Issuing App</h2>
+<p>To demonstrate the problem, I would like to build an app to issue tickets with
+serial numbers.  Each user must get one integer representing the number of
+tickets that have been issued prior to the user.  Apparently, the numbers must
+be distinct and all requests from users must be serialized in a certain order.</p>
+<p>The source code has been uploaded to <a class="reference external" href="https://github.com/loganchien/django-counter-demo/">loganchien/django-counter-demo</a>.  There
+are 4 views in <a class="reference external" href="https://github.com/loganchien/django-counter-demo/blob/master/counter/views.py">counter/views.py</a>.  These views will be elaborated in the
+upcoming sections.</p>
+<p>To run the app with 10 workers concurrently, launch the app with:</p>
+<div class="highlight"><pre><span></span>$ gunicorn -w <span class="m">10</span> counter_demo.wsgi
+</pre></div>
+<p>To test the correctness, <a class="reference external" href="https://github.com/loganchien/django-counter-demo/blob/master/stress_test.py">stress_test.py</a> will send 400 requests to get the
+serial numbers.  The requests are divided into 4 threads, thus each thread is
+responsible for 100 requests.  After collecting the numbers from each threads,
+the test script will count the number of <em>distinct</em> serial numbers.  The
+expected answer is 400.  Finally, the test script will send another request to
+get the latest number in the database.  The expected answer is 401.  The source
+code of the test script is listed below:</p>
+<div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">argparse</span>
+<span class="kn">import</span> <span class="nn">multiprocessing</span>
+<span class="kn">import</span> <span class="nn">traceback</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span>
+
+<span class="k">def</span> <span class="nf">get_number</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">as</span> <span class="n">response</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">get_numbers</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">task_id</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">num_requests</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="n">response_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_requests</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">get_number</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="n">task_id</span><span class="p">,</span> <span class="s1">&#39;received&#39;</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+            <span class="n">response_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="n">traceback</span><span class="o">.</span><span class="n">print_exc</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">response_set</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-j&#39;</span><span class="p">,</span> <span class="s1">&#39;--parallel&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-n&#39;</span><span class="p">,</span> <span class="s1">&#39;--request&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="n">tasks</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">args</span><span class="o">.</span><span class="n">request</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">parallel</span><span class="p">)]</span>
+
+    <span class="k">with</span> <span class="n">multiprocessing</span><span class="o">.</span><span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="n">args</span><span class="o">.</span><span class="n">parallel</span><span class="p">)</span> <span class="k">as</span> <span class="n">pool</span><span class="p">:</span>
+        <span class="n">response_sets</span> <span class="o">=</span> <span class="n">pool</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">get_numbers</span><span class="p">,</span> <span class="n">tasks</span><span class="p">)</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">response_set</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">response_sets</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;task&#39;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="s1">&#39;received&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">response_set</span><span class="p">),</span> <span class="s1">&#39;numbers&#39;</span><span class="p">)</span>
+        <span class="n">answer</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">response_set</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;total&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">answer</span><span class="p">))</span>
+    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;last extra request got:&#39;</span><span class="p">,</span> <span class="n">get_number</span><span class="p">(</span><span class="n">args</span><span class="o">.</span><span class="n">url</span><span class="p">))</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="section" id="naive-but-incorrect">
+<h2>Naive but Incorrect</h2>
+<p>At the first glance, it looks straightforward to implement a counter.  We can
+simply load an object with <code>get_or_create()</code>, add <code>num_counts</code> by
+one, and save the object with <code>save()</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counter1</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span><span class="p">),</span>
+                        <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+</pre></div>
+<p>However, this <strong>doesn't work</strong>:</p>
+<div class="highlight"><pre><span></span>$ ./stress_test.py http://localhost:8000/counter1
+...
+task <span class="m">0</span> received <span class="m">100</span> numbers
+task <span class="m">1</span> received <span class="m">100</span> numbers
+task <span class="m">2</span> received <span class="m">100</span> numbers
+task <span class="m">3</span> received <span class="m">100</span> numbers
+total <span class="m">109</span>
+last extra request got: <span class="m">110</span>
+</pre></div>
+<p>This total number is incorrect because there is a <strong>race condition</strong> between
+<code>get_or_create()</code> and <code>save()</code>.  Another worker may update
+<code>num_counts</code> in the database after <code>get_or_create()</code> returns.</p>
+</div>
+<div class="section" id="using-f-expressions">
+<h2>Using F() expressions</h2>
+<p>In Django apps, programmers may refer <strong>the value in the database</strong> with
+<a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions">F() expressions</a>.  It will be translated into SQL statements and take effects
+after calling the <code>save()</code> method.  After updating the database, you
+should call <code>refresh_from_db()</code> to load the latest value from the
+database:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counter2</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">2</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="s1">&#39;num_counts&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="n">counter</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span><span class="p">),</span>
+                        <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+</pre></div>
+<p>It <em>seems</em> working.  The total number and the last number <em>seem</em> correct:</p>
+<div class="highlight"><pre><span></span>$ ./stress_test.py http://localhost:8000/counter2
+...
+task <span class="m">0</span> received <span class="m">100</span> numbers
+task <span class="m">1</span> received <span class="m">100</span> numbers
+task <span class="m">2</span> received <span class="m">100</span> numbers
+task <span class="m">3</span> received <span class="m">100</span> numbers
+total <span class="m">400</span>
+last extra request got: <span class="m">401</span>
+</pre></div>
+<p>However, this is not correct.  There is a <strong>race condition</strong> between
+<code>save()</code> and <code>refresh_from_db()</code>.  You can observe the race
+condition by sleeping randomly between <code>save()</code> and
+<code>refresh_from_db()</code>:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counter3</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">3</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="s1">&#39;num_counts&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="n">counter</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="c1"># Demonstrate race condition by sleeping randomly</span>
+    <span class="c1"># between save() and refresh_from_db().</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span>
+
+    <span class="n">counter</span><span class="o">.</span><span class="n">refresh_from_db</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span><span class="p">),</span>
+                        <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Now, here is the problem:</p>
+<div class="highlight"><pre><span></span>$ ./stress_test.py http://localhost:8000/counter3
+...
+task <span class="m">0</span> received <span class="m">100</span> numbers
+task <span class="m">1</span> received <span class="m">100</span> numbers
+task <span class="m">2</span> received <span class="m">100</span> numbers
+task <span class="m">3</span> received <span class="m">100</span> numbers
+total <span class="m">260</span>
+last extra request got: <span class="m">401</span>
+</pre></div>
+<p>The value in the database is correct.  However, some users incorrectly get the
+numbers that are created by other transactions.</p>
+<p>Some users get the incorrect numbers because <code>refresh_from_db()</code>
+retrieves the <strong>latest version</strong> in the database.  Unfortunately, AFAIK, all
+Django model updating functions, including <code>save()</code> and <code>update()</code>,
+do not return the updated values.</p>
+</div>
+<div class="section" id="using-select-for-update">
+<h2>Using select_for_update()</h2>
+<p>The third implementation makes queries with <code>select_for_update()</code>.  Unlike
+<code>select()</code> or <code>get_or_create()</code>, <code>select_for_update()</code> will
+acquire the <strong>write lock</strong> of the selected rows so that <strong>other transactions
+won't be able to update the row until the transaction ends</strong>. Furthermore, if
+two <code>select_for_update()</code> are competing for a row, the later one is
+blocked until the lock is released.</p>
+<p>The code below starts a transaction with <code>transaction.atomic()</code>, load the
+object with <code>select_for_update()</code>, compute <code>num_counts</code> in Python,
+and save the updated object to database with <code>save()</code>.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">counter4</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">Counter</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+    <span class="k">with</span> <span class="n">transaction</span><span class="o">.</span><span class="n">atomic</span><span class="p">():</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="n">Counter</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">select_for_update</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">num_counts</span> <span class="o">=</span> <span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">counter</span><span class="o">.</span><span class="n">num_counts</span> <span class="o">=</span> <span class="n">num_counts</span>
+        <span class="n">counter</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">HttpResponse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">num_counts</span><span class="p">),</span> <span class="n">content_type</span><span class="o">=</span><span class="s1">&#39;text/plain&#39;</span><span class="p">)</span>
+</pre></div>
+<p>Since other transactions won't be able to update the object in the middle of the
+transaction, the local variable <code>num_counts</code> is guaranteed to be the
+number for this user:</p>
+<div class="highlight"><pre><span></span>$ ./stress_test.py http://localhost:8000/counter4
+...
+task <span class="m">0</span> received <span class="m">100</span> numbers
+task <span class="m">1</span> received <span class="m">100</span> numbers
+task <span class="m">2</span> received <span class="m">100</span> numbers
+task <span class="m">3</span> received <span class="m">100</span> numbers
+total <span class="m">400</span>
+last extra request got: <span class="m">401</span>
+</pre></div>
+<p>As expected, the answer is correct.</p>
+<p>However, only PostgreSQL, Oracle, and MySQL support <code>select_for_update()</code>.
+Some backend will ignore <code>select_for_update()</code> silently.  Thus, it is
+important to choose a right database backend.</p>
+</div>
+<div class="section" id="conclusion">
+<h2>Conclusion</h2>
+<p>In this post, we covered three different ways to update counters:</p>
+<ul class="simple">
+<li>The <a class="reference internal" href="#naive-but-incorrect">first implementation</a> doesn't work at all.</li>
+<li>The <a class="reference internal" href="#using-f-expressions">second implementation</a> uses <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions">F() expressions</a>.  The value in the
+database is correct, but this implementation won't be able to get the updated
+value.  As a result, the second implementation can't solve the ticket issuing
+problem.  However, if your application does not impose strong requirements on
+the numbers returned to the users, this is still a good solution.</li>
+<li>The <a class="reference internal" href="#using-select-for-update">third implementation</a> uses <code>select_for_update()</code> to acquire the
+write lock of the selected row.  This correctly solves the ticket issuing
+problem.  However, only PostgreSQL, Oracle, and MySQL support
+<code>select_for_update()</code>.</li>
+</ul>
+<p>Concurrent programming is always difficult.  Even though updating counters looks
+simple, there are many pitfalls.  But that's the reason why programming is fun.</p>
+</div>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li>Django 1.10 documentation, QuerySet API reference, <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/querysets/#select-for-update">select_for_update()</a></li>
+<li>Django 1.10 documentation, Query Expressions, <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions">F() expressions</a></li>
+<li>Django 1.10 documentation, Model instance reference, <a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/instances/#django.db.models.Model.refresh_from_db">refresh_from_db()</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>

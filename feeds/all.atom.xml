@@ -1258,7 +1258,238 @@ repository, specify the URL after the directory name.&lt;/td&gt;&lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;/div&gt;
-</content><category term="qemu"></category><category term="linux"></category><category term="aarch64"></category><category term="arm64"></category></entry><entry><title>Connect to Freenode with Irssi through SSL and SASL</title><link href="http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/" rel="alternate"></link><published>2016-03-19T16:47:00+08:00</published><updated>2016-03-19T16:47:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-19:/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</id><summary type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
+</content><category term="qemu"></category><category term="linux"></category><category term="aarch64"></category><category term="arm64"></category></entry><entry><title>Django ORM and Updating Counters</title><link href="http://logan.tw/posts/2016/12/03/django-orm-and-updating-counters/" rel="alternate"></link><published>2016-12-03T22:04:00+08:00</published><updated>2016-12-03T22:04:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-12-03:/posts/2016/12/03/django-orm-and-updating-counters/</id><summary type="html">&lt;p&gt;Counters are common in website development.  Most websites collect the number of
+page views with counters.  E-commerce websites keep track of the quantity of a
+commodity with counters.  However, it is hard to implement a correct counter
+with &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/topics/db/models/"&gt;Django ORM&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this post, I would like to cover three ways …&lt;/p&gt;</summary><content type="html">&lt;p&gt;Counters are common in website development.  Most websites collect the number of
+page views with counters.  E-commerce websites keep track of the quantity of a
+commodity with counters.  However, it is hard to implement a correct counter
+with &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/topics/db/models/"&gt;Django ORM&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this post, I would like to cover three ways to update counters in Django.
+The &lt;a class="reference internal" href="#naive-but-incorrect"&gt;first&lt;/a&gt; and the &lt;a class="reference internal" href="#using-f-expressions"&gt;second&lt;/a&gt; have race conditions.  Skip to the &lt;a class="reference internal" href="#using-select-for-update"&gt;third&lt;/a&gt;
+implementation if you would like to know the correct solution immediately.&lt;/p&gt;
+&lt;div class="section" id="case-study-a-ticket-issuing-app"&gt;
+&lt;h2&gt;Case Study: A Ticket Issuing App&lt;/h2&gt;
+&lt;p&gt;To demonstrate the problem, I would like to build an app to issue tickets with
+serial numbers.  Each user must get one integer representing the number of
+tickets that have been issued prior to the user.  Apparently, the numbers must
+be distinct and all requests from users must be serialized in a certain order.&lt;/p&gt;
+&lt;p&gt;The source code has been uploaded to &lt;a class="reference external" href="https://github.com/loganchien/django-counter-demo/"&gt;loganchien/django-counter-demo&lt;/a&gt;.  There
+are 4 views in &lt;a class="reference external" href="https://github.com/loganchien/django-counter-demo/blob/master/counter/views.py"&gt;counter/views.py&lt;/a&gt;.  These views will be elaborated in the
+upcoming sections.&lt;/p&gt;
+&lt;p&gt;To run the app with 10 workers concurrently, launch the app with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ gunicorn -w &lt;span class="m"&gt;10&lt;/span&gt; counter_demo.wsgi
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To test the correctness, &lt;a class="reference external" href="https://github.com/loganchien/django-counter-demo/blob/master/stress_test.py"&gt;stress_test.py&lt;/a&gt; will send 400 requests to get the
+serial numbers.  The requests are divided into 4 threads, thus each thread is
+responsible for 100 requests.  After collecting the numbers from each threads,
+the test script will count the number of &lt;em&gt;distinct&lt;/em&gt; serial numbers.  The
+expected answer is 400.  Finally, the test script will send another request to
+get the latest number in the database.  The expected answer is 401.  The source
+code of the test script is listed below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="ch"&gt;#!/usr/bin/env python3&lt;/span&gt;
+
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;argparse&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;multiprocessing&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;traceback&lt;/span&gt;
+&lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="nn"&gt;urllib.request&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;urllib&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;urlopen&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;read&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;decode&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;utf-8&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_numbers&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;task_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;num_requests&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;
+    &lt;span class="n"&gt;response_set&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_requests&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+            &lt;span class="n"&gt;value&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;get_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;task_id&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;received&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+            &lt;span class="n"&gt;response_set&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;value&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;Exception&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;traceback&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;print_exc&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;response_set&lt;/span&gt;
+
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;main&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;argparse&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ArgumentParser&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;url&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-j&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;--parallel&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_argument&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;-n&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;--request&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;default&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;100&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;args&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;parser&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parse_args&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;tasks&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[(&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;range&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parallel&lt;/span&gt;&lt;span class="p"&gt;)]&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;multiprocessing&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Pool&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;processes&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;parallel&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="n"&gt;response_sets&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;pool&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;map&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;get_numbers&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;tasks&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;answer&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;set&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;response_set&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response_sets&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;task&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;received&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response_set&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;numbers&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;answer&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;update&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;response_set&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;total&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;answer&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;last extra request got:&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;get_number&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;url&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;main&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="naive-but-incorrect"&gt;
+&lt;h2&gt;Naive but Incorrect&lt;/h2&gt;
+&lt;p&gt;At the first glance, it looks straightforward to implement a counter.  We can
+simply load an object with &lt;code&gt;get_or_create()&lt;/code&gt;, add &lt;code&gt;num_counts&lt;/code&gt; by
+one, and save the object with &lt;code&gt;save()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;counter1&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_or_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;+=&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                        &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, this &lt;strong&gt;doesn't work&lt;/strong&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./stress_test.py http://localhost:8000/counter1
+...
+task &lt;span class="m"&gt;0&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;1&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;2&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;3&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+total &lt;span class="m"&gt;109&lt;/span&gt;
+last extra request got: &lt;span class="m"&gt;110&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This total number is incorrect because there is a &lt;strong&gt;race condition&lt;/strong&gt; between
+&lt;code&gt;get_or_create()&lt;/code&gt; and &lt;code&gt;save()&lt;/code&gt;.  Another worker may update
+&lt;code&gt;num_counts&lt;/code&gt; in the database after &lt;code&gt;get_or_create()&lt;/code&gt; returns.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="using-f-expressions"&gt;
+&lt;h2&gt;Using F() expressions&lt;/h2&gt;
+&lt;p&gt;In Django apps, programmers may refer &lt;strong&gt;the value in the database&lt;/strong&gt; with
+&lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions"&gt;F() expressions&lt;/a&gt;.  It will be translated into SQL statements and take effects
+after calling the &lt;code&gt;save()&lt;/code&gt; method.  After updating the database, you
+should call &lt;code&gt;refresh_from_db()&lt;/code&gt; to load the latest value from the
+database:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;counter2&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_or_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;num_counts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;refresh_from_db&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                        &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It &lt;em&gt;seems&lt;/em&gt; working.  The total number and the last number &lt;em&gt;seem&lt;/em&gt; correct:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./stress_test.py http://localhost:8000/counter2
+...
+task &lt;span class="m"&gt;0&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;1&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;2&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;3&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+total &lt;span class="m"&gt;400&lt;/span&gt;
+last extra request got: &lt;span class="m"&gt;401&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;However, this is not correct.  There is a &lt;strong&gt;race condition&lt;/strong&gt; between
+&lt;code&gt;save()&lt;/code&gt; and &lt;code&gt;refresh_from_db()&lt;/code&gt;.  You can observe the race
+condition by sleeping randomly between &lt;code&gt;save()&lt;/code&gt; and
+&lt;code&gt;refresh_from_db()&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;counter3&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_or_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;F&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;num_counts&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="c1"&gt;# Demonstrate race condition by sleeping randomly&lt;/span&gt;
+    &lt;span class="c1"&gt;# between save() and refresh_from_db().&lt;/span&gt;
+    &lt;span class="n"&gt;time&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sleep&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;random&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;randint&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;/&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;refresh_from_db&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+                        &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now, here is the problem:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./stress_test.py http://localhost:8000/counter3
+...
+task &lt;span class="m"&gt;0&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;1&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;2&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;3&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+total &lt;span class="m"&gt;260&lt;/span&gt;
+last extra request got: &lt;span class="m"&gt;401&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The value in the database is correct.  However, some users incorrectly get the
+numbers that are created by other transactions.&lt;/p&gt;
+&lt;p&gt;Some users get the incorrect numbers because &lt;code&gt;refresh_from_db()&lt;/code&gt;
+retrieves the &lt;strong&gt;latest version&lt;/strong&gt; in the database.  Unfortunately, AFAIK, all
+Django model updating functions, including &lt;code&gt;save()&lt;/code&gt; and &lt;code&gt;update()&lt;/code&gt;,
+do not return the updated values.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="using-select-for-update"&gt;
+&lt;h2&gt;Using select_for_update()&lt;/h2&gt;
+&lt;p&gt;The third implementation makes queries with &lt;code&gt;select_for_update()&lt;/code&gt;.  Unlike
+&lt;code&gt;select()&lt;/code&gt; or &lt;code&gt;get_or_create()&lt;/code&gt;, &lt;code&gt;select_for_update()&lt;/code&gt; will
+acquire the &lt;strong&gt;write lock&lt;/strong&gt; of the selected rows so that &lt;strong&gt;other transactions
+won't be able to update the row until the transaction ends&lt;/strong&gt;. Furthermore, if
+two &lt;code&gt;select_for_update()&lt;/code&gt; are competing for a row, the later one is
+blocked until the lock is released.&lt;/p&gt;
+&lt;p&gt;The code below starts a transaction with &lt;code&gt;transaction.atomic()&lt;/code&gt;, load the
+object with &lt;code&gt;select_for_update()&lt;/code&gt;, compute &lt;code&gt;num_counts&lt;/code&gt; in Python,
+and save the updated object to database with &lt;code&gt;save()&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;counter4&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="n"&gt;Counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_or_create&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;pk&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;transaction&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;atomic&lt;/span&gt;&lt;span class="p"&gt;():&lt;/span&gt;
+        &lt;span class="n"&gt;counter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;objects&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;id&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;select_for_update&lt;/span&gt;&lt;span class="p"&gt;()[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+        &lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+        &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;num_counts&lt;/span&gt;
+        &lt;span class="n"&gt;counter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;HttpResponse&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;str&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;num_counts&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;text/plain&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Since other transactions won't be able to update the object in the middle of the
+transaction, the local variable &lt;code&gt;num_counts&lt;/code&gt; is guaranteed to be the
+number for this user:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ ./stress_test.py http://localhost:8000/counter4
+...
+task &lt;span class="m"&gt;0&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;1&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;2&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+task &lt;span class="m"&gt;3&lt;/span&gt; received &lt;span class="m"&gt;100&lt;/span&gt; numbers
+total &lt;span class="m"&gt;400&lt;/span&gt;
+last extra request got: &lt;span class="m"&gt;401&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As expected, the answer is correct.&lt;/p&gt;
+&lt;p&gt;However, only PostgreSQL, Oracle, and MySQL support &lt;code&gt;select_for_update()&lt;/code&gt;.
+Some backend will ignore &lt;code&gt;select_for_update()&lt;/code&gt; silently.  Thus, it is
+important to choose a right database backend.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="conclusion"&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;In this post, we covered three different ways to update counters:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;The &lt;a class="reference internal" href="#naive-but-incorrect"&gt;first implementation&lt;/a&gt; doesn't work at all.&lt;/li&gt;
+&lt;li&gt;The &lt;a class="reference internal" href="#using-f-expressions"&gt;second implementation&lt;/a&gt; uses &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions"&gt;F() expressions&lt;/a&gt;.  The value in the
+database is correct, but this implementation won't be able to get the updated
+value.  As a result, the second implementation can't solve the ticket issuing
+problem.  However, if your application does not impose strong requirements on
+the numbers returned to the users, this is still a good solution.&lt;/li&gt;
+&lt;li&gt;The &lt;a class="reference internal" href="#using-select-for-update"&gt;third implementation&lt;/a&gt; uses &lt;code&gt;select_for_update()&lt;/code&gt; to acquire the
+write lock of the selected row.  This correctly solves the ticket issuing
+problem.  However, only PostgreSQL, Oracle, and MySQL support
+&lt;code&gt;select_for_update()&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Concurrent programming is always difficult.  Even though updating counters looks
+simple, there are many pitfalls.  But that's the reason why programming is fun.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="references"&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Django 1.10 documentation, QuerySet API reference, &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/querysets/#select-for-update"&gt;select_for_update()&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Django 1.10 documentation, Query Expressions, &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/expressions/#f-expressions"&gt;F() expressions&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Django 1.10 documentation, Model instance reference, &lt;a class="reference external" href="https://docs.djangoproject.com/en/1.10/ref/models/instances/#django.db.models.Model.refresh_from_db"&gt;refresh_from_db()&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="django"></category><category term="python"></category></entry><entry><title>Connect to Freenode with Irssi through SSL and SASL</title><link href="http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/" rel="alternate"></link><published>2016-03-19T16:47:00+08:00</published><updated>2016-03-19T16:47:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2016-03-19:/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</id><summary type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by
 &lt;a class="reference external" href="https://freenode.net"&gt;Freenode&lt;/a&gt; (because it is easy for us to get another IP.)  According to the error
 message, I should connect and login with &lt;a class="reference external" href="https://en.wikipedia.org/wiki/Simple_Authentication_and_Security_Layer"&gt;SASL&lt;/a&gt;.  It took me a while to figure
 out a solution, thus I …&lt;/p&gt;</summary><content type="html">&lt;p&gt;My dynamic IP address, which is provided by my ISP, seems to be blocked by

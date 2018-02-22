@@ -26,6 +26,11 @@
 <changefreq>daily</changefreq>
 <priority>0.80</priority>
 </url><url>
+<loc>http://logan.tw/posts/2016/12/03/django-orm-and-updating-counters/</loc>
+<lastmod>2016-12-03</lastmod>
+<changefreq>daily</changefreq>
+<priority>0.80</priority>
+</url><url>
 <loc>http://logan.tw/posts/2016/03/19/connect-to-freenode-with-irssi-through-ssl-and-sasl/</loc>
 <lastmod>2016-03-19</lastmod>
 <changefreq>daily</changefreq>
