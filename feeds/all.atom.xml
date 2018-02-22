@@ -9279,7 +9279,7 @@ about the soundness and the completeness of the type system.  He said that:&lt;/
 correct (in the other words, all of the incorrect program can't be type
 checked), i.e. there won't be any &lt;em&gt;false negative&lt;/em&gt; &lt;a class="footnote-reference" href="#neg" id="id1"&gt;[1]&lt;/a&gt;.&lt;/li&gt;
 &lt;li&gt;A type-system is &lt;strong&gt;complete&lt;/strong&gt; implies that all of the correct program can
-be accepted by the type checker, i.s. there won't be any &lt;em&gt;false positive&lt;/em&gt;
+be accepted by the type checker, i.e. there won't be any &lt;em&gt;false positive&lt;/em&gt;
 &lt;a class="footnote-reference" href="#pos" id="id2"&gt;[2]&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;With this explanation, I have better understanding to the soundness and the
