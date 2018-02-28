@@ -10,7 +10,8 @@ different Debian and Ubuntu releases.  Schroot perfectly fits my use case.&lt;/p
 default, it will mount the home directory in the chroot environment so that
 files are shared between the host and the chroot environment.  In addition,
 after configuring chroots, users don't need root privileges to enter a chroot.
-These features significantly speed up my day-to-day software development work.&lt;/p&gt;
+These features significantly streamline my day-to-day software development
+process.&lt;/p&gt;
 &lt;p&gt;As a daily user of schroot, I feel that I must write an article to introduce
 schroot to all software developers.  This article is a gentle introduction to
 schroot.  It covers the basic usages of the schroot command.&lt;/p&gt;
