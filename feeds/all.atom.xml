@@ -1,5 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2018-02-18T15:50:00+08:00</updated><entry><title>Build qemu-user-static from source code</title><link href="http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/" rel="alternate"></link><published>2018-02-18T15:50:00+08:00</published><updated>2018-02-18T15:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-02-18:/posts/2018/02/18/build-qemu-user-static-from-source-code/</id><summary type="html">&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Logan's Note</title><link href="http://logan.tw/" rel="alternate"></link><link href="http://logan.tw/feeds/all.atom.xml" rel="self"></link><id>http://logan.tw/</id><updated>2018-02-24T22:33:00+08:00</updated><entry><title>Manage Chroot Environments with Schroot</title><link href="http://logan.tw/posts/2018/02/24/manage-chroot-environments-with-schroot/" rel="alternate"></link><published>2018-02-24T22:33:00+08:00</published><updated>2018-02-24T22:33:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-02-24:/posts/2018/02/24/manage-chroot-environments-with-schroot/</id><summary type="html">&lt;p&gt;&lt;a class="reference external" href="https://gitlab.com/codelibre/schroot"&gt;Schroot&lt;/a&gt; allows users to switch between different Linux distributions or
+releases conveniently.  As a software developer, I have to test software between
+different Debian and Ubuntu releases.  Schroot perfectly fits my use case.&lt;/p&gt;
+&lt;p&gt;Besides, schroot has good balance between &lt;strong&gt;isolation&lt;/strong&gt; and &lt;strong&gt;convenience&lt;/strong&gt;. By
+default, it will mount the home directory …&lt;/p&gt;</summary><content type="html">&lt;p&gt;&lt;a class="reference external" href="https://gitlab.com/codelibre/schroot"&gt;Schroot&lt;/a&gt; allows users to switch between different Linux distributions or
+releases conveniently.  As a software developer, I have to test software between
+different Debian and Ubuntu releases.  Schroot perfectly fits my use case.&lt;/p&gt;
+&lt;p&gt;Besides, schroot has good balance between &lt;strong&gt;isolation&lt;/strong&gt; and &lt;strong&gt;convenience&lt;/strong&gt;. By
+default, it will mount the home directory in the chroot environment so that
+files are shared between the host and the chroot environment.  In addition,
+after configuring chroots, users don't need root privileges to enter a chroot.
+These features significantly speed up my day-to-day software development work.&lt;/p&gt;
+&lt;p&gt;As a daily user of schroot, I feel that I must write an article to introduce
+schroot to all software developers.  This article is a gentle introduction to
+schroot.  It covers the basic usages of the schroot command.&lt;/p&gt;
+&lt;p&gt;There are 4 sections in this article:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#installation"&gt;Installation&lt;/a&gt; section covers the instructions to install &lt;code&gt;schroot&lt;/code&gt; and
+&lt;code&gt;debootstrap&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#set-up-a-chroot"&gt;Set Up a Chroot&lt;/a&gt; section covers the instructions to prepare a root file
+system with &lt;code&gt;debootstrap&lt;/code&gt; and create a schroot configuration file.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#enter-a-chroot-environment"&gt;Enter a Chroot Environment&lt;/a&gt; section covers the basic usage of the
+&lt;code&gt;schroot&lt;/code&gt; command.&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#manage-sessions"&gt;Manage Sessions&lt;/a&gt; section describes how to start a schroot session, list
+schroot sessions, enter a schroot session, and end a schroot session.7&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class="section" id="installation"&gt;
+&lt;h2&gt;Installation&lt;/h2&gt;
+&lt;p&gt;To install &lt;code&gt;schroot&lt;/code&gt; on Debian or Ubuntu, run the command below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install schroot
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;It is recommended to install &lt;code&gt;debootstrap&lt;/code&gt; as well:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install debootstrap
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="set-up-a-chroot"&gt;
+&lt;h2&gt;Set Up a Chroot&lt;/h2&gt;
+&lt;p&gt;There are two steps to setup a chroot environment.  First, we have to
+&lt;a class="reference internal" href="#prepare-a-root-file-system"&gt;prepare a root file system&lt;/a&gt;, which will become the new root directory
+&lt;code&gt;/&lt;/code&gt; while running the &lt;code&gt;schroot&lt;/code&gt; command.  And then, we have to
+&lt;a class="reference internal" href="#create-a-configuration-file"&gt;create a configuration file&lt;/a&gt; for the &lt;code&gt;schroot&lt;/code&gt; command.  Let's start
+from the first step.&lt;/p&gt;
+&lt;div class="section" id="prepare-a-root-file-system"&gt;
+&lt;h3&gt;Prepare a Root File System&lt;/h3&gt;
+&lt;p&gt;A root file system consists of utility commands, shared libraries, system
+configuration files, etc.  It requires some expertise if you would like to craft
+a root file system manually.  Linux distributions usually have some mechanisms
+to automate the process.  For Debian and Ubuntu, you may create a root file
+system with the &lt;code&gt;debootstrap&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;For example, to create an &lt;em&gt;Ubuntu 16.04 (Xenial Xerus)&lt;/em&gt;
+root directory at &lt;code&gt;/var/chroot/xenial&lt;/code&gt;, run the command below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo debootstrap xenial /var/chroot/xenial &lt;span class="se"&gt;\&lt;/span&gt;
+    http://archive.ubuntu.com/ubuntu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you would like to run a &lt;em&gt;32-bit chroot&lt;/em&gt; on an x86-64 host, run
+&lt;code&gt;debootstrap --arch=i386&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo debootstrap --arch&lt;span class="o"&gt;=&lt;/span&gt;i386 xenial /var/chroot/xenial32 &lt;span class="se"&gt;\&lt;/span&gt;
+    http://archive.ubuntu.com/ubuntu
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;If you would like to run a chroot with QEMU (such as
+&lt;em&gt;running an arm64 chroot on an x86-64 host&lt;/em&gt;), refer
+&lt;a class="reference external" href="http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/"&gt;Introduction to qemu-debootstrap&lt;/a&gt; for further information.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-a-configuration-file"&gt;
+&lt;h3&gt;Create a Configuration File&lt;/h3&gt;
+&lt;p&gt;After setting up a root file system, we have to create a
+&lt;strong&gt;schroot configuration file&lt;/strong&gt; in &lt;code&gt;/etc/schroot/chroot.d&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;For example, open a configuration file with:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ sudo editor /etc/schroot/chroot.d/xenial.conf
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And fill in the configuration (remember to substitute &lt;code&gt;USERNAME&lt;/code&gt; with your
+user name):&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;[xenial]
+description=Ubuntu 16.04 Xenial Xerus
+directory=/var/chroot/xenial
+root-users=USERNAME
+users=USERNAME
+type=directory
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The configuration file consists of a chroot name (wrapped by a pair of square
+brackets) and several properties:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;strong&gt;directory&lt;/strong&gt; -- The root directory of the chroot environment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;users&lt;/strong&gt; -- A comma-separated list of the users that have access to the chroot
+environment.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;root-users&lt;/strong&gt; -- A comma-separated list of the users that can get root
+privileges in the chroot environment by specifying &lt;code&gt;-u root&lt;/code&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;type&lt;/strong&gt; -- This can be either &lt;code&gt;directory&lt;/code&gt; or &lt;code&gt;plain&lt;/code&gt;.&lt;ul&gt;
+&lt;li&gt;If &lt;code&gt;directory&lt;/code&gt; is specified, the home directory will be mounted in the
+chroot environment.  In most cases, &lt;code&gt;directory&lt;/code&gt; is a convenient and
+the suggested option.&lt;/li&gt;
+&lt;li&gt;If &lt;code&gt;plain&lt;/code&gt; is specified, schroot won't run any setup scripts.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;personality&lt;/strong&gt; -- The personality of the chroot environment.  To run a 32-bit
+chroot environment on a x86-64 host, set &lt;code&gt;personality&lt;/code&gt; to
+&lt;code&gt;linux32&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;After creating the configuration file, &lt;code&gt;schroot -l&lt;/code&gt; should list the
+chroot environments that are available:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -l
+chroot:xenial
+&lt;/pre&gt;&lt;/div&gt;
+&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p class="last"&gt;Schroot configuration files must be owned by root and must not be writable
+by other users.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="enter-a-chroot-environment"&gt;
+&lt;h2&gt;Enter a Chroot Environment&lt;/h2&gt;
+&lt;p&gt;Now, it's time to enter a chroot environment with the &lt;code&gt;schroot&lt;/code&gt; command.&lt;/p&gt;
+&lt;p&gt;To &lt;strong&gt;enter a chroot environment&lt;/strong&gt;, run &lt;code&gt;schroot -c [name]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -c xenial
+&lt;span class="o"&gt;(&lt;/span&gt;xenial&lt;span class="o"&gt;)&lt;/span&gt;user@hostname:~$
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To leave a chroot environment, type &lt;code&gt;exit&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;(&lt;/span&gt;xenial&lt;span class="o"&gt;)&lt;/span&gt;user@hostname:~$ &lt;span class="nb"&gt;exit&lt;/span&gt;
+$
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To &lt;strong&gt;execute a command in a chroot&lt;/strong&gt; and leave a chroot after the command
+completes, append &lt;code&gt;--&lt;/code&gt; and the command to be executed.  For example, to
+execute the &lt;code&gt;cat /etc/lsb-release&lt;/code&gt; command in the chroot environment, run
+the command below:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -c xenial -- cat /etc/lsb-release
+&lt;span class="nv"&gt;DISTRIB_ID&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;Ubuntu
+&lt;span class="nv"&gt;DISTRIB_RELEASE&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="m"&gt;16&lt;/span&gt;.04
+&lt;span class="nv"&gt;DISTRIB_CODENAME&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;xenial
+&lt;span class="nv"&gt;DISTRIB_DESCRIPTION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Ubuntu 16.04 LTS&amp;quot;&lt;/span&gt;
+$
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;To enter a chroot with &lt;strong&gt;root privileges&lt;/strong&gt;, append &lt;code&gt;-u root&lt;/code&gt; to the
+command line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -c xenial -u root
+&lt;span class="o"&gt;(&lt;/span&gt;xenial&lt;span class="o"&gt;)&lt;/span&gt;root@hostname:/home/user#
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="manage-sessions"&gt;
+&lt;h2&gt;Manage Sessions&lt;/h2&gt;
+&lt;p&gt;The simpliest &lt;code&gt;schroot -c&lt;/code&gt; command mentioned in the &lt;a class="reference internal" href="#enter-a-chroot-environment"&gt;previous section&lt;/a&gt;
+starts an &lt;em&gt;automatic session&lt;/em&gt; before running the command and ends the automatic
+session after the command completes.  When a session starts, &lt;code&gt;schroot&lt;/code&gt;
+will mount the file systems and execute the start hooks.  When a session ends,
+&lt;code&gt;schroot&lt;/code&gt; will execute the exit hooks and unmount the file systems.  It
+may be time consuming if you have to enter and leave a chroot several times.&lt;/p&gt;
+&lt;p&gt;Under some circumstances (e.g. running several unit tests with &lt;code&gt;schroot&lt;/code&gt;),
+it would be great to &lt;strong&gt;manage sessions manually&lt;/strong&gt;.  This section covers the
+command to &lt;a class="reference internal" href="#start-a-schroot-session"&gt;start a session&lt;/a&gt;, &lt;a class="reference internal" href="#list-all-schroot-sessions"&gt;list sessions&lt;/a&gt;, &lt;a class="reference internal" href="#enter-a-schroot-session"&gt;enter a session&lt;/a&gt;, and
+&lt;a class="reference internal" href="#end-a-schroot-session"&gt;clean up a session&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="section" id="start-a-schroot-session"&gt;
+&lt;h3&gt;Start a Schroot Session&lt;/h3&gt;
+&lt;p&gt;To start a schroot session, run &lt;code&gt;schroot -b -c [name]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -b -c xenial
+xenial-05735790-a1ab-464b-8675-4e66111370d3
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;code&gt;schroot&lt;/code&gt; command will print the session name to the standard output.
+To keep the session name in an environment variable, run this command instead:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class="nv"&gt;SESSION&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="k"&gt;$(&lt;/span&gt;schroot -b -c xenial&lt;span class="k"&gt;)&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;You may specify a session name with &lt;code&gt;-n [session-name]&lt;/code&gt; as well:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -b -c xenial -n mysession
+mysession
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="list-all-schroot-sessions"&gt;
+&lt;h3&gt;List All Schroot Sessions&lt;/h3&gt;
+&lt;p&gt;To list all schroot sessions, run &lt;code&gt;schroot -l --all-sessions&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -l --all-sessions
+session:xenial-05735790-a1ab-464b-8675-4e66111370d3
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="enter-a-schroot-session"&gt;
+&lt;h3&gt;Enter a Schroot Session&lt;/h3&gt;
+&lt;p&gt;To enter a schroot session, run &lt;code&gt;schroot -r -c [session-name]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -r -c xenial-05735790-a1ab-464b-8675-4e66111370d3
+&lt;span class="o"&gt;(&lt;/span&gt;xenial&lt;span class="o"&gt;)&lt;/span&gt;user@hostname:~$
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This is similar to the simpliest &lt;code&gt;schroot -c&lt;/code&gt; command mentioned &lt;a class="reference internal" href="#enter-a-chroot-environment"&gt;earlier&lt;/a&gt;.
+You may append command to be executed or specify &lt;code&gt;-u root&lt;/code&gt; for root
+privileges.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="end-a-schroot-session"&gt;
+&lt;h3&gt;End a Schroot Session&lt;/h3&gt;
+&lt;p&gt;To end a schroot session (i.e. unmount all file systems and execute the exit
+hooks), run &lt;code&gt;schroot -e -c [session-name]&lt;/code&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;$ schroot -e -c xenial-05735790-a1ab-464b-8675-4e66111370d3
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;BTW, if the computer &lt;em&gt;reboots&lt;/em&gt; before the simpliest &lt;code&gt;schroot -c&lt;/code&gt;
+completes, the automatic session won't be ended.  To clean up those sessions,
+you have to find their names with &lt;code&gt;schroot -l --all-sssions&lt;/code&gt; and end those
+sessions with &lt;code&gt;schroot -e -c [session-name]&lt;/code&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="references"&gt;
+&lt;h2&gt;References&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://gitlab.com/codelibre/schroot"&gt;schroot git repository&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://manpages.debian.org/testing/schroot/schroot.1.en.html"&gt;schroot manpage&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://manpages.debian.org/testing/schroot/schroot.conf.5.en.html"&gt;schroot.conf manpage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+</content><category term="schroot"></category><category term="linux"></category></entry><entry><title>Build qemu-user-static from source code</title><link href="http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/" rel="alternate"></link><published>2018-02-18T15:50:00+08:00</published><updated>2018-02-18T15:50:00+08:00</updated><author><name>Logan</name></author><id>tag:logan.tw,2018-02-18:/posts/2018/02/18/build-qemu-user-static-from-source-code/</id><summary type="html">&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
 It allows developers to create a &lt;em&gt;chroot environment&lt;/em&gt; and run the
 &lt;em&gt;cross-compiled&lt;/em&gt; programs.  For example, a developer may run an AArch64
 executable without the overhead of system-level emulation.&lt;/p&gt;

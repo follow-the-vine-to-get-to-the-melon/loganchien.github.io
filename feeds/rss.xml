@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sun, 18 Feb 2018 15:50:00 +0800</lastBuildDate><item><title>Build qemu-user-static from source code</title><link>http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/</link><description>&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
+<rss version="2.0"><channel><title>Logan's Note</title><link>http://logan.tw/</link><description></description><lastBuildDate>Sat, 24 Feb 2018 22:33:00 +0800</lastBuildDate><item><title>Manage Chroot Environments with Schroot</title><link>http://logan.tw/posts/2018/02/24/manage-chroot-environments-with-schroot/</link><description>&lt;p&gt;&lt;a class="reference external" href="https://gitlab.com/codelibre/schroot"&gt;Schroot&lt;/a&gt; allows users to switch between different Linux distributions or
+releases conveniently.  As a software developer, I have to test software between
+different Debian and Ubuntu releases.  Schroot perfectly fits my use case.&lt;/p&gt;
+&lt;p&gt;Besides, schroot has good balance between &lt;strong&gt;isolation&lt;/strong&gt; and &lt;strong&gt;convenience&lt;/strong&gt;. By
+default, it will mount the home directory …&lt;/p&gt;</description><dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">Logan</dc:creator><pubDate>Sat, 24 Feb 2018 22:33:00 +0800</pubDate><guid isPermaLink="false">tag:logan.tw,2018-02-24:/posts/2018/02/24/manage-chroot-environments-with-schroot/</guid><category>schroot</category><category>linux</category></item><item><title>Build qemu-user-static from source code</title><link>http://logan.tw/posts/2018/02/18/build-qemu-user-static-from-source-code/</link><description>&lt;p&gt;&lt;code&gt;qemu-user-static&lt;/code&gt; is an important tool for cross-architecture developers.
 It allows developers to create a &lt;em&gt;chroot environment&lt;/em&gt; and run the
 &lt;em&gt;cross-compiled&lt;/em&gt; programs.  For example, a developer may run an AArch64
 executable without the overhead of system-level emulation.&lt;/p&gt;

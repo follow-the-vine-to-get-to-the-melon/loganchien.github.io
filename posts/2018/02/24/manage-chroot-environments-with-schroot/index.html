@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Manage Chroot Environments with Schroot | Logan's Note</title>
+
+	<meta charset="utf-8" />
+	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
+	<link href="http://logan.tw/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Atom Feed" />
+	<link href="http://logan.tw/feeds/rss.xml" type="application/rss+xml" rel="alternate" title="Logan's Note RSS Feed" />
+	<link href="http://logan.tw/feeds/programming.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Categories Atom Feed" />
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic|Source+Sans+Pro:400,700,400italic,700italic|Source+Code+Pro:400,700" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/main.css" media="all" />
+	<link rel="stylesheet" type="text/css" href="/theme/css/pygment.css" media="all" />
+
+	<link rel="apple-touch-icon" sizes="180x180" href="/theme/images/favicon-180.png" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-192.png" sizes="192x192" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-96.png" sizes="96x96" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-32.png" sizes="32x32" />
+	<link rel="icon" type="image/png" href="/theme/images/favicon-16.png" sizes="16x16" />
+
+	<!--[if lte IE 8]>
+	<script type="text/javascript" src="/theme/js/respond.min.js"></script>
+	<![endif]-->
+
+
+	<meta name="tags" content="schroot" />
+	<meta name="tags" content="linux" />
+
+	<meta property="og:title" content="Manage Chroot Environments with Schroot" />
+	<meta property="og:url" content="http://logan.tw/posts/2018/02/24/manage-chroot-environments-with-schroot/" />
+</head>
+
+<body>
+	<div id="container">
+		<div id="content">
+<h1 class="entry-title">
+        <a href="http://logan.tw/posts/2018/02/24/manage-chroot-environments-with-schroot/" rel="bookmark" title="Permalink to Manage Chroot Environments with Schroot">Manage Chroot Environments with Schroot</a>
+</h1>
+
+
+
+<div class="post-info">
+	<time class="published" datetime="2018-02-24T22:33:00+08:00">
+		Sat 24 February 2018
+	</time>
+
+	<div class="tags">
+		<span class="tags-label">Tags</span>
+		<a class="tags" href="/tag/schroot/">schroot</a>
+		<a class="tags" href="/tag/linux/">linux</a>
+	</div>
+
+	<address class="vcard author">
+		Posted by <a class="url fn" href="/author/logan/">Logan</a>	</address>
+</div>
+
+<div class="entry-content">
+<p><a class="reference external" href="https://gitlab.com/codelibre/schroot">Schroot</a> allows users to switch between different Linux distributions or
+releases conveniently.  As a software developer, I have to test software between
+different Debian and Ubuntu releases.  Schroot perfectly fits my use case.</p>
+<p>Besides, schroot has good balance between <strong>isolation</strong> and <strong>convenience</strong>. By
+default, it will mount the home directory in the chroot environment so that
+files are shared between the host and the chroot environment.  In addition,
+after configuring chroots, users don't need root privileges to enter a chroot.
+These features significantly speed up my day-to-day software development work.</p>
+<p>As a daily user of schroot, I feel that I must write an article to introduce
+schroot to all software developers.  This article is a gentle introduction to
+schroot.  It covers the basic usages of the schroot command.</p>
+<p>There are 4 sections in this article:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#installation">Installation</a> section covers the instructions to install <code>schroot</code> and
+<code>debootstrap</code>.</li>
+<li><a class="reference internal" href="#set-up-a-chroot">Set Up a Chroot</a> section covers the instructions to prepare a root file
+system with <code>debootstrap</code> and create a schroot configuration file.</li>
+<li><a class="reference internal" href="#enter-a-chroot-environment">Enter a Chroot Environment</a> section covers the basic usage of the
+<code>schroot</code> command.</li>
+<li><a class="reference internal" href="#manage-sessions">Manage Sessions</a> section describes how to start a schroot session, list
+schroot sessions, enter a schroot session, and end a schroot session.7</li>
+</ul>
+<div class="section" id="installation">
+<h2>Installation</h2>
+<p>To install <code>schroot</code> on Debian or Ubuntu, run the command below:</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install schroot
+</pre></div>
+<p>It is recommended to install <code>debootstrap</code> as well:</p>
+<div class="highlight"><pre><span></span>$ sudo apt-get install debootstrap
+</pre></div>
+</div>
+<div class="section" id="set-up-a-chroot">
+<h2>Set Up a Chroot</h2>
+<p>There are two steps to setup a chroot environment.  First, we have to
+<a class="reference internal" href="#prepare-a-root-file-system">prepare a root file system</a>, which will become the new root directory
+<code>/</code> while running the <code>schroot</code> command.  And then, we have to
+<a class="reference internal" href="#create-a-configuration-file">create a configuration file</a> for the <code>schroot</code> command.  Let's start
+from the first step.</p>
+<div class="section" id="prepare-a-root-file-system">
+<h3>Prepare a Root File System</h3>
+<p>A root file system consists of utility commands, shared libraries, system
+configuration files, etc.  It requires some expertise if you would like to craft
+a root file system manually.  Linux distributions usually have some mechanisms
+to automate the process.  For Debian and Ubuntu, you may create a root file
+system with the <code>debootstrap</code> command.</p>
+<p>For example, to create an <em>Ubuntu 16.04 (Xenial Xerus)</em>
+root directory at <code>/var/chroot/xenial</code>, run the command below:</p>
+<div class="highlight"><pre><span></span>$ sudo debootstrap xenial /var/chroot/xenial <span class="se">\</span>
+    http://archive.ubuntu.com/ubuntu
+</pre></div>
+<p>If you would like to run a <em>32-bit chroot</em> on an x86-64 host, run
+<code>debootstrap --arch=i386</code>:</p>
+<div class="highlight"><pre><span></span>$ sudo debootstrap --arch<span class="o">=</span>i386 xenial /var/chroot/xenial32 <span class="se">\</span>
+    http://archive.ubuntu.com/ubuntu
+</pre></div>
+<p>If you would like to run a chroot with QEMU (such as
+<em>running an arm64 chroot on an x86-64 host</em>), refer
+<a class="reference external" href="http://logan.tw/posts/2017/01/21/introduction-to-qemu-debootstrap/">Introduction to qemu-debootstrap</a> for further information.</p>
+</div>
+<div class="section" id="create-a-configuration-file">
+<h3>Create a Configuration File</h3>
+<p>After setting up a root file system, we have to create a
+<strong>schroot configuration file</strong> in <code>/etc/schroot/chroot.d</code>.</p>
+<p>For example, open a configuration file with:</p>
+<div class="highlight"><pre><span></span>$ sudo editor /etc/schroot/chroot.d/xenial.conf
+</pre></div>
+<p>And fill in the configuration (remember to substitute <code>USERNAME</code> with your
+user name):</p>
+<div class="highlight"><pre><span></span>[xenial]
+description=Ubuntu 16.04 Xenial Xerus
+directory=/var/chroot/xenial
+root-users=USERNAME
+users=USERNAME
+type=directory
+</pre></div>
+<p>The configuration file consists of a chroot name (wrapped by a pair of square
+brackets) and several properties:</p>
+<ul class="simple">
+<li><strong>directory</strong> -- The root directory of the chroot environment.</li>
+<li><strong>users</strong> -- A comma-separated list of the users that have access to the chroot
+environment.</li>
+<li><strong>root-users</strong> -- A comma-separated list of the users that can get root
+privileges in the chroot environment by specifying <code>-u root</code>.</li>
+<li><strong>type</strong> -- This can be either <code>directory</code> or <code>plain</code>.<ul>
+<li>If <code>directory</code> is specified, the home directory will be mounted in the
+chroot environment.  In most cases, <code>directory</code> is a convenient and
+the suggested option.</li>
+<li>If <code>plain</code> is specified, schroot won't run any setup scripts.</li>
+</ul>
+</li>
+<li><strong>personality</strong> -- The personality of the chroot environment.  To run a 32-bit
+chroot environment on a x86-64 host, set <code>personality</code> to
+<code>linux32</code>.</li>
+</ul>
+<p>After creating the configuration file, <code>schroot -l</code> should list the
+chroot environments that are available:</p>
+<div class="highlight"><pre><span></span>$ schroot -l
+chroot:xenial
+</pre></div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Schroot configuration files must be owned by root and must not be writable
+by other users.</p>
+</div>
+</div>
+</div>
+<div class="section" id="enter-a-chroot-environment">
+<h2>Enter a Chroot Environment</h2>
+<p>Now, it's time to enter a chroot environment with the <code>schroot</code> command.</p>
+<p>To <strong>enter a chroot environment</strong>, run <code>schroot -c [name]</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -c xenial
+<span class="o">(</span>xenial<span class="o">)</span>user@hostname:~$
+</pre></div>
+<p>To leave a chroot environment, type <code>exit</code>:</p>
+<div class="highlight"><pre><span></span><span class="o">(</span>xenial<span class="o">)</span>user@hostname:~$ <span class="nb">exit</span>
+$
+</pre></div>
+<p>To <strong>execute a command in a chroot</strong> and leave a chroot after the command
+completes, append <code>--</code> and the command to be executed.  For example, to
+execute the <code>cat /etc/lsb-release</code> command in the chroot environment, run
+the command below:</p>
+<div class="highlight"><pre><span></span>$ schroot -c xenial -- cat /etc/lsb-release
+<span class="nv">DISTRIB_ID</span><span class="o">=</span>Ubuntu
+<span class="nv">DISTRIB_RELEASE</span><span class="o">=</span><span class="m">16</span>.04
+<span class="nv">DISTRIB_CODENAME</span><span class="o">=</span>xenial
+<span class="nv">DISTRIB_DESCRIPTION</span><span class="o">=</span><span class="s2">&quot;Ubuntu 16.04 LTS&quot;</span>
+$
+</pre></div>
+<p>To enter a chroot with <strong>root privileges</strong>, append <code>-u root</code> to the
+command line:</p>
+<div class="highlight"><pre><span></span>$ schroot -c xenial -u root
+<span class="o">(</span>xenial<span class="o">)</span>root@hostname:/home/user#
+</pre></div>
+</div>
+<div class="section" id="manage-sessions">
+<h2>Manage Sessions</h2>
+<p>The simpliest <code>schroot -c</code> command mentioned in the <a class="reference internal" href="#enter-a-chroot-environment">previous section</a>
+starts an <em>automatic session</em> before running the command and ends the automatic
+session after the command completes.  When a session starts, <code>schroot</code>
+will mount the file systems and execute the start hooks.  When a session ends,
+<code>schroot</code> will execute the exit hooks and unmount the file systems.  It
+may be time consuming if you have to enter and leave a chroot several times.</p>
+<p>Under some circumstances (e.g. running several unit tests with <code>schroot</code>),
+it would be great to <strong>manage sessions manually</strong>.  This section covers the
+command to <a class="reference internal" href="#start-a-schroot-session">start a session</a>, <a class="reference internal" href="#list-all-schroot-sessions">list sessions</a>, <a class="reference internal" href="#enter-a-schroot-session">enter a session</a>, and
+<a class="reference internal" href="#end-a-schroot-session">clean up a session</a>.</p>
+<div class="section" id="start-a-schroot-session">
+<h3>Start a Schroot Session</h3>
+<p>To start a schroot session, run <code>schroot -b -c [name]</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -b -c xenial
+xenial-05735790-a1ab-464b-8675-4e66111370d3
+</pre></div>
+<p>The <code>schroot</code> command will print the session name to the standard output.
+To keep the session name in an environment variable, run this command instead:</p>
+<div class="highlight"><pre><span></span>$ <span class="nv">SESSION</span><span class="o">=</span><span class="s2">&quot;</span><span class="k">$(</span>schroot -b -c xenial<span class="k">)</span><span class="s2">&quot;</span>
+</pre></div>
+<p>You may specify a session name with <code>-n [session-name]</code> as well:</p>
+<div class="highlight"><pre><span></span>$ schroot -b -c xenial -n mysession
+mysession
+</pre></div>
+</div>
+<div class="section" id="list-all-schroot-sessions">
+<h3>List All Schroot Sessions</h3>
+<p>To list all schroot sessions, run <code>schroot -l --all-sessions</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -l --all-sessions
+session:xenial-05735790-a1ab-464b-8675-4e66111370d3
+</pre></div>
+</div>
+<div class="section" id="enter-a-schroot-session">
+<h3>Enter a Schroot Session</h3>
+<p>To enter a schroot session, run <code>schroot -r -c [session-name]</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -r -c xenial-05735790-a1ab-464b-8675-4e66111370d3
+<span class="o">(</span>xenial<span class="o">)</span>user@hostname:~$
+</pre></div>
+<p>This is similar to the simpliest <code>schroot -c</code> command mentioned <a class="reference internal" href="#enter-a-chroot-environment">earlier</a>.
+You may append command to be executed or specify <code>-u root</code> for root
+privileges.</p>
+</div>
+<div class="section" id="end-a-schroot-session">
+<h3>End a Schroot Session</h3>
+<p>To end a schroot session (i.e. unmount all file systems and execute the exit
+hooks), run <code>schroot -e -c [session-name]</code>:</p>
+<div class="highlight"><pre><span></span>$ schroot -e -c xenial-05735790-a1ab-464b-8675-4e66111370d3
+</pre></div>
+<p>BTW, if the computer <em>reboots</em> before the simpliest <code>schroot -c</code>
+completes, the automatic session won't be ended.  To clean up those sessions,
+you have to find their names with <code>schroot -l --all-sssions</code> and end those
+sessions with <code>schroot -e -c [session-name]</code>.</p>
+</div>
+</div>
+<div class="section" id="references">
+<h2>References</h2>
+<ul class="simple">
+<li><a class="reference external" href="https://gitlab.com/codelibre/schroot">schroot git repository</a></li>
+<li><a class="reference external" href="https://manpages.debian.org/testing/schroot/schroot.1.en.html">schroot manpage</a></li>
+<li><a class="reference external" href="https://manpages.debian.org/testing/schroot/schroot.conf.5.en.html">schroot.conf manpage</a></li>
+</ul>
+</div>
+
+</div>
+
+		</div>
+
+		<div id="nav">
+                        <div><a href="/"><img src="/theme/images/logo.png" id="logo" alt="" /></a></div>
+                        <div><h1><a href="/">Logan's Note</a></h1></div>
+
+<ul id="social-icon">
+	<li><a href="http://facebook.com/loganchien" title="Facebook"><img src="/theme/images/facebook.png" alt="Facebook" /></a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW" title="Google+"><img src="/theme/images/gplus.png" alt="Google+" /></a></li>
+	<li><a href="http://github.com/loganchien" title="GitHub"><img src="/theme/images/github.png" alt="GitHub" /></a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien" title="LinkedIn"><img src="/theme/images/linkedin.png" alt="LinkedIn" /></a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed"><img src="/theme/images/feed.png" alt="RSS Feed" /></a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" title="E-Mail" class="email-link"><img src="/theme/images/email.png" alt="E-Mail" /></a></li>
+</ul>
+			<ul id="menu">
+				<li><a href="/">about</a></li>
+				<li><a href="/blog/">blog</a></li>
+				<li><a href="/tag/">tags</a></li>
+				<li><a href="/archives/">archives</a></li>
+			</ul>
+		</div>
+
+		<div id="footer">
+<ul id="social">
+	<li><a href="http://facebook.com/loganchien">Facebook</a></li>
+	<li><a href="http://plus.google.com/+LoganChienTW">Google+</a></li>
+	<li><a href="http://github.com/loganchien">GitHub</a></li>
+	<li><a href="https://www.linkedin.com/in/loganchien">LinkedIn</a></li>
+	<li><a href="http://logan.tw/feeds/rss.xml" title="RSS Feed">RSS</a></li>
+	<li><a href="http://www.google.com/recaptcha/mailhide/d?k=010OEhA7khMtwOXmN8Y0bfEw==&c=QzSeNAKgnmfFfzP6qTplbY3x-J3H4arBUzSImqb17Po=" class="email-link">E-Mail</a></li>
+</ul>
+			<p id="copyright">&copy; Logan</p>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-57011197-1']);
+	_gaq.push(['_trackPageview']);
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = 'https://ssl.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+	</script>
+</body>
+</html>
