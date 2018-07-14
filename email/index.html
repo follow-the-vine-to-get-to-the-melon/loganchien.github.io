@@ -43,13 +43,8 @@
 		<!--
 		(function(window){
 			'use strict';
-			var linkDom, imgDom, hoverDom;
-
-			var Image = window.Image;
 			var String = window.String;
 			var document = window.document;
-
-			var HOVER_IMG_URL = '/static/images/email-hover.png';
 
 			function getEmail() {
 				var i, ch;
@@ -63,38 +58,17 @@
 				return decrypted;
 			}
 
-			function onHover(evt) {
-				try {
-					linkDom.replaceChild(hoverDom, imgDom);
-				} catch (e) {}
-			}
-
-			function onHoverOut(evt) {
-				try {
-					linkDom.replaceChild(imgDom, hoverDom);
-				} catch (e) {}
-			}
-
-			function onHoverLoaded(evt) {
-				linkDom.addEventListener('mouseover', onHover);
-				linkDom.addEventListener('mouseout', onHoverOut);
-			}
-
 			function addLink() {
+				var linkDom, imgDom, textDom;
 				var email = getEmail();
 
 				linkDom = document.getElementById('emailLink');
 				linkDom.href = 'mailto:' + email;
 
 				imgDom = document.getElementById('email');
-				imgDom.alt = email;
 
-				hoverDom = new Image();
-				hoverDom.src = HOVER_IMG_URL;
-				hoverDom.alt = email;
-				hoverDom.style.verticalAlign = imgDom.style.verticalAlign;
-				hoverDom.style.height = imgDom.style.height;
-				hoverDom.onload = onHoverLoaded;
+				textDom = document.createTextNode(email);
+				linkDom.replaceChild(textDom, imgDom);
 			}
 
 			window.addEventListener('DOMContentLoaded', addLink);
