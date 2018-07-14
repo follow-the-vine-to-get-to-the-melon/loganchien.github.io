@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>apache2 | Logan's Note</title>
+	<title>Email Address</title>
 
 	<meta charset="utf-8" />
 	<link href="http://logan.tw/feeds/all.atom.xml" type="application/atom+xml" rel="alternate" title="Logan's Note Full Atom Feed" />
@@ -27,30 +27,81 @@
 <body>
 	<div id="container">
 		<div id="content">
+<h1>Email Address</h1>
 
-<h1>Tag | apache2</h1>
 
-<ol id="post-list">
-	<li>
-		<article class="hentry">
-			<header>
-				<h1 class="entry-title"><a href="/posts/2014/11/15/ssl-certificate/" rel="bookmark" title="Permalink to SSL Certificate">SSL Certificate</a></h1>
-			</header>
-			<footer class="post-info">
-				<time class="published" datetime="2014-11-15T02:30:00+08:00">Sat 15 November 2014</time>
-			</footer>
-			<div class="entry-content"><p>I would like to run <a class="reference external" href="https://code.google.com/p/shellinabox/">shellinabox</a> and my private blog system through HTTPS
-protocol.  However, an SSL certificate is really expensive, thus I decided to
-run our own <strong>certificate authority</strong> and distribute my <em>cacert.pem</em> through
-<a class="reference external" href="https://pages.github.com">GitHub Pages</a>.</p>
-<p>In general, running a certificate authority requires three steps:</p>
-<ol class="arabic simple">
-<li>Create a RSA …</li></ol></div>
-                        <p><a class="normal-btn" href="/posts/2014/11/15/ssl-certificate/">More</a></p>
-		</article>
-	</li>
-</ol>
 
+
+		<p>
+			My email address is
+			<a id="emailLink" href="/static/images/email.png">
+			<img id="email" src="/static/images/email.png" alt="tzu...@gmail.com (hidden)" style="vertical-align: middle; height: 16px;" />
+			</a>
+		</p>
+
+		<script type="text/javascript">
+		<!--
+		(function(window){
+			'use strict';
+			var linkDom, imgDom, hoverDom;
+
+			var Image = window.Image;
+			var String = window.String;
+			var document = window.document;
+
+			var HOVER_IMG_URL = '/static/images/email-hover.png';
+
+			function getEmail() {
+				var i, ch;
+				var tab = '@.cmolsgeiahtnzu';
+				var base = 'a'.charCodeAt(0);
+				var encrypted = 'moplgjknhbcljinahdkjfbced';
+				var decrypted = '';
+				for (i = 0; i < encrypted.length; ++i) {
+					decrypted += tab[encrypted.charCodeAt(i) - base];
+				}
+				return decrypted;
+			}
+
+			function onHover(evt) {
+				try {
+					linkDom.replaceChild(hoverDom, imgDom);
+				} catch (e) {}
+			}
+
+			function onHoverOut(evt) {
+				try {
+					linkDom.replaceChild(imgDom, hoverDom);
+				} catch (e) {}
+			}
+
+			function onHoverLoaded(evt) {
+				linkDom.addEventListener('mouseover', onHover);
+				linkDom.addEventListener('mouseout', onHoverOut);
+			}
+
+			function addLink() {
+				var email = getEmail();
+
+				linkDom = document.getElementById('emailLink');
+				linkDom.href = 'mailto:' + email;
+
+				imgDom = document.getElementById('email');
+				imgDom.alt = email;
+
+				hoverDom = new Image();
+				hoverDom.src = HOVER_IMG_URL;
+				hoverDom.alt = email;
+				hoverDom.style.verticalAlign = imgDom.style.verticalAlign;
+				hoverDom.style.height = imgDom.style.height;
+				hoverDom.onload = onHoverLoaded;
+			}
+
+			window.addEventListener('DOMContentLoaded', addLink);
+		})(this);
+		-->
+		</script>
+	
 
 		</div>
 
