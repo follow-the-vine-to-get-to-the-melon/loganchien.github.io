@@ -39,52 +39,67 @@
 <li>Full-stack web development</li>
 </ul>
 <p>If you have any questions, suggestions, or comments, feel free to send an <a href="/email/">e-mail</a>.  I will reply your e-mail ASAP.</p>
-<h2>Recent Posts</h2>
+<h2 id="recent-posts">Recent Posts</h2>
 <ul class="post-compact-list"><li><a href="posts/2018/02/24/manage-chroot-environments-with-schroot/">Manage Chroot Environments with Schroot</a><div class="published">02/24/2018</div></li><li><a href="posts/2018/02/18/build-qemu-user-static-from-source-code/">Build qemu-user-static from source code</a><div class="published">02/18/2018</div></li><li><a href="posts/2018/01/27/find-undefined-behavior-with-clang-ubsan/">Find Undefined Behavior with Clang UBSan</a><div class="published">01/27/2018</div></li><li><a href="posts/2018/01/07/posix-shared-memory/">POSIX Shared Memory</a><div class="published">01/07/2018</div></li><li><a href="posts/2017/12/30/full-text-search-with-django-and-postgresql/">Full-text Search with Django and PostgreSQL</a><div class="published">12/30/2017</div></li><li><a href="posts/2017/01/21/introduction-to-qemu-debootstrap/">Introduction to qemu-debootstrap</a><div class="published">01/21/2017</div></li></ul>
 <p><a class="normal-btn" href="/blog/">More Posts</a></p>
-<h2>Skills</h2>
-<h3>Programming Languages</h3>
-<ul>
-<li><strong>C/C++</strong> — Fluent and proficient.</li>
-<li><strong>Java</strong>, <strong>Python</strong>, and <strong>Javascript</strong> — Advanced.  Able to read, debug, and hack programs.</li>
-<li><strong>Bash</strong> — Intermediate.</li>
-<li>Functional programming languages, e.g. <a class="reference external" href="http://haskell.org">Haskell</a>, <a class="reference external" href="http://ocaml.org">OCaml</a>.</li>
-</ul>
-<h3>Compiler</h3>
+<h2 id="skills">Skills</h2>
+<h3 id="compiler">Compiler</h3>
 <ul>
 <li>Compiler and virtual machine design</li>
 <li>Program analysis</li>
 <li>Code optimization</li>
 </ul>
-<h2>Projects</h2>
-<h3><a class="reference external" href="http://llvm.org">LLVM</a> and <a class="reference external" href="http://clang.llvm.org">Clang</a></h3>
+<h3 id="system-software">System Software Development</h3>
 <ul>
-<li>Fixed the LLVM ARM exception handling code generation</li>
-<li>Implemented the ARM exception handling run-time library in <a class="reference external" href="http://libcxxabi.llvm.org">libcxxabi</a></li>
+<li>Linux and POSIX system programming</li>
+<li>ELF linking and loading</li>
+<li>Threading and synchronization</li>
+<li>I have been developing Android operating system since 2011.</li>
+</ul>
+<h3 id="programming-languages">Programming Languages</h3>
+<ul>
+<li><strong>C/C++</strong> — Fluent and proficient (including C++11, C++14, and C++17)</li>
+<li><strong>Python</strong> — Fluent</li>
+<li><strong>Java</strong> and <strong>Javascript</strong> — Advanced.  Able to read, debug, and hack programs.</li>
+<li><strong>Bash</strong> — Intermediate</li>
+<li>Functional programming languages, e.g. <a class="reference external" href="http://haskell.org">Haskell</a>, <a class="reference external" href="http://ocaml.org">OCaml</a>.</li>
+</ul>
+<h2 id="projects">Projects</h2>
+<h3 id="llvm-and-clang"><a class="reference external" href="http://llvm.org">LLVM</a> and <a class="reference external" href="http://clang.llvm.org">Clang</a></h3>
+<ul>
+<li>Fixed the LLVM ARM exception handling code generation (2011-2014)</li>
+<li>Implemented the ARM exception handling run-time library in <a class="reference external" href="http://libcxxabi.llvm.org">libcxxabi</a> (2013-2014)</li>
 <li>Fixed the MIPS exception handling in some cases</li>
 <li>Fixed atomic instruction generation in some cases</li>
-<li>Adopt Clang driver for Android NDK toolchain</li>
+<li>Adapted clang driver for Android NDK toolchain (2011-2012)</li>
 </ul>
-<h3><a class="reference external" href="https://android-review.googlesource.com">Android Open Source Project</a></h3>
+<h3 id="swiftshader"><a class="reference external" href="https://swiftshader.googlesource.com/SwiftShader">SwiftShader</a></h3>
 <ul>
-<li>Integrated Clang with NDK</li>
-<li>Fixed some AArch64 related issues, including bionic and qemu</li>
-<li>Participated the RenderScript CPU reference impelementation development</li>
+<li>Migrated the codebase from LLVM 3.0 to LLVM 7.0 (2018)</li>
+<li>Ported SwiftShader to AArch64 and passed the dEQP test suite (2018)</li>
 </ul>
-<h3>PyPy</h3>
+<h3 id="android-open-source-project"><a class="reference external" href="https://android-review.googlesource.com">Android Open Source Project</a></h3>
+<ul>
+<li>Built <a class="reference external" href="https://android.googlesource.com/platform/development/+/master/vndk/tools/definition-tool">a tool</a> to analyze dependencies between different ELF binaries (2016-2017)</li>
+<li>Fixed issues in <a class="reference external" href="https://android.googlesource.com/platform/bionic/+/master/tools/versioner">bionic versioner</a> (a clang-based tool that checks whether bionic libc public headers are properly annotated) (2018)</li>
+<li>Integrated clang into Android NDK (2012-2013)</li>
+<li>Fixed some AArch64-related issues, including bionic libc and qemu (2014)</li>
+<li>Participated the development of RenderScript CPU reference impelementation (2015)</li>
+</ul>
+<h3 id="pypy">PyPy</h3>
 <ul>
 <li>I have sent some small and trivial patches to update the documentation and remove dead code.</li>
 <li>I am currently working on something non-trivial.  Stay tuned.</li>
 </ul>
-<h3>Other Projects</h3>
-<p>Projects to which I sent patches before but no longer contributing actively:</p>
+<h3 id="other-projects">Other Projects</h3>
+<p>Projects to which I sent patches before:</p>
 <ul>
 <li><a class="reference external" href="http://code.google.com/p/mclinker">MCLinker</a> — A linker which links object files and produces shared libraries or executables for Linux or FreeBSD.</li>
 <li><a class="reference external" href="http://portablecl.org/">POCL</a> — Portable OpenCL implementation based on LLVM</li>
 <li><a class="reference external" href="https://github.com/mgaitan/waliki/">Waliki</a> — A Wiki engine based on Django and Git</li>
 <li><a class="reference external" href="http://www.iana.org/time-zones">IANA Time Zone Database</a> (<a class="reference external" href="http://mm.icann.org/pipermail/tz/2014-January/020535.html">patch</a>)</li>
 </ul>
-<h2>Experiences</h2>
+<h2 id="experiences">Experiences</h2>
 <ul>
 <li>Google / Software Engineer / 2016 — present</li>
 <li>MediaTek / Software Engineer / 2013 — 2016</li>
@@ -94,6 +109,7 @@
 </ul>
 
 
+<p>Last updated: Wed 07 November 2018</p>
 		</div>
 
 		<div id="nav">
